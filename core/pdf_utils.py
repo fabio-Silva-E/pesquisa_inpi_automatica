@@ -11,6 +11,7 @@ def extrair_email_do_pdf(pdf_path):
             email = texto.lower().split("e-mail:")[1].split()[0]
             return email.strip()
         return None
+
     except Exception as e:
         print(f"❌ Erro ao ler PDF: {e}")
         return None

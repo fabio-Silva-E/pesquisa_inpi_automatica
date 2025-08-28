@@ -5,9 +5,10 @@ def conectar_banco():
     try:
         conn = pyodbc.connect(
             "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=localhost\\SQLEXPRESS;"
+            "SERVER=192.168.3.4,1433;"
             "DATABASE=INPI_Busca;"
-            "Trusted_Connection=yes;"
+            "UID=admin;"
+            "PWD=24098675"
         )
         return conn
     except Exception as e:
