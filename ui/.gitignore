@@ -1,0 +1,14 @@
+
+# Ignorar ambientes virtuais
+venv*/
+.venv*/
+
+# Ignorar pastas de build
+build/
+dist/
+
+# Arquivos grandes
+*.exe
+*.pkg
+*.dll
+*.rar
