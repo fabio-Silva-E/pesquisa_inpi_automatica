@@ -1,1 +1,2 @@
 PESQUISA AUTOMATICA INPI
+este app em python acessa o site do inpi com o numero de processo gravado em um banco de dados extrai os dados necessarios para enviar um email ao cliente com uma proposta de serviço de acessoria o tanto o email quanto os dados são extraidos automaticamente e uma menssagem pre programado com os dados retirados e enviada via email ao cliente o vendedor tem somete que passar pelo capctha
