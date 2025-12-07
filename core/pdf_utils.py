@@ -29,4 +29,8 @@ def extrair_dados_do_pdf(pdf_path):
         return {"email": email, "cnpj": cnpj, "mensagem": mensagem}
 
     except Exception as e:
-        return {"email": None, "cnpj": None, "mensagem": f"❌ Erro ao ler PDF: {e}"}
+        return {
+            "email": None,
+            "cnpj": None,
+            "mensagem": f"❌ Erro ao ler PDF: {e}"
+        }
