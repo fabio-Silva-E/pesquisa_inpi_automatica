@@ -22,9 +22,10 @@ from PyQt5.QtWebEngineWidgets import (
 from PyQt5.QtCore import QUrl, QTimer, Qt
 
 from db.connection import conectar_banco
-from core.pdf_utils import extrair_email_do_pdf
+from core.pdf_utils import extrair_dados_do_pdf
+#from core.email_sender_outlok import enviar_email
 from core.email_sender import enviar_email
-
+from core.alert_menssenger import mostrar_toast
 app = QApplication(sys.argv)
 
 
@@ -66,11 +67,11 @@ class INPIApp(QWidget):
         self.entry_usuario.setPlaceholderText("Usuário")
         self.entry_senha = QLineEdit()
         self.entry_senha.setPlaceholderText("Senha")
-        self.btn_login = QPushButton("Iniciar")
-        self.btn_login.clicked.connect(self.fazer_login)
+       # self.btn_login = QPushButton("Iniciar")
+       
         login_layout.addWidget(self.entry_usuario)
         login_layout.addWidget(self.entry_senha)
-        login_layout.addWidget(self.btn_login)
+        #login_layout.addWidget(self.btn_login)
         conteudo_layout.addLayout(login_layout)
 
         # WebView principal
@@ -102,8 +103,11 @@ class INPIApp(QWidget):
         self.lista_processos.itemClicked.connect(self.selecionar_processo)
         sidebar_layout.addWidget(self.lista_processos)
         self.atualizar_lista_processos()
-        email_layout = QHBoxLayout()
+        self.btn_login = QPushButton("Iniciar")
+        self.btn_login.clicked.connect(self.fazer_login)
+        sidebar_layout.addWidget(self.btn_login)
 
+        email_layout = QHBoxLayout()
         self.campo_texto = QLineEdit()
         self.campo_texto.setPlaceholderText("e-mail extraído")
         self.btn_email = QPushButton("Enviar")
@@ -113,16 +117,7 @@ class INPIApp(QWidget):
         email_layout.addWidget(self.campo_texto)
         email_layout.addWidget(self.btn_email)
         sidebar_layout.addLayout(email_layout)
-        # enviar = enviar_email
-        # email_layout = QHBoxLayout()
-        # self.campo_texto = QLineEdit()
-        # self.campo_texto.setPlaceholderText("e-mail extraído")
-        # self.btn_email = QPushButton("Enviar")
-        # self.btn_email.clicked.connect(enviar)
-        # email_layout.addWidget(self.campo_texto)
-        # email_layout.addWidget(self.btn_email)
-        # sidebar_layout.addLayout(email_layout)
-
+        
         processo_layout = QHBoxLayout()
         self.entry_processo = QLineEdit()
         self.entry_processo.setPlaceholderText("N°Processo")
@@ -148,7 +143,10 @@ class INPIApp(QWidget):
     def enviar_email_com_feedback(self):
         email_destino = self.campo_texto.text().strip()
         if not email_destino:
-            QMessageBox.warning(self, "Aviso", "Informe um e-mail para envio.")
+            mostrar_toast(self, "Informe um e-mail para envio.")
+
+
+            #QMessageBox.warning(self, "Aviso", "Informe um e-mail para envio.")
             return
         # --- Mostra loading ---
         progress = QProgressDialog("Enviando e-mail...", None, 0, 0, self)
@@ -171,9 +169,9 @@ class INPIApp(QWidget):
             print(msg)
 
             if sucesso:
-                QMessageBox.information(self, "Sucesso", msg)
+                mostrar_toast(self, f"Sucesso: {msg}")
             else:
-                QMessageBox.critical(self, "Erro", msg)
+                mostrar_toast(self, f"Erro: {msg}")
 
         # --- Executa envio após atualizar interface ---
         QTimer.singleShot(100, enviar)
@@ -222,7 +220,7 @@ class INPIApp(QWidget):
             usuario = self.entry_usuario.text()
             senha = self.entry_senha.text()
             if not usuario or not senha:
-                QMessageBox.warning(self, "Erro", "Preencha usuário e senha")
+                mostrar_toast(self, "Preencha usuário e senha")
                 return
 
             js_code = f"""
@@ -371,14 +369,76 @@ class INPIApp(QWidget):
         download.finished.connect(lambda: self._processar_pdf_baixado(caminho_final))
 
     def _processar_pdf_baixado(self, caminho_final):
-        email = extrair_email_do_pdf(caminho_final)
+        dados = extrair_dados_do_pdf(caminho_final)  # agora retorna dict
+        email = dados.get("email")
+        cnpj = dados.get("cnpj")
+        mensagem = dados.get("mensagem")
+    
+        conn = conectar_banco()
+        if not conn:
+            QMessageBox.critical(self, "Erro Banco", "Falha ao conectar no SQL Server.")
+            return
+        cursor = conn.cursor()
+    
+        # 🔹 Garante que temos o processo_atual_id
+        if not getattr(self, "processo_atual_id", None):
+            numero_processo = self.entry_processo.text().strip()
+            if numero_processo:
+                cursor.execute("SELECT Id FROM Processos WHERE Numero_Processo = ?", (numero_processo,))
+                row = cursor.fetchone()
+                if row:
+                    self.processo_atual_id = row[0]
+                    print(f"[DEBUG] processo_atual_id recuperado: {self.processo_atual_id}")
+                else:
+                    print("[DEBUG] Processo não encontrado no banco.")
+                    self.processo_atual_id = None
+    
+        # 🔎 Se email foi extraído
         if email:
+            print(f"[DEBUG] Email extraído: {email}")
+    
+            if mensagem:  # se veio alerta de palavra proibida
+                if self.processo_atual_id:
+                    print(f"[DEBUG] Removendo processo ID={self.processo_atual_id}")
+                    try:
+                        cursor.execute("DELETE FROM Processos WHERE Id = ?", (self.processo_atual_id,))
+                        conn.commit()
+                        mostrar_toast(self, mensagem)  # mostra alerta de e-mail inválido
+                    except Exception as e:
+                        print(f"❌ Erro ao remover processo inválido: {e}")
+                else:
+                    print("[DEBUG] processo_atual_id ainda é None, não removido.")
+    
+                self.campo_texto.clear()
+                self.entry_processo.clear()
+                self.atualizar_lista_processos()
+                if self.lista_processos.count() > 0:
+                    self.lista_processos.setCurrentRow(0)
+                    self.selecionar_processo(self.lista_processos.item(0))
+                conn.close()
+                return  # 🚨 Sai aqui para não continuar fluxo
+    
+            # Caso válido
             self.campo_texto.setText(email)
+            mostrar_toast(self, f"✅ E-mail extraído: {email}")
             print(f"✅ E-mail extraído: {email}")
+    
         else:
+            mostrar_toast(self, "⚠ Nenhum e-mail encontrado no PDF")
             print("⚠ Nenhum e-mail encontrado no PDF")
-
-    # --- NAVEGAÇÃO ---
+    
+        # 🔎 Se tiver CNPJ extraído, você pode exibir ou salvar
+        if cnpj:
+            print(f"📑 CNPJ extraído: {cnpj}")
+            # Exemplo: poderia salvar em outro campo da tela
+            # self.campo_cnpj.setText(cnpj)
+    
+        conn.close()
+    
+    
+    
+    
+        # --- NAVEGAÇÃO ---
     def clicar_proxima_pg(self, href):
         if href:
             if href.startswith("/"):
@@ -470,11 +530,11 @@ class INPIApp(QWidget):
 
             # 👉 Só fecha o popup quando ele carregar a resposta do servidor
             QTimer.singleShot(
-                1000,
+                500,
                 lambda: (
                     print("✅ Fechando popup..."),
                     popup_view.close(),
-                    QTimer.singleShot(1000, self.baixar_pdf),
+                    QTimer.singleShot(500, self.baixar_pdf),
                 ),
             )
 
@@ -559,11 +619,10 @@ class INPIApp(QWidget):
         cursor.execute("DELETE FROM Processos WHERE Id = ?", (self.processo_atual_id,))
         conn.commit()
         conn.close()
-
-        QMessageBox.information(
-            self, "Sucesso", f"Processo {numero_processo} salvo com sucesso."
-        )
-
+        mostrar_toast(self, f"Processo {numero_processo} salvo com sucesso.")
+      
+        self.campo_texto.clear() 
+        
         # 🔹 Atualiza lista e seleciona o próximo automaticamente
         self.atualizar_lista_processos()
         if self.lista_processos.count() > 0:

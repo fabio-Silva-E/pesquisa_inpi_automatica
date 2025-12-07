@@ -31,25 +31,33 @@ def enviar_email(destinatario, marca, classe, data_deposito, titular, numero_pro
     corpo_html = f"""
     <p>Prezados,</p>
     <p>
-    Conforme pesquisa efetuada ao INPI (Instituto Nacional da Propriedade Industrial), constatamos que o processo de sua titularidade teve seu despacho publicado quanto ao recolhimento das retribuições relativas à concessão do Registro. Passados mais de 90(noventa) dias sem ter sido efetuado o pagamento das taxas, em breve o órgão publicará o ARQUIVAMENTO DEFINITIVO DO PEDIDO DE REGISTRO, tornando-se pública a informação para que terceiros possam solicitar a titularidade da marca.
-
-      Sendo assim torna-se imprescindível o REDEPÓSITO DA MARCA antes da publicação na RPI (Revista da Propriedade Industrial), para evitar futuros problemas com a concorrência.
-
-     Segue abaixo informações da marca.
-    </p>
+      Sua marca foi depositada, publicada e deferida (concedido o registro por 10 anos), tinha uma taxa federal para ser paga em 90 dias e a mesma, não foi paga.    </p>
+    <p>
+       Ainda há tempo de recuperar a marca preencha o requerimento e nos envie via E-mail ou WhatsApp <a href="https://wa.me/5514996587707">14-99658-7707</a>.    </p>
+    <p>Segue pesquisa do INSTITUTO NACIONAL DA PROPRIEDADE INDUSTRIAL, mostrando que passou mais de 90 (NOVENTA) dias sem ter sido efetuado o pagamento da taxa do decênio, em breve o órgão publicará o ARQUIVAMENTO DEFINITIVO DO PEDIDO DE REGISTRO, é imprescindível o RE-DEPÓSITO URGENTE DA MARCA antes da publicação na Revista da Propriedade Industrial, para evitar que terceiros solicite sua marca.</p>
+    <p>Para a segurança de nossos clientes somente trabalhamos com requerimento devidamente preenchido e assinado ficando os documentos originais em poder das contratantes.
+     </p>
+     <p>Sendo assim torna-se imprescindível o REDEPÓSITO DA MARCA antes da publicação na RPI (Revista da Propriedade Industrial), para evitar futuros problemas com a concorrência.
+     </p>
+     <p>RE-DEPÓSITO DA MARCA preencha o requerimento que está em anexo.</p>
     <p><b>Número do processo:</b> {numero_processo} - <b>Data Depósito:</b> {data_deposito}</p>
     <p><b>Titular:</b> {titular}</p>
     <p><b>Marca:</b> {marca}</p>
     <p><b>Apresentação:</b> {classe}</p>
     <p>
         Caso precise de ajuda, entre em contato pelo WhatsApp:<br>
-        <img src="cid:whatsapp_logo" width="20" height="20">
         <a href="https://wa.me/5514996587707">+55 14 996587707</a>
     </p>
     <p>Atenciosamente,</p>
     
-    Claudemir Soares
+   <p> Claudemir Soares </p>
+<p>
+  E-mail: 
+  <a href="mailto:claudemir@mpbrasil.com">claudemir@mpbrasil.com</a>
+</p>
+    Consultor em marcas
     """
+
 
     # Criação do e-mail
     msg = MIMEMultipart("related")
