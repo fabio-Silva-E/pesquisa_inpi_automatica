@@ -1,0 +1,5 @@
+*.pdf
+*.pyz
+cached-microdescs
+geoip6
+geoip
