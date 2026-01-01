@@ -2,8 +2,10 @@
 import os
 import time
 import sys
-
+import tempfile
 import shutil
+import requests
+print(requests.get("https://api.ipify.org").text)
 
 from collections import deque
 from pathlib import Path
@@ -15,7 +17,7 @@ from PyQt5.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget,
     QLabel, QMessageBox, QApplication, QProgressDialog, QTextEdit, QMessageBox, QComboBox
 )
-from PyQt5.QtCore import QTimer, QDateTime
+from PyQt5.QtCore import QTimer, QDateTime, QThread, pyqtSignal
 
 # Selenium imports
 from selenium import webdriver
@@ -32,6 +34,8 @@ from selenium.webdriver.support import expected_conditions as EC
 # suas funções internas
 
 from ui.alert_menssenger import mostrar_toast
+from .vpn_manager import VPNManager
+
 
 def pasta_app():
     if getattr(sys, 'frozen', False):
@@ -39,7 +43,12 @@ def pasta_app():
     return Path(__file__).parent.parent
 
 BASE_DIR = pasta_app()
-BUSTER_PATH = BASE_DIR / "buster"/ "3.1.0_0"
+
+def resource_path(relative):
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(os.path.abspath("."), relative)
+
 PROFILE_PATH = BASE_DIR / "ui"/ "chrome_profile"
 
 EXCEL_PROCESSOS_PATH = BASE_DIR / "processos.xlsx"
@@ -76,35 +85,71 @@ class SeleniumController:
         self.driver = None
 
     def start(self):
-        chrome_options = Options()
-        # carrega extensão Buster se a pasta existir
-        chrome_options.add_argument(f"--user-data-dir={PROFILE_PATH}")
-        chrome_options.add_argument("--profile-directory=Default")
-        chrome_options.add_argument(f"--load-extension={BUSTER_PATH}")
-        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
-        # evitar mensagens "Chrome is being controlled by automated test software"
-        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        chrome_options.add_experimental_option('useAutomationExtension', False)
+        from selenium.webdriver.chrome.service import Service
 
+        chrome_options = Options()
+        
+        # 🔐 worker_id dinâmico (não quebra código antigo)
+        worker_id = getattr(self, "worker_id", 1)
+
+        # 📁 PERFIL ÚNICO POR WORKER
+        profile_path = os.path.join(PROFILE_PATH, f"profile_{worker_id}")
+        os.makedirs(profile_path, exist_ok=True)
+        chrome_options.add_argument(f"--user-data-dir={profile_path}")
+
+        # 📁 DOWNLOAD ÚNICO POR WORKER
+        download_dir = os.path.join(DOWNLOAD_DIR, f"worker_{worker_id}")
+        os.makedirs(download_dir, exist_ok=True)
+       
         prefs = {
-            "download.default_directory": os.path.abspath(DOWNLOAD_DIR),
+            "download.default_directory": os.path.abspath(download_dir),
             "download.prompt_for_download": False,
             "plugins.always_open_pdf_externally": True,
         }
         chrome_options.add_experimental_option("prefs", prefs)
-        if CHROME_BINARY:
-            chrome_options.binary_location = CHROME_BINARY
-        
-        
-        # inicia webdriver
+
+        # Flags que você já usa
+        chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+        chrome_options.add_argument("--autoplay-policy=no-user-gesture-required")
+        chrome_options.add_argument("--verbose")
+        chrome_options.add_argument("--no-first-run")
+        chrome_options.add_argument("--disable-software-rasterizer")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+
+        service = Service()
+        service.start_timeout = 60
+
+        self._aguardar_rede_estavel()
+
         try:
-            self.driver = webdriver.Chrome(options=chrome_options)
-        except WebDriverException as e:
+            self.driver = webdriver.Chrome(service=service, options=chrome_options)
+            self.driver.set_window_size(600, 720)
+
+            # 🔥 guarda para uso futuro (downloads, logs, etc)
+            self.download_dir = download_dir
+
+            return self.driver
+        except Exception as e:
             raise RuntimeError(f"Erro ao iniciar ChromeDriver: {e}")
 
-        self.driver.set_window_size(600, 720)
-        return self.driver
+
     
+    def _aguardar_rede_estavel(self, timeout=30):
+        print("⏳ Aguardando rede estabilizar após a troca de VPN...")
+        inicio = time.time()
+
+        while time.time() - inicio < timeout:
+            try:
+                r = requests.get("https://www.google.com", timeout=5)
+                if r.status_code == 200:
+                    print("✅ Rede estabilizada.")
+                    return
+            except requests.exceptions.RequestException:
+                pass
+            time.sleep(3)  # Aguardar mais tempo
+        raise RuntimeError("❌ A rede não estabilizou após a troca de VPN.")
 
     def stop(self):
         try:
@@ -146,47 +191,63 @@ class SeleniumController:
                 continue
         return None
     
-    
-    def wait_for_download(self, timeout=90):
+    def popup_erro_download_visivel(self):
+        try:
+            popup = self.driver.find_element(
+                By.XPATH,
+                "//div[contains(text(),'Erro') or contains(text(),'erro')]"
+            )
+            return popup.is_displayed()
+        except:
+            return False
+    def wait_for_download(self, worker_id, timeout=90):
         """
         Aguarda o ÚLTIMO PDF realmente baixado (por data de modificação)
         """
         t0 = time.time()
-
+      
+        # 🔥 pasta exclusiva do worker
+        download_dir = DOWNLOAD_DIR / f"worker_{worker_id}"
+        download_dir.mkdir(parents=True, exist_ok=True)
+      
         # snapshot inicial
         arquivos_iniciais = {
-            f: os.path.getmtime(os.path.join(DOWNLOAD_DIR, f))
-            for f in os.listdir(DOWNLOAD_DIR)
+            f: os.path.getmtime(download_dir / f)
+            for f in os.listdir(download_dir)
             if f.lower().endswith(".pdf")
         }
-
+      
         while time.time() - t0 < timeout:
+            if self.popup_erro_download_visivel():
+                print("❌ Erro exibido pelo site durante download")
+                raise RuntimeError("❌ Erro exibido pelo site durante download")
+      
             pdfs = []
-
-            for nome in os.listdir(DOWNLOAD_DIR):
+      
+            for nome in os.listdir(download_dir):
                 if not nome.lower().endswith(".pdf"):
                     continue
-
-                caminho = os.path.join(DOWNLOAD_DIR, nome)
-
+      
+                caminho = download_dir / nome
+      
                 try:
                     mtime = os.path.getmtime(caminho)
                 except FileNotFoundError:
                     continue
-
+      
                 # só PDFs criados/modificados depois do clique
                 if nome not in arquivos_iniciais or mtime > arquivos_iniciais.get(nome, 0):
                     if self._arquivo_estavel(caminho):
                         pdfs.append((mtime, caminho))
-
+      
             if pdfs:
-                # retorna o MAIS RECENTE
                 pdfs.sort(key=lambda x: x[0], reverse=True)
                 return pdfs[0][1]
-
+      
             time.sleep(0.5)
-
+      
         return None
+
     def _arquivo_estavel(self, caminho, tentativas=5, intervalo=0.5):
         """
         Verifica se o tamanho do arquivo não muda (download finalizado)
@@ -202,17 +263,48 @@ class SeleniumController:
         except FileNotFoundError:
             return False
         return False   
-       
+    
+class SeleniumWorker(QThread):
+    finished = pyqtSignal(int)
+    error = pyqtSignal(int, str)
+
+    def __init__(self, app, worker_id):
+        super().__init__()
+        self.app = app
+        self.worker_id = worker_id
+
+    def run(self):
+        try:
+            driver = self.app.driver1 if self.worker_id == 1 else self.app.driver2
+            self.app.abrir_detalhe_processo(driver)
+            self.finished.emit(self.worker_id)
+        except Exception as e:
+            self.error.emit(self.worker_id, str(e))
+
+
+      
 class MainApp(QWidget):
+    log_signal = pyqtSignal(str)
     def __init__(self):
         super().__init__()
-        self.tentativas_por_processo = {}
-        self.MAX_TENTATIVAS = 3
+        self.log_signal.connect(self._log_ui)
 
+        self.tentativas_por_processo = {}
+        self.MAX_TENTATIVAS = 2
+        
+        # diretórios de download por worker
+        self.download_dirs = {}
+        
         # 1️⃣ Flags e dados
         self.parar_loop = False
         self.loop_ativo = False
-        self.processando = False
+        self.processando = {1: False, 2: False}
+
+        self.numero_atual = {
+            1: None,
+            2: None
+        }
+
 
         self.indice_processo = 0
         self.total_processos = 0
@@ -221,10 +313,14 @@ class MainApp(QWidget):
         self.arquivo_concluidos = "processos_concluidos.txt"
         self.processos = []
         self.processos_concluidos = set()
-
+        
+        self.vpn = VPNManager()
+      
+       
+        
         # 2️⃣ Criar UI PRIMEIRO
         self._criar_interface()
-
+        self._iniciar_monitor_ip()
         # 3️⃣ Carregar dados DEPOIS
         self._carregar_processos_concluidos()
         self.atualizar_lista_processos()
@@ -234,7 +330,11 @@ class MainApp(QWidget):
             p for p in self.processos
             if p not in self.processos_concluidos
         ]
-           
+        for wid in (1, 2):
+           pasta = Path(DOWNLOAD_DIR) / f"worker_{wid}"
+           pasta.mkdir(parents=True, exist_ok=True)
+           self.download_dirs[wid] = pasta
+
     def _criar_interface(self):  
         self.setWindowTitle("INPI - Automação")
         self.setGeometry(120, 80, 300, 100)
@@ -244,6 +344,17 @@ class MainApp(QWidget):
 
         left = QVBoxLayout()
        # right = QVBoxLayout()
+          # 🔐 VPN UI (AGORA VISÍVEL)
+        self.label_ip = QLabel("🌍 IP: ---")
+        #self.label_ip.setStyleSheet("font-weight: bold; color: green;")
+        #self.btn_trocar = QPushButton("🔁 Trocar ip")
+        #self.btn_trocar.clicked.connect(self.trocar_vpn)
+
+        left.addWidget(self.label_ip)
+        #left.addWidget(self.btn_trocar)
+
+        # Conecta VPN ao iniciar
+        #self.atualizar_ip()
         self.combo_usuario = QComboBox()
         self.combo_usuario.addItem("Selecione o usuário INPI")
         self.combo_usuario.model().item(0).setEnabled(False)  # desabilita seleção
@@ -261,6 +372,29 @@ class MainApp(QWidget):
         left.addWidget(self.combo_usuario)
         left.addWidget(self.input_usuario)
         left.addWidget(self.input_senha)
+        
+        # =========================
+        # 🔐 USUÁRIO 2
+        # =========================
+        self.combo_usuario_2 = QComboBox()
+        self.combo_usuario_2.addItem("Selecione o usuário INPI (Aba 2)")
+        self.combo_usuario_2.model().item(0).setEnabled(False)
+        self.combo_usuario_2.setCurrentIndex(0)
+        
+        self.input_usuario_2 = QLineEdit()
+        self.input_usuario_2.setPlaceholderText("Usuário INPI (Aba 2)")
+        self.input_usuario_2.setReadOnly(True)
+        
+        self.input_senha_2 = QLineEdit()
+        self.input_senha_2.setPlaceholderText("Senha INPI (Aba 2)")
+        self.input_senha_2.setEchoMode(QLineEdit.Password)
+        self.input_senha_2.setReadOnly(True)
+        
+        left.addWidget(self.combo_usuario_2)
+        left.addWidget(self.input_usuario_2)
+        left.addWidget(self.input_senha_2)
+        
+        
         self.btn_iniciar = QPushButton("abrir site inpi")
         self.btn_iniciar.clicked.connect(self.iniciar_selenium)
         left.addWidget(self.btn_iniciar)
@@ -300,7 +434,13 @@ class MainApp(QWidget):
         self.layout.addLayout(left, 2)
         
         self.selenium = SeleniumController()
-        self.driver = None
+        self.selenium.worker_id = 1
+        #self.driver = self.selenium.start()
+
+        self.selenium2 = SeleniumController()
+        self.selenium2.worker_id = 2
+       # self.driver2 = self.selenium2.start()
+
 
         # data holders
         self.processo_atual_id = None
@@ -312,7 +452,42 @@ class MainApp(QWidget):
         for u in self.usuarios:
             self.combo_usuario.addItem(u["usuario"])
         
+        for u in self.usuarios:
+            self.combo_usuario_2.addItem(u["usuario"])
+
         self.combo_usuario.currentIndexChanged.connect(self.on_usuario_selecionado)
+        self.combo_usuario_2.currentIndexChanged.connect(self.on_usuario_selecionado_2)
+
+    def _log_ui(self, mensagem):
+        timestamp = QDateTime.currentDateTime().toString("HH:mm:ss")
+        self.console_log.append(f"[{timestamp}] {mensagem}")
+        self.console_log.ensureCursorVisible()
+        self.label_status.setText(f"Status: {mensagem}")
+
+    def _iniciar_monitor_ip(self):
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.atualizar_ip)
+        self.timer.start(5000)
+        self.atualizar_ip()
+    
+    def atualizar_ip(self):
+        ip = self.vpn.ip_atual()
+        self.label_ip.setText(f"🌍 IP: {ip}")
+
+    def trocar_vpn(self):
+        print("BOTÃO CLICADO")
+        self.label_ip.setText("🔄 Trocando VPN...")
+        ip = self.vpn.conectar()
+        self.label_ip.setText(f"🌍 IP: {ip}")
+        
+    def on_usuario_selecionado_2(self, index):
+        if index <= 0:
+            self.input_usuario_2.clear()
+            self.input_senha_2.clear()
+            return
+        user = self.usuarios[index - 1]
+        self.input_usuario_2.setText(user["usuario"])
+        self.input_senha_2.setText(user["senha"])
 
     def on_usuario_selecionado(self, index):
         if index == 0:
@@ -324,7 +499,7 @@ class MainApp(QWidget):
         self.input_usuario.setText(user["usuario"])
         self.input_senha.setText(user["senha"])
 
-
+   
     def parar_processamento(self):
         if not self.loop_ativo:
             return
@@ -346,18 +521,21 @@ class MainApp(QWidget):
                 if numero:
                     self.processos_concluidos.add(numero)
     
-            # carrega lista de processos
-            #QTimer.singleShot(200, self.atualizar_lista_processos)
+           
+
+    
+       
     def iniciar_processamento_em_lote(self):
 
         # 🔐 Verifica se o Chrome/Selenium está ativo
-        if not self.driver or not self.selenium.driver:
+        if not hasattr(self, "driver1") or not hasattr(self, "driver2"):
             self.ui_warning(
                 "Chrome não iniciado",
-                "Abra o site do INPI antes de iniciar a extração."
+                "Abra os dois Chromes antes de iniciar a extração."
             )
-            self.log("⚠️ Tentativa de iniciar lote sem Chrome aberto.")
+            self.log("⚠️ Tentativa de iniciar lote sem Chromes abertos.")
             return
+
 
         if not self.processos:
             self.ui_warning("Aviso", "Nenhum processo carregado.")
@@ -368,7 +546,15 @@ class MainApp(QWidget):
         self.lista_processos.setEnabled(False)
         
          # 🔥 CONVERTE LISTA EM FILA
-        self.processos = deque(self.processos)
+        self.processos_1 = deque()
+        self.processos_2 = deque()
+        
+        for i, p in enumerate(self.processos):
+            if i % 2 == 0:
+                self.processos_1.append(p)
+            else:
+                self.processos_2.append(p)
+
         
         self.total_processos = len(self.processos)
         self.processos_extraidos = 0
@@ -377,7 +563,11 @@ class MainApp(QWidget):
         self.log("🚀 Iniciando processamento em lote...")
         
 
-        self._processar_proximo()
+        self._processar_proximo(1)
+        self._processar_proximo(2)
+
+        
+
     def carregar_usuarios_excel(self):
         self.usuarios = []  # lista de dicts
 
@@ -397,40 +587,43 @@ class MainApp(QWidget):
                 "usuario": str(row[0]).strip(),
                 "senha": str(row[1]).strip()
             })
-    def _processar_proximo(self):
-        if self.processando:
-            return
-
-        if not self.processos:
-            self.log("🏁 Fila finalizada")
-            return
-
-        self.processando = True
-
-        # 🔥 REMOVE AQUI
-        self.numero_atual = self.processos.popleft()
-        self.tentativas_por_processo.setdefault(self.numero_atual, 0)
-        self.log(f"📦 Processando processo {self.numero_atual}"
-                 f"(tentativa {self.tentativas_por_processo[self.numero_atual] + 1})")
-
-        try:
-            self.abrir_detalhe_processo()
-        except Exception as e:
-            self.log(f"❌ Erro inesperado: {e}")
-            self.processando = False
-            QTimer.singleShot(0, self._processar_proximo)
-
-    def popup_erro_download_visivel(self):
-        try:
-            popup = self.driver.find_element(
-                By.XPATH,
-                "//div[contains(text(),'Erro') or contains(text(),'erro')]"
-            )
-            return popup.is_displayed()
-        except:
-            return False
-
     
+    def _erro_worker(self, worker_id, mensagem):
+        self.log(f"❌ Worker {worker_id} — Erro: {mensagem}")
+        self.processando[worker_id] = False
+    
+        QTimer.singleShot(
+            0, lambda: self._processar_proximo(worker_id)
+        )
+
+
+    def _processar_proximo(self, worker_id):
+        if self.processando[worker_id]:
+            return
+    
+        fila = self.processos_1 if worker_id == 1 else self.processos_2
+        if not fila:
+            self.log(f"🏁 Fila finalizada (Worker {worker_id})")
+            return
+    
+        self.processando[worker_id] = True
+    
+        numero = fila.popleft()
+        self.numero_atual[worker_id] = numero
+        self.tentativas_por_processo.setdefault(numero, 0)
+    
+        self.log(
+            f"📦 tela {worker_id} processando {numero} "
+            f"(tentativa {self.tentativas_por_processo[numero] + 1})"
+        )
+    
+        worker = SeleniumWorker(self, worker_id)
+        worker.finished.connect(self._finalizar_processo_atual)
+        worker.error.connect(self._erro_worker)
+        worker.start()
+    
+        # 🔒 mantém referência (IMPORTANTE!)
+        setattr(self, f"_worker_{worker_id}", worker)
 
     def selecionar_processo(self, item):
         if self.processando:
@@ -464,15 +657,7 @@ class MainApp(QWidget):
         )
     
     def log(self, mensagem):
-
-        timestamp = QDateTime.currentDateTime().toString("HH:mm:ss")
-
-        # console estilo VSCode
-        self.console_log.append(f"[{timestamp}] {mensagem}")
-        self.console_log.ensureCursorVisible()
-
-        # status curto
-        self.label_status.setText(f"Status: {mensagem}")
+        self.log_signal.emit(mensagem)
 
 
     def atualizar_lista_processos(self):
@@ -524,28 +709,67 @@ class MainApp(QWidget):
             self.log(f"Falha ao carregar processos do Excel")
 
     def iniciar_selenium(self):
-        if self.driver:
-            self.log("Chrome já iniciado — reutilizando sessão.")
-            return
-
-        self.log("Iniciando Chrome + extensão...")
-        self.btn_iniciar.setEnabled(False)  # 🔒 trava o botão
-
+        self.log("Iniciando 2 Chromes independentes...")
+   
         try:
-            self.driver = self.selenium.start()
-            self.log("Chrome iniciado")
-            self.driver.get(URL_INPI)
+            # Fecha se já existir
+            if hasattr(self, "driver1") and self.driver1:
+                self.selenium1.stop()
+   
+            if hasattr(self, "driver2") and self.driver2:
+                self.selenium2.stop()
+   
+            time.sleep(3)
+   
+            # 🔹 DRIVER 1
+            self.selenium1 = SeleniumController()
+            self.selenium1.worker_id = 1
+            self.driver1 = self.selenium1.start()
+            self.driver1.get(URL_INPI)
+   
+            # 🔹 DRIVER 2
+            self.selenium2 = SeleniumController()
+            self.selenium2.worker_id = 2
+            self.driver2 = self.selenium2.start()
+            self.driver2.get(URL_INPI)
+   
+            self.log("✅ Dois Chromes iniciados com sucesso")
+
         except Exception as e:
-            self.btn_iniciar.setEnabled(True)  # reabilita se falhar
-            QMessageBox.critical(self, "Erro", f"Falha ao iniciar Selenium: ")
-            print(self, "Erro", f"Falha ao iniciar Selenium: ")
-    def login_inpi(self): 
-        self.driver.get("https://busca.inpi.gov.br/pePI/") 
-        time.sleep(3) 
-        self.driver.find_element(By.NAME, "T_Login").send_keys( self.input_usuario.text() ) 
-        self.driver.find_element(By.NAME, "T_Senha").send_keys( self.input_senha.text() ) 
-        self.driver.find_element( By.XPATH, "//input[@type='submit' and contains(@value,'Continuar')]" ).click()
-    def garantir_login(self):
+           QMessageBox.critical(self, "Erro", str(e))
+    def login_duas_abas(self):
+        self.login_inpi(self.driver1, self.input_usuario, self.input_senha)
+        self.garantir_login(self.driver1)
+        
+        self.login_inpi(self.driver2, self.input_usuario_2, self.input_senha_2)
+        self.garantir_login(self.driver2)
+
+        self.log("✅ Login realizado nos dois navegadores")
+
+    def _usuario_atual(self, driver):
+        return self.input_usuario if driver == self.driver1 else self.input_usuario_2
+
+    def _senha_atual(self, driver):
+        return self.input_senha if driver == self.driver1 else self.input_senha_2
+   
+
+    def login_inpi(self, driver, usuario_input, senha_input):
+        driver.get("https://busca.inpi.gov.br/pePI/")
+        time.sleep(3)
+
+        driver.find_element(By.NAME, "T_Login").clear()
+        driver.find_element(By.NAME, "T_Login").send_keys(usuario_input.text())
+
+        driver.find_element(By.NAME, "T_Senha").clear()
+        driver.find_element(By.NAME, "T_Senha").send_keys(senha_input.text())
+
+        driver.find_element(
+            By.XPATH,
+            "//input[@type='submit' and contains(@value,'Continuar')]"
+        ).click()
+        
+    def garantir_login(self, driver):
+
         """
          Garante que o usuário esteja:
         1) Logado
@@ -554,7 +778,7 @@ class MainApp(QWidget):
 
         try:
              # 🔎 Já está na página correta?
-            self.driver.find_element(By.NAME, "NumPedido")
+            driver.find_element(By.NAME, "NumPedido")
             self.log("✅ Usuário já está logado e na página correta.")
             return
         except:
@@ -566,15 +790,15 @@ class MainApp(QWidget):
         # LOGIN
         # ======================
         try:
-            self.login_inpi()
-            self.tratar_popups_login()
+            self.login_inpi(driver, self._usuario_atual(driver), self._senha_atual(driver))
+            self.tratar_popups_login(driver)
         except Exception as e:
             raise Exception(f"Falha no login: {e}")
 
         # ======================
         # AGUARDA PÁGINA PRINCIPAL
          # ======================
-        WebDriverWait(self.driver, WAIT_MEDIUM).until(
+        WebDriverWait(driver, WAIT_MEDIUM).until(
             EC.presence_of_element_located((By.TAG_NAME, "body"))
         )
 
@@ -584,14 +808,14 @@ class MainApp(QWidget):
         # CLICA NO MENU MARCAS
         # ======================
         try:
-            menu_marcas = WebDriverWait(self.driver, WAIT_MEDIUM).until(
+            menu_marcas = WebDriverWait(driver, WAIT_MEDIUM).until(
                 EC.presence_of_element_located(
                     (By.CSS_SELECTOR, "area[href*='Pesquisa_num_processo.jsp']")
                  )
             )
        
             # ⚠️ area precisa ser clicada via JS
-            self.driver.execute_script("arguments[0].click();", menu_marcas)
+            driver.execute_script("arguments[0].click();", menu_marcas)
        
         except TimeoutException:
             raise Exception("❌ Não foi possível localizar o menu Marcas")
@@ -600,16 +824,16 @@ class MainApp(QWidget):
         # AGUARDA CAMPO NumPedido
         # ======================
         try:
-            WebDriverWait(self.driver, WAIT_MEDIUM).until(
+            WebDriverWait(driver, WAIT_MEDIUM).until(
                 EC.presence_of_element_located((By.NAME, "NumPedido"))
             )
             self.log("✅ Página de pesquisa por processo carregada com sucesso.")
         except TimeoutException:
             raise Exception("❌ Campo NumPedido não apareceu após acessar Marcas")
     
-    def extrair_por_rotulo(self, rotulo):
+    def extrair_por_rotulo(self, driver, rotulo):
         try:
-            el = WebDriverWait(self.driver, 15).until(
+            el = WebDriverWait(driver, 15).until(
                 EC.presence_of_element_located((
                     By.XPATH,
                     f"//td[contains(normalize-space(),'{rotulo}')]/following-sibling::td[1]"
@@ -620,21 +844,9 @@ class MainApp(QWidget):
             self.log(f"⏱ {rotulo} não encontrado")
             return ""
 
-    def extrair_titular(self):
-         return self.extrair_por_rotulo("Titular(1):")
-    def extrair_dados_pagina(self):
-      
-        self.log("🧩 Iniciando extração estruturada dos dados do INPI")
-        #self.log_pagina_atual("antes da extração")
-        self.titular = self.extrair_titular()
-       
+   
 
-        self.log("📋 Resumo da extração:")
-        self.log(f"   Titular       : {self.titular or 'NÃO ENCONTRADO'}")
-        
-        self.log("✅ Extração finalizada com sucesso.")
-
-    def tratar_popups_login(self, timeout=5):
+    def tratar_popups_login(self, driver, timeout=5):
         """
         Trata qualquer popup que apareça durante login:
         - alert JS
@@ -643,8 +855,8 @@ class MainApp(QWidget):
         """
         # 🔔 ALERT JavaScript
         try:
-            WebDriverWait(self.driver, timeout).until(EC.alert_is_present())
-            alert = self.driver.switch_to.alert
+            WebDriverWait(driver, timeout).until(EC.alert_is_present())
+            alert = driver.switch_to.alert
             texto = alert.text
             alert.accept()
             self.log(f"⚠️ Alert fechado automaticamente: {texto}")
@@ -653,7 +865,7 @@ class MainApp(QWidget):
             pass
         except UnexpectedAlertPresentException:
             try:
-                self.driver.switch_to.alert.accept()
+                driver.switch_to.alert.accept()
                 self.log("⚠️ Alert inesperado fechado")
             except Exception:
                 pass
@@ -664,16 +876,16 @@ class MainApp(QWidget):
             if len(handles) > 1:
                 principal = handles[0]
                 for h in handles[1:]:
-                    self.driver.switch_to.window(h)
-                    self.driver.close()
+                    driver.switch_to.window(h)
+                    driver.close()
                     self.log("🪟 Popup de janela fechado")
-                self.driver.switch_to.window(principal)
+                driver.switch_to.window(principal)
         except Exception:
             pass
 
         # 🧱 MODAL HTML (se existir)
         try:
-            modal = self.driver.find_elements(
+            modal = driver.find_elements(
                 By.XPATH,
                 "//button[contains(.,'Fechar') or contains(.,'OK') or contains(.,'Continuar')]"
             )
@@ -691,11 +903,11 @@ class MainApp(QWidget):
             lambda m=mensagem, t=tempo: mostrar_toast(m, t)
         )
     
-    def garantir_acesso_peticiones(self):
+    def garantir_acesso_peticiones(self, driver):
         try:
             self.log("🔍 Verificando necessidade de amplo acesso às petições...")
     
-            link_amplo = WebDriverWait(self.driver, 1).until(
+            link_amplo = WebDriverWait(driver, 1).until(
                 EC.presence_of_element_located((
                     By.XPATH,
                     "//a[contains(normalize-space(),'Clique aqui para ter acesso as petições')]"
@@ -704,13 +916,13 @@ class MainApp(QWidget):
 
             self.log("🔐 Acesso restrito detectado. Solicitando liberação...")
     
-            self.driver.execute_script("arguments[0].scrollIntoView(true);", link_amplo)
+            driver.execute_script("arguments[0].scrollIntoView(true);", link_amplo)
             time.sleep(0.5)
     
             link_amplo.click()
 
             # aguarda o modal abrir (título da página do popup)
-            WebDriverWait(self.driver, 1).until(
+            WebDriverWait(driver, 1).until(
                 EC.title_contains("Finalidade do Acesso")
             )
 
@@ -718,7 +930,7 @@ class MainApp(QWidget):
     
             # dependendo do INPI, basta abrir o modal para liberar
             # aguarda voltar para a página principal
-            WebDriverWait(self.driver, 1).until(
+            WebDriverWait(driver, 1).until(
                 EC.not_(EC.title_contains("Finalidade do Acesso"))
             )
 
@@ -728,34 +940,34 @@ class MainApp(QWidget):
             # não existe bloqueio → segue normal
             self.log("🔓 Nenhum bloqueio de petições detectado")
     
-    def liberar_acesso_peticiones(self):
-        janela_principal = self.driver.current_window_handle
+    def liberar_acesso_peticiones(self, driver):
+        janela_principal = driver.current_window_handle
 
         try:
             self.log("🔍 Verificando popup de amplo acesso...")
 
             # aguarda abrir nova janela (popup)
-            WebDriverWait(self.driver, 1).until(
+            WebDriverWait(driver, 1).until(
                 lambda d: len(d.window_handles) > 1
             )
 
             # muda para o popup
-            for janela in self.driver.window_handles:
+            for janela in driver.window_handles:
                 if janela != janela_principal:
-                    self.driver.switch_to.window(janela)
+                    driver.switch_to.window(janela)
                     break
 
             self.log("🪟 Popup de amplo acesso detectado")
 
             # aguarda checkbox aparecer
-            checkbox = WebDriverWait(self.driver, 1).until(
+            checkbox = WebDriverWait(driver, 1).until(
                 EC.element_to_be_clickable((By.ID, "aceite"))
             )
             checkbox.click()
             self.log("☑️ Checkbox de concordância marcado")
 
             # botão Enviar (input submit)
-            botao_enviar = WebDriverWait(self.driver, 1).until(
+            botao_enviar = WebDriverWait(driver, 1).until(
                 EC.element_to_be_clickable((
                     By.XPATH,
                     "//input[@type='submit' and @name='Enviar']"
@@ -765,33 +977,35 @@ class MainApp(QWidget):
             self.log("📨 Formulário enviado")
 
             # aguarda popup fechar
-            WebDriverWait(self.driver, 1).until(
+            WebDriverWait(driver, 1).until(
                 lambda d: len(d.window_handles) == 1
             )
 
             # volta para janela principal
-            self.driver.switch_to.window(janela_principal)
+            driver.switch_to.window(janela_principal)
             self.log("✅ Acesso às petições liberado com sucesso")
 
         except TimeoutException:
             self.log("🔓 Nenhum popup de amplo acesso detectado")
-            self.driver.switch_to.window(janela_principal)
+            driver.switch_to.window(janela_principal)
                 
-    def abrir_detalhe_processo(self):
-        numero = self.numero_atual
+    def abrir_detalhe_processo(self, driver):
+        worker_id = 1 if driver == self.driver1 else 2
+        numero = self.numero_atual[worker_id]
+
         if not numero:
-            self.ui_warning(self, "Aviso", "Informe o número do processo.")
+            self.ui_warning( "Aviso", "Informe o número do processo.")
             return
 
         try:
             self.log("🔐 Garantindo login...")
-            self.garantir_login()
-            self.tratar_popups_login()
+            self.garantir_login(driver)
+            self.tratar_popups_login(driver)
             self.log("🔎 Acessando página de pesquisa...")
-            self.driver.get(URL_DESTINO)
+            driver.get(URL_DESTINO)
 
             # aguarda campo NumPedido visível
-            campo = WebDriverWait(self.driver, 1).until(
+            campo = WebDriverWait(driver, 1).until(
                 EC.visibility_of_element_located((By.NAME, "NumPedido"))
             )
             campo.clear()
@@ -802,7 +1016,7 @@ class MainApp(QWidget):
 
             # aguarda link de detalhe
             self.log("📄 Aguardando link de detalhe...")
-            link = WebDriverWait(self.driver, 1).until(
+            link = WebDriverWait(driver, 1).until(
                 EC.element_to_be_clickable(
                     (By.CSS_SELECTOR, "a[href*='MarcasServletController?Action=detail']")
                 )
@@ -812,106 +1026,93 @@ class MainApp(QWidget):
             link.click()
     
             # aguarda página de detalhe
-            WebDriverWait(self.driver, 1).until(
+            WebDriverWait(driver, 1).until(
     EC.presence_of_element_located((By.TAG_NAME, "body"))
 )
             time.sleep(1)  # estabilidade
-            print("🌐 URL atual:", self.driver.current_url)
+            print("🌐 URL atual:", driver.current_url)
            # self.extrair_dados_pagina()
             # 🔓 garante acesso às petições (se necessário)
-            self.garantir_acesso_peticiones()
-            self.liberar_acesso_peticiones()    # trata o popup
+            self.garantir_acesso_peticiones(driver)
+            self.liberar_acesso_peticiones(driver)    # trata o popup
             # ✅ tenta baixar PDF
-            self.tentar_clicar_botao_pdf()
+            self.tentar_clicar_botao_pdf(driver, worker_id, numero)
+
         
         except UnexpectedAlertPresentException:
-            self.tratar_popups_login()
+            self.tratar_popups_login(driver)
             self.log("⚠️ Alert inesperado tratado, retomando fluxo")
         except TimeoutException:
-            if "Nenhum resultado foi encontrado" in self.driver.page_source:
+            if "Nenhum resultado foi encontrado" in driver.page_source:
                 self.log(f"❌ Processo {numero} inexistente no INPI")
+                self._registrar_processo_concluido(numero)
             else:
                 self.log(f"⏱ Timeout inesperado ao abrir processo {numero}")
 
-            QTimer.singleShot(0, self._finalizar_processo_atual)
+            QTimer.singleShot(0, lambda: self._finalizar_processo_atual(worker_id))
 
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Falha ao abrir detalhe do processo:")
-            QTimer.singleShot(0, self._finalizar_processo_atual)
+            QMessageBox.critical(self, "Erro", f"Falha ao abrir detalhe do processo:{e}")
+        
+            QTimer.singleShot(0, self.parar_processamento)
              
-    def tentar_clicar_botao_pdf(self):
-        try:
-            img = self.driver.find_element(
-                By.XPATH,
-                "//div[@id='389' or @id='394']/ancestor::tr//img[contains(@class,'salvaDocumento')]"
-            )
+    def tentar_clicar_botao_pdf(self, driver, worker_id, numero):
+          try:
+              img = driver.find_element(
+                  By.XPATH,
+                  "//div[@id='389' or @id='394']/ancestor::tr//img[contains(@class,'salvaDocumento')]"
+              )
+  
+              img.click()
+              self.log("Clique no ícone PDF executado para ID 389 ou 394.")
+  
+              time.sleep(0.6)
+              self.tratar_modal_captcha(driver, worker_id)
 
-            img.click()
-            self.log("Clique no ícone PDF executado para ID 389 ou 394.")
 
-            QTimer.singleShot(
-                600,
-                lambda: QTimer.singleShot(600, self.tratar_modal_captcha)
-
-            )
-
-        except Exception :
-            self.log(f"Nenhum PDF encontrado para ID 389 ou 394")
-            QTimer.singleShot(0, self._finalizar_processo_atual)
-        numero = self.numero_atual
-        self.tentativas_por_processo[numero] += 1
+  
+          except Exception :
+              self.log(f"Nenhum PDF encontrado para ID 389 ou 394")
+              self._registrar_processo_concluido(numero)
+              QTimer.singleShot(0, lambda: self._finalizar_processo_atual(worker_id))
       
-        self.log(f"⚠️ Falha no download do processo {numero}")
-      
-        if self.tentativas_por_processo[numero] >= self.MAX_TENTATIVAS:
-            self.log(f"❌ Processo {numero} excedeu tentativas. Ignorado.")
-            self._registrar_processo_concluido(numero)
-            self._finalizar_processo_atual()
-            return
-      
-        # 🔁 REINSERE NA FRENTE DA FILA
-        self.processos.appendleft(numero)
-      
-        self.log(f"🔁 Reagendando processo {numero} "
-                 f"(tentativa {self.tentativas_por_processo[numero] + 1})")
-      
-        self.numero_atual = None
-        self.processando = False
-      
-        QTimer.singleShot(1000, self._processar_proximo)
     
-    
-    def download_iniciado(self):
-        for f in os.listdir(DOWNLOAD_DIR):
-            if f.lower().endswith(".crdownload"):
-                return True
-        return False
-    def _repetir_processo_atual(self, motivo):
-        numero = self.numero_atual
-      
+    def _repetir_processo_atual(self, worker_id, motivo):
+        numero = self.numero_atual[worker_id]
+
         self.tentativas_por_processo.setdefault(numero, 0)
         self.tentativas_por_processo[numero] += 1
-      
+
         self.log(
-            f"⚠️ Falha no download do processo {numero} "
+            f"⚠️ Worker {worker_id} — Falha no download do processo {numero} "
             f"(tentativa {self.tentativas_por_processo[numero]}): {motivo}"
         )
-      
-        if self.tentativas_por_processo[numero] >= self.MAX_TENTATIVAS:
-            self.log(f"❌ Processo {numero} excedeu tentativas e será ignorado.")
-            self._registrar_processo_concluido(numero)
-            self.numero_atual = None
-            self.processando = False
-            QTimer.singleShot(0, self._processar_proximo)
-            return
-      
-        # 🔁 REAGENDAR O MESMO PROCESSO
-        self.numero_atual = None
-        self.processando = False
-      
-        QTimer.singleShot(3000, self._processar_proximo)
 
-    def tratar_modal_captcha(self):
+        if self.tentativas_por_processo[numero] >= self.MAX_TENTATIVAS:
+            self.log(
+                f"❌ Worker {worker_id} — Processo {numero} excedeu tentativas e será ignorado."
+            )
+
+            # ❌ NÃO REGISTRA CONCLUÍDO AQUI (mantido como você tinha)
+            self.numero_atual[worker_id] = None
+            self.processando[worker_id] = False
+
+            QTimer.singleShot(
+                0, lambda: self._processar_proximo(worker_id)
+            )
+            return
+
+        # 🔁 REAGENDAR O MESMO WORKER
+        self.numero_atual[worker_id] = None
+        self.processando[worker_id] = False
+
+        QTimer.singleShot(
+            3000, lambda: self._processar_proximo(worker_id)
+        )
+
+
+    def tratar_modal_captcha(self, driver, worker_id):
+
         """
         Fluxo:
         - aguarda modal #janelaModalCaptchaDownload visível (ou .g-recaptcha)
@@ -927,13 +1128,13 @@ class MainApp(QWidget):
             modal = None
             while time.time() - t0 < WAIT_LONG:
                 try:
-                    modal = self.driver.find_element(By.CSS_SELECTOR, "#janelaModalCaptchaDownload")
+                    modal = driver.find_element(By.CSS_SELECTOR, "#janelaModalCaptchaDownload")
                     if modal.is_displayed():
                         break
                 except NoSuchElementException:
                     # fallback: procurar .g-recaptcha direto
                     try:
-                        g = self.driver.find_element(By.CSS_SELECTOR, ".g-recaptcha")
+                        g = driver.find_element(By.CSS_SELECTOR, ".g-recaptcha")
                         if g.is_displayed():
                             break
                     except NoSuchElementException:
@@ -946,13 +1147,13 @@ class MainApp(QWidget):
                 self.log("[captcha] modal visível")
 
             # tenta clicar a checkbox do reCAPTCHA (iframe com src contendo 'anchor')
-            iframe = self.selenium_get_recaptcha_iframe()
+            iframe = self.selenium_get_recaptcha_iframe(driver)
             if iframe:
                 try:
-                    self.driver.switch_to.frame(iframe)
+                    driver.switch_to.frame(iframe)
                     # checkbox id recaptcha-anchor
                     try:
-                        checkbox = WebDriverWait(self.driver, WAIT_SHORT).until(
+                        checkbox = WebDriverWait(driver, WAIT_SHORT).until(
                             EC.element_to_be_clickable((By.ID, "recaptcha-anchor"))
                         )
                         checkbox.click()
@@ -960,18 +1161,19 @@ class MainApp(QWidget):
                     except Exception as e:
                         self.log(f"[captcha] falha ao clicar checkbox: ")
                     finally:
-                        self.driver.switch_to.default_content()
+                        driver.switch_to.default_content()
                 except Exception as e:
                     self.log(f"[captcha] erro switch_to.frame: ")
             else:
                 self.log("[captcha] iframe do recaptcha não encontrado")
-            div = self.identificar_captcha_imagem()
+            div = self.identificar_captcha_imagem(driver)
             if div:
                 try:
-                    self.driver.switch_to.frame(div)
+                    driver.switch_to.frame(div)
                     # checkbox id recaptcha-anchor
                     try:
-                        checkbox = WebDriverWait(self.driver, WAIT_SHORT).until(
+                        
+                        checkbox = WebDriverWait(driver, WAIT_SHORT).until(
                             EC.element_to_be_clickable((By.ID, "solver-button"))
                         )
                         checkbox.click()
@@ -979,7 +1181,7 @@ class MainApp(QWidget):
                     except Exception as e:
                         self.log(f"[buster] falha ao clicar checkbox: ")
                     finally:
-                        self.driver.switch_to.default_content()
+                        driver.switch_to.default_content()
                 except Exception as e:
                     self.log(f"[buster] erro switch_to.frame:")
             else:
@@ -989,7 +1191,7 @@ class MainApp(QWidget):
             # Aqui aguardamos o token aparecer no DOM (g-recaptcha-response ou input#recaptcha-token)
             self.log("[captcha] aguardando token resolver (sem timeout)...")
             token = None
-            timeout = 120  # segundos
+            timeout = 420  # segundos
             inicio = time.time()
 
             while time.time() - inicio < timeout:
@@ -997,7 +1199,7 @@ class MainApp(QWidget):
                     # 1) input hidden recaptcha-token (algumas implementações do INPI colocam o token aqui)
                    
                     try:
-                        token_input = self.driver.find_element(By.ID, "recaptcha-token")
+                        token_input = driver.find_element(By.ID, "recaptcha-token")
                         val = token_input.get_attribute("value")
                         if val and len(val) > 10:
                             token = val
@@ -1007,7 +1209,7 @@ class MainApp(QWidget):
 
                     # 2) textarea.g-recaptcha-response
                     try:
-                        gr = self.driver.find_element(By.CSS_SELECTOR, "textarea.g-recaptcha-response")
+                        gr = driver.find_element(By.CSS_SELECTOR, "textarea.g-recaptcha-response")
                         val2 = gr.get_attribute("value")
                         if val2 and len(val2) > 10:
                             token = val2
@@ -1033,37 +1235,29 @@ class MainApp(QWidget):
                         return true;
                     })(arguments[0]);
                     """
-                    self.driver.execute_script(script_set, token)
+                    driver.execute_script(script_set, token)
                 except Exception as e:
                     print("Erro ao injetar token via JS:")
 
                 # clica no botão #captchaButton (Download)
                 try:
-                    btn = WebDriverWait(self.driver, 1).until(
+                    btn = WebDriverWait(driver,1).until(
                         EC.element_to_be_clickable((By.ID, "captchaButton"))
                     )
                     btn.click()
                     self.log("[captcha] botão Download clicado")
-                    
-                    # ⏱ aguarda alguns segundos para ver se o download inicia
-                    time.sleep(3)
-                    
-                    if not self.download_iniciado():
-                        self._repetir_processo_atual(
-                            "Clique em Download não iniciou download (popup de erro do INPI)"
-                        )
-                        return                # aguarda o PDF ser baixado
-                    caminho_pdf = self.selenium.wait_for_download()
+                # aguarda o PDF ser baixado
+                    caminho_pdf = self.selenium.wait_for_download(worker_id)
 
                     if caminho_pdf:
-                        self._renomear_pdf_para_processo(caminho_pdf)
+                        self._renomear_pdf_para_processo(worker_id, caminho_pdf)
+
                     else:
-                        self._repetir_processo_atual("Download não iniciado / popup de erro do INPI")
-                        return
+                        self.log("❌ PDF não foi baixado.")
+                        self._finalizar_processo_atual
+    
                 except Exception as e:
-                    
-                    self._repetir_processo_atual(f"Falha ao clicar Download: {e}")
-                    return
+                    self.log(f"[captcha] falha ao clicar #captchaButton: {e}")
             else:
                 self.log("[captcha] token não detectado — talvez Buster não resolveu automaticamente.")
 
@@ -1071,70 +1265,91 @@ class MainApp(QWidget):
                 self.log("[captcha] nenhum PDF detectado no diretório de download (timeout).")
         except Exception as e:
             self.log(f"[captcha] erro no tratamento do modal: {e}")
-        
-   
-    def _renomear_pdf_para_processo(self, caminho_pdf):
+                
+
+    def _renomear_pdf_para_processo(self, worker_id, caminho_pdf):
         try:
-            numero = self.numero_atual
+            numero = self.numero_atual.get(worker_id)
             if not numero:
-                self.log("⚠️ Processo atual não definido para renomear PDF.")
+                self.log(
+                    f"⚠️ Worker {worker_id} — Processo atual não definido para renomear PDF."
+                )
                 return
-
+    
             # sanitiza o número (remove caracteres inválidos)
-            nome_seguro = "".join(c for c in numero if c.isalnum())
-
+            nome_seguro = "".join(c for c in str(numero) if c.isalnum())
+    
+            # pasta correta do worker (garantido)
+            pasta_worker = Path(self.download_dirs[worker_id])
+    
+            # garante que a pasta existe (proteção extra)
+            pasta_worker.mkdir(parents=True, exist_ok=True)
+    
             novo_nome = f"{nome_seguro}.pdf"
-            novo_caminho = DOWNLOAD_DIR / novo_nome
-
+            novo_caminho = pasta_worker / novo_nome
+    
             # se já existir, adiciona timestamp
             if novo_caminho.exists():
                 ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-                novo_caminho = DOWNLOAD_DIR / f"{nome_seguro}_{ts}.pdf"
-
-            shutil.move(caminho_pdf, novo_caminho)
-
-            self.log(f"📄 PDF renomeado para: {novo_caminho.name}")
-            QTimer.singleShot(0, self._finalizar_processo_atual)
+                novo_caminho = pasta_worker / f"{nome_seguro}_{ts}.pdf"
+    
+            # caminho_pdf pode ser str ou Path
+            caminho_pdf = Path(caminho_pdf)
+    
+            # renomeia (mesma pasta, sem mover entre workers)
+            shutil.move(str(caminho_pdf), str(novo_caminho))
+    
+            self.log(
+                f"📄 Worker {worker_id} — PDF renomeado para: {novo_caminho.name}"
+            )
+    
+            self._registrar_processo_concluido(numero)
+    
+            QTimer.singleShot(
+                0, lambda: self._finalizar_processo_atual(worker_id)
+            )
+    
         except Exception as e:
-            self.log(f"❌ Erro ao renomear PDF: {e}")
+            self.log(
+                f"❌ Worker {worker_id} — Erro ao renomear PDF: {e}"
+            )
+    
 
-        
-
-    def identificar_captcha_imagem(self) -> bool:
+    def identificar_captcha_imagem(self, driver) -> bool:
         """
         Retorna True se o CAPTCHA de seleção de imagens estiver presente.
         NÃO interage com o CAPTCHA.
         """
         try:
             # procura iframe do challenge (bframe)
-            iframes = self.driver.find_elements(By.TAG_NAME, "div")
+            iframes = driver.find_elements(By.TAG_NAME, "div")
     
             for iframe in iframes:
                 src = iframe.get_attribute("src") or ""
                 if "api2/bframe" in src:
                     # entra no iframe do desafio
-                    self.driver.switch_to.frame(iframe)
+                    driver.switch_to.frame(iframe)
 
                     try:
                         # procura a div principal do desafio de imagens
-                        self.driver.find_element(By.ID, "button-holder help-button-holder")
+                        driver.find_element(By.ID, "solver-button")
                         return True
                     except NoSuchElementException:
                         pass
                     finally:
                         # sempre volta para o DOM principal
-                        self.driver.switch_to.default_content()
+                        driver.switch_to.default_content()
 
             return False
 
         except Exception:
-            self.driver.switch_to.default_content()
+            driver.switch_to.default_content()
             return False
 
-    def selenium_get_recaptcha_iframe(self):
+    def selenium_get_recaptcha_iframe(self, driver):
         # procura iframe que contém 'anchor' (checkbox) ou 'api2/anchor'
         try:
-            iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
+            iframes = driver.find_elements(By.TAG_NAME, "iframe")
             for fr in iframes:
                 src = fr.get_attribute("src") or ""
                 if "api2/anchor" in src or "recaptcha" in src and "anchor" in src:
@@ -1148,32 +1363,33 @@ class MainApp(QWidget):
             pass
         return None 
            
-    def _pdf_baixado_com_sucesso(self, caminho_final):
+    def _pdf_baixado_com_sucesso(self, worker_id, caminho_final):
         caminho_pdf = os.path.abspath(caminho_final)
 
-        self.log(f"📥 PDF salvo: {caminho_pdf}")
+        self.log(f"📥 Worker {worker_id} — PDF salvo: {caminho_pdf}")
 
-        QTimer.singleShot(0, self._finalizar_processo_atual)
+        QTimer.singleShot(
+            0, lambda: self._finalizar_processo_atual(worker_id)
+        )
+
+
 
     
     def _atualizar_contador_ui(self):
         texto = f"Processos extraídos: {self.processos_extraidos} / {self.total_processos}"
         self.label_contador.setText(texto)
         
-    def _finalizar_processo_atual(self):
-        numero = self.numero_atual  # ✅ já existe
-
-        self._registrar_processo_concluido(numero)
-
+    def _finalizar_processo_atual(self, worker_id):
+        self.processando[worker_id] = False
+        self.numero_atual[worker_id] = None
         self.processos_extraidos += 1
         self._atualizar_contador_ui()
 
-        self.log(f"✔ Processo {numero} finalizado")
+        QTimer.singleShot(
+            0, lambda: self._processar_proximo(worker_id)
+        )
 
-        self.numero_atual = None
-        self.processando = False
 
-        QTimer.singleShot(200, self._processar_proximo)
 
                                      
                         
