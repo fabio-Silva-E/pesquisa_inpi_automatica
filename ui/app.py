@@ -1,10 +1,12 @@
 # ui/app.py
+import pyautogui
 import os
 import time
 import sys
 import tempfile
 import shutil
 import requests
+import threading
 print(requests.get("https://api.ipify.org").text)
 
 from collections import deque
@@ -12,6 +14,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 from datetime import datetime
 from openpyxl import Workbook, load_workbook
+
 
 from PyQt5.QtWidgets import (
     QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLineEdit, QListWidget,
@@ -53,6 +56,7 @@ PROFILE_PATH = BASE_DIR / "ui"/ "chrome_profile"
 
 EXCEL_PROCESSOS_PATH = BASE_DIR / "processos.xlsx"
 
+caminho = BASE_DIR / "solver_button.png"
 
 DOWNLOAD_DIR = BASE_DIR / "pdfs"
 DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -90,6 +94,7 @@ class SeleniumController:
         chrome_options = Options()
         
         # 🔐 worker_id dinâmico (não quebra código antigo)
+        
         worker_id = getattr(self, "worker_id", 1)
 
         # 📁 PERFIL ÚNICO POR WORKER
@@ -105,10 +110,16 @@ class SeleniumController:
             "download.default_directory": os.path.abspath(download_dir),
             "download.prompt_for_download": False,
             "plugins.always_open_pdf_externally": True,
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
         }
         chrome_options.add_experimental_option("prefs", prefs)
 
         # Flags que você já usa
+        chrome_options.add_argument("--disable-notifications")
+        chrome_options.add_argument("--disable-infobars")
+        chrome_options.add_argument("--disable-features=PasswordLeakDetection")
+        chrome_options.add_argument("--disable-save-password-bubble")
         chrome_options.add_argument("--disable-blink-features=AutomationControlled")
         chrome_options.add_argument("--autoplay-policy=no-user-gesture-required")
         chrome_options.add_argument("--verbose")
@@ -178,7 +189,7 @@ class SeleniumController:
             self.driver.find_element(by, value)
             return True
         except NoSuchElementException:
-            return False
+            return Falsez
 
     def get_iframe_by_src_contains(self, partial_src):
         iframes = self.driver.find_elements(By.TAG_NAME, "iframe")
@@ -200,6 +211,8 @@ class SeleniumController:
             return popup.is_displayed()
         except:
             return False
+        
+   
     def wait_for_download(self, worker_id, timeout=90):
         """
         Aguarda o ÚLTIMO PDF realmente baixado (por data de modificação)
@@ -275,11 +288,21 @@ class SeleniumWorker(QThread):
 
     def run(self):
         try:
-            driver = self.app.driver1 if self.worker_id == 1 else self.app.driver2
+            if self.worker_id == 1:
+                driver = self.app.driver1
+            elif self.worker_id == 2:
+                driver = self.app.driver2
+            elif self.worker_id == 3:
+                driver = self.app.driver3
+            else:
+                raise ValueError("Worker inválido")
+
             self.app.abrir_detalhe_processo(driver)
             self.finished.emit(self.worker_id)
+
         except Exception as e:
             self.error.emit(self.worker_id, str(e))
+
 
 
       
@@ -305,7 +328,7 @@ class MainApp(QWidget):
             2: None
         }
 
-
+        
         self.indice_processo = 0
         self.total_processos = 0
         self.processos_extraidos = 0
@@ -317,7 +340,7 @@ class MainApp(QWidget):
         self.vpn = VPNManager()
       
        
-        
+       
         # 2️⃣ Criar UI PRIMEIRO
         self._criar_interface()
         self._iniciar_monitor_ip()
@@ -330,133 +353,159 @@ class MainApp(QWidget):
             p for p in self.processos
             if p not in self.processos_concluidos
         ]
-        for wid in (1, 2):
+        for wid in (1, 2, 3):
            pasta = Path(DOWNLOAD_DIR) / f"worker_{wid}"
            pasta.mkdir(parents=True, exist_ok=True)
            self.download_dirs[wid] = pasta
+        self.carregar_usuarios_excel()
+         
+        for u in self.usuarios:
+            self.combo_usuario.addItem(u["usuario"])
+            self.combo_usuario_2.addItem(u["usuario"])
+            self.combo_usuario_3.addItem(u["usuario"])
+            
+        # 🔌 CONECTA OS COMBOS AOS MÉTODOS
+        self.combo_usuario.currentIndexChanged.connect(self.on_usuario_selecionado)
+        self.combo_usuario_2.currentIndexChanged.connect(self.on_usuario_selecionado_2)
+        self.combo_usuario_3.currentIndexChanged.connect(self.on_usuario_selecionado_3)
 
-    def _criar_interface(self):  
-        self.setWindowTitle("INPI - Automação")
-        self.setGeometry(120, 80, 300, 100)
-
-        # UI simples (mantendo layout similar ao anterior)
+    def _criar_interface(self):
+        self.setWindowTitle("INPI - vs(1.2) - 02/02/2026")
+        self.setGeometry(50, 30, 700, 50)
+      
+        # 🔹 Layout principal
         self.layout = QHBoxLayout(self)
-
-        left = QVBoxLayout()
-       # right = QVBoxLayout()
-          # 🔐 VPN UI (AGORA VISÍVEL)
+      
+        # ==================================================
+        # 🟦 COLUNA LOGIN
+        # ==================================================
+        coluna_login = QVBoxLayout()
+      
         self.label_ip = QLabel("🌍 IP: ---")
-        #self.label_ip.setStyleSheet("font-weight: bold; color: green;")
-        #self.btn_trocar = QPushButton("🔁 Trocar ip")
-        #self.btn_trocar.clicked.connect(self.trocar_vpn)
+        coluna_login.addWidget(self.label_ip)
+        # ===== dropdown de timeout =====
+        coluna_login.addWidget(QLabel("Timeout Captcha (segundos)"))
 
-        left.addWidget(self.label_ip)
-        #left.addWidget(self.btn_trocar)
+        self.combo_timeout = QComboBox()
+        self.combo_timeout.addItem("Selecione o timeout")
+        self.combo_timeout.model().item(0).setEnabled(False)
+        
+        # opções
+        self.combo_timeout.addItems(["30", "60", "120", "180", "300"])
+        
+        # valor padrão
+        self.combo_timeout.setCurrentText("120")
+        
+        coluna_login.addWidget(self.combo_timeout)
 
-        # Conecta VPN ao iniciar
-        #self.atualizar_ip()
+        
+        # ===== USUÁRIO 1 =====
+        coluna_login.addWidget(QLabel("Login Aba 1"))
         self.combo_usuario = QComboBox()
         self.combo_usuario.addItem("Selecione o usuário INPI")
-        self.combo_usuario.model().item(0).setEnabled(False)  # desabilita seleção
-        self.combo_usuario.setCurrentIndex(0)
-        
+        self.combo_usuario.model().item(0).setEnabled(False)
+      
         self.input_usuario = QLineEdit()
-        self.input_usuario.setPlaceholderText("Usuário INPI")
         self.input_usuario.setReadOnly(True)
-        
+      
         self.input_senha = QLineEdit()
-        self.input_senha.setPlaceholderText("Senha INPI")
         self.input_senha.setEchoMode(QLineEdit.Password)
         self.input_senha.setReadOnly(True)
-        
-        left.addWidget(self.combo_usuario)
-        left.addWidget(self.input_usuario)
-        left.addWidget(self.input_senha)
-        
-        # =========================
-        # 🔐 USUÁRIO 2
-        # =========================
+      
+        coluna_login.addWidget(self.combo_usuario)
+        coluna_login.addWidget(self.input_usuario)
+        coluna_login.addWidget(self.input_senha)
+      
+        # ===== USUÁRIO 2 =====
+        coluna_login.addWidget(QLabel("Login Aba 2"))
         self.combo_usuario_2 = QComboBox()
-        self.combo_usuario_2.addItem("Selecione o usuário INPI (Aba 2)")
+        self.combo_usuario_2.addItem("Selecione o usuário INPI")
         self.combo_usuario_2.model().item(0).setEnabled(False)
-        self.combo_usuario_2.setCurrentIndex(0)
-        
+      
         self.input_usuario_2 = QLineEdit()
-        self.input_usuario_2.setPlaceholderText("Usuário INPI (Aba 2)")
-        self.input_usuario_2.setReadOnly(True)
-        
         self.input_senha_2 = QLineEdit()
-        self.input_senha_2.setPlaceholderText("Senha INPI (Aba 2)")
         self.input_senha_2.setEchoMode(QLineEdit.Password)
-        self.input_senha_2.setReadOnly(True)
-        
-        left.addWidget(self.combo_usuario_2)
-        left.addWidget(self.input_usuario_2)
-        left.addWidget(self.input_senha_2)
-        
-        
-        self.btn_iniciar = QPushButton("abrir site inpi")
+      
+        coluna_login.addWidget(self.combo_usuario_2)
+        coluna_login.addWidget(self.input_usuario_2)
+        coluna_login.addWidget(self.input_senha_2)
+      
+        # ===== USUÁRIO 3 =====
+        coluna_login.addWidget(QLabel("Login Aba 3"))
+        self.combo_usuario_3 = QComboBox()
+        self.combo_usuario_3.addItem("Selecione o usuário INPI")
+        self.combo_usuario_3.model().item(0).setEnabled(False)
+      
+        self.input_usuario_3 = QLineEdit()
+        self.input_senha_3 = QLineEdit()
+        self.input_senha_3.setEchoMode(QLineEdit.Password)
+      
+        coluna_login.addWidget(self.combo_usuario_3)
+        coluna_login.addWidget(self.input_usuario_3)
+        coluna_login.addWidget(self.input_senha_3)
+      
+        self.btn_iniciar = QPushButton("🌐 Abrir site INPI")
         self.btn_iniciar.clicked.connect(self.iniciar_selenium)
-        left.addWidget(self.btn_iniciar)
-
+        coluna_login.addWidget(self.btn_iniciar)
+      
+        coluna_login.addStretch()
+      
+        # ==================================================
+        # 🟨 COLUNA PROCESSOS
+        # ==================================================
+        coluna_processos = QVBoxLayout()
+      
+        coluna_processos.addWidget(QLabel("📄 Processos"))
+      
         self.lista_processos = QListWidget()
         self.lista_processos.itemClicked.connect(self.selecionar_processo)
-        left.addWidget(QLabel("Processos"))
-        left.addWidget(self.lista_processos)
-
-        self.entry_processo = QLineEdit(); self.entry_processo.setPlaceholderText("N°Processo")
-        left.addWidget(self.entry_processo)
-        self.btn_buscar = QPushButton("iniciar extração")
+        coluna_processos.addWidget(self.lista_processos)
+      
+        self.entry_processo = QLineEdit()
+        self.entry_processo.setPlaceholderText("Número do processo")
+        coluna_processos.addWidget(self.entry_processo)
+      
+        self.btn_buscar = QPushButton("▶ Iniciar extração")
         self.btn_buscar.clicked.connect(self.iniciar_processamento_em_lote)
-        self.btn_parar = QPushButton("Parar")
+      
+        self.btn_parar = QPushButton("⏹ Parar")
         self.btn_parar.clicked.connect(self.parar_processamento)
-        left.addWidget(self.btn_parar)
-
-        #self.btn_buscar.clicked.connect(self.abrir_detalhe_processo)
-        left.addWidget(self.btn_buscar)
-
+      
+        coluna_processos.addWidget(self.btn_buscar)
+        coluna_processos.addWidget(self.btn_parar)
+      
         self.label_status = QLabel("Status: idle")
-        left.addWidget(self.label_status)
-        
+        coluna_processos.addWidget(self.label_status)
+      
         self.label_contador = QLabel("Processos extraídos: 0 / 0")
-        self.label_contador.setStyleSheet("font-size: 12pt; font-weight: bold;")
-        left.addWidget(self.label_contador)
+        self.label_contador.setStyleSheet("font-size: 11pt; font-weight: bold;")
+        coluna_processos.addWidget(self.label_contador)
+      
+        coluna_processos.addStretch()
+      
+        # ==================================================
+        # 🟩 COLUNA LOGS
+        # ==================================================
+        coluna_logs = QVBoxLayout()
+      
+        coluna_logs.addWidget(QLabel("🧾 Logs"))
+      
         self.console_log = QTextEdit()
         self.console_log.setReadOnly(True)
         self.console_log.setStyleSheet("""
             background-color: white;
             color: black;
             font-family: Consolas;
-            font-size: 11pt;
+            font-size: 10pt;
         """)
-        left.addWidget(self.console_log)
-
-        self.layout.addLayout(left, 2)
-        
-        self.selenium = SeleniumController()
-        self.selenium.worker_id = 1
-        #self.driver = self.selenium.start()
-
-        self.selenium2 = SeleniumController()
-        self.selenium2.worker_id = 2
-       # self.driver2 = self.selenium2.start()
-
-
-        # data holders
-        self.processo_atual_id = None
-        
- 
-        self.lista_processos.setEnabled(True)
-        self.carregar_usuarios_excel()
-
-        for u in self.usuarios:
-            self.combo_usuario.addItem(u["usuario"])
-        
-        for u in self.usuarios:
-            self.combo_usuario_2.addItem(u["usuario"])
-
-        self.combo_usuario.currentIndexChanged.connect(self.on_usuario_selecionado)
-        self.combo_usuario_2.currentIndexChanged.connect(self.on_usuario_selecionado_2)
+        coluna_logs.addWidget(self.console_log)
+      
+        # ==================================================
+        # 🔗 ADICIONA AO LAYOUT PRINCIPAL (AGORA SIM)
+        # ==================================================
+        self.layout.addLayout(coluna_login, 2)
+        self.layout.addLayout(coluna_processos, 2)
+        self.layout.addLayout(coluna_logs, 3)
 
     def _log_ui(self, mensagem):
         timestamp = QDateTime.currentDateTime().toString("HH:mm:ss")
@@ -488,6 +537,16 @@ class MainApp(QWidget):
         user = self.usuarios[index - 1]
         self.input_usuario_2.setText(user["usuario"])
         self.input_senha_2.setText(user["senha"])
+        
+    def on_usuario_selecionado_3(self, index):
+        if index <= 0:
+            self.input_usuario_3.clear()
+            self.input_senha_3.clear()
+            return
+        user = self.usuarios[index - 1]
+        self.input_usuario_3.setText(user["usuario"])
+        self.input_senha_3.setText(user["senha"])
+
 
     def on_usuario_selecionado(self, index):
         if index == 0:
@@ -525,48 +584,90 @@ class MainApp(QWidget):
 
     
        
-    def iniciar_processamento_em_lote(self):
+    from collections import deque
 
-        # 🔐 Verifica se o Chrome/Selenium está ativo
-        if not hasattr(self, "driver1") or not hasattr(self, "driver2"):
+    def iniciar_processamento_em_lote(self):
+    
+        # 🔐 Verifica se os Chromes estão ativos
+        if not all(hasattr(self, f"driver{i}") for i in (1, 2, 3)):
             self.ui_warning(
                 "Chrome não iniciado",
-                "Abra os dois Chromes antes de iniciar a extração."
+                "Abra os três Chromes antes de iniciar a extração."
             )
             self.log("⚠️ Tentativa de iniciar lote sem Chromes abertos.")
             return
-
-
+    
         if not self.processos:
             self.ui_warning("Aviso", "Nenhum processo carregado.")
             return
-        
-        self.loop_ativo = True 
-        
+    
+        self.loop_ativo = True
         self.lista_processos.setEnabled(False)
-        
-         # 🔥 CONVERTE LISTA EM FILA
+    
+        # 🔥 CONVERTE LISTA EM 3 FILAS
         self.processos_1 = deque()
         self.processos_2 = deque()
-        
+        self.processos_3 = deque()
+    
         for i, p in enumerate(self.processos):
-            if i % 2 == 0:
+            if i % 3 == 0:
                 self.processos_1.append(p)
-            else:
+            elif i % 3 == 1:
                 self.processos_2.append(p)
-
-        
+            else:
+                self.processos_3.append(p)
+    
         self.total_processos = len(self.processos)
         self.processos_extraidos = 0
         self._atualizar_contador_ui()
-
-        self.log("🚀 Iniciando processamento em lote...")
-        
-
+    
+        self.log("🚀 Iniciando processamento em lote (3 Chromes)...")
+    
+        # 🚀 DISPARA OS 3 WORKERS
         self._processar_proximo(1)
         self._processar_proximo(2)
+        self._processar_proximo(3)
 
+    def clicar_imagem(
+            self,
+            timeout=15,
+            confidence=0.85,
+            clicar=True,
+            delay=0.5
+        ):
+            """
+            Localiza uma imagem PNG na tela e opcionalmente clica nela.
         
+            :param nome_imagem: Nome do arquivo PNG (ex: 'captcha_checkbox.png')
+            :param timeout: Tempo máximo de espera (segundos)
+            :param confidence: Precisão da imagem (0.7 a 0.95)
+            :param clicar: Se True, clica no centro da imagem
+            :param delay: Delay após clicar
+            :return: (x, y) ou None
+            """
+        
+            caminho = BASE_DIR / "solver_button.png"
+            if not caminho.exists():
+                raise FileNotFoundError(f"Imagem não encontrada: {caminho}")
+        
+            inicio = time.time()
+        
+            while time.time() - inicio < timeout:
+                pos = pyautogui.locateCenterOnScreen(
+                    str(caminho),
+                    confidence=confidence
+                )
+        
+                if pos:
+                    if clicar:
+                        pyautogui.moveTo(pos.x, pos.y, duration=0.2)
+                        pyautogui.click()
+                        time.sleep(delay)
+                    return pos
+        
+                time.sleep(0.3)
+            self.log(f"⚠️ Imagem não encontrada na tela: {nome_imagem}")
+            return None             
 
     def carregar_usuarios_excel(self):
         self.usuarios = []  # lista de dicts
@@ -598,32 +699,44 @@ class MainApp(QWidget):
 
 
     def _processar_proximo(self, worker_id):
-        if self.processando[worker_id]:
+        # 🚫 Evita rodar dois processos ao mesmo tempo no mesmo worker
+        if self.processando.get(worker_id):
             return
-    
-        fila = self.processos_1 if worker_id == 1 else self.processos_2
+
+        # 🔥 Seleciona a fila correta
+        if worker_id == 1:
+            fila = self.processos_1
+        elif worker_id == 2:
+            fila = self.processos_2
+        elif worker_id == 3:
+            fila = self.processos_3
+        else:
+            return
+
+        # 🏁 Fila vazia
         if not fila:
             self.log(f"🏁 Fila finalizada (Worker {worker_id})")
             return
-    
+
         self.processando[worker_id] = True
-    
+
         numero = fila.popleft()
         self.numero_atual[worker_id] = numero
         self.tentativas_por_processo.setdefault(numero, 0)
-    
+
         self.log(
-            f"📦 tela {worker_id} processando {numero} "
+            f"📦 Tela {worker_id} processando {numero} "
             f"(tentativa {self.tentativas_por_processo[numero] + 1})"
         )
-    
+
         worker = SeleniumWorker(self, worker_id)
         worker.finished.connect(self._finalizar_processo_atual)
         worker.error.connect(self._erro_worker)
         worker.start()
-    
+
         # 🔒 mantém referência (IMPORTANTE!)
         setattr(self, f"_worker_{worker_id}", worker)
+
 
     def selecionar_processo(self, item):
         if self.processando:
@@ -718,6 +831,9 @@ class MainApp(QWidget):
    
             if hasattr(self, "driver2") and self.driver2:
                 self.selenium2.stop()
+                
+            if hasattr(self, "driver3") and self.driver2:
+                self.selenium3.stop()
    
             time.sleep(3)
    
@@ -733,7 +849,15 @@ class MainApp(QWidget):
             self.driver2 = self.selenium2.start()
             self.driver2.get(URL_INPI)
    
-            self.log("✅ Dois Chromes iniciados com sucesso")
+           # 🔹 DRIVER 3
+            self.selenium3 = SeleniumController()
+            self.selenium3.worker_id = 3
+            self.driver3 = self.selenium3.start()
+            self.driver3.get(URL_INPI)
+
+            self.log("✅ Três Chromes iniciados com sucesso")
+            self.iniciar_solver_auto()
+            self._ultimo_solver_click = 0
 
         except Exception as e:
            QMessageBox.critical(self, "Erro", str(e))
@@ -746,12 +870,25 @@ class MainApp(QWidget):
 
         self.log("✅ Login realizado nos dois navegadores")
 
-    def _usuario_atual(self, driver):
-        return self.input_usuario if driver == self.driver1 else self.input_usuario_2
+    def _usuario_atual(self, worker_id):
+        if worker_id == 1:
+            return self.input_usuario
+        elif worker_id == 2:
+            return self.input_usuario_2
+        elif worker_id == 3:
+            return self.input_usuario_3
+        return None
 
-    def _senha_atual(self, driver):
-        return self.input_senha if driver == self.driver1 else self.input_senha_2
-   
+
+    def _senha_atual(self, worker_id):
+        if worker_id == 1:
+            return self.input_senha
+        elif worker_id == 2:
+            return self.input_senha_2
+        elif worker_id == 3:
+            return self.input_senha_3
+        return None
+
 
     def login_inpi(self, driver, usuario_input, senha_input):
         driver.get("https://busca.inpi.gov.br/pePI/")
@@ -790,8 +927,18 @@ class MainApp(QWidget):
         # LOGIN
         # ======================
         try:
-            self.login_inpi(driver, self._usuario_atual(driver), self._senha_atual(driver))
-            self.tratar_popups_login(driver)
+            worker_id = (
+                1 if driver == self.driver1 else
+                2 if driver == self.driver2 else
+                3
+            )
+            
+            self.login_inpi(
+                driver,
+                self._usuario_atual(worker_id),
+                self._senha_atual(worker_id)
+            )
+
         except Exception as e:
             raise Exception(f"Falha no login: {e}")
 
@@ -831,80 +978,38 @@ class MainApp(QWidget):
         except TimeoutException:
             raise Exception("❌ Campo NumPedido não apareceu após acessar Marcas")
     
-    def extrair_por_rotulo(self, driver, rotulo):
-        try:
-            el = WebDriverWait(driver, 15).until(
-                EC.presence_of_element_located((
-                    By.XPATH,
-                    f"//td[contains(normalize-space(),'{rotulo}')]/following-sibling::td[1]"
-                ))
-            )
-            return el.text.strip()
-        except TimeoutException:
-            self.log(f"⏱ {rotulo} não encontrado")
-            return ""
-
+    
    
 
-    def tratar_popups_login(self, driver, timeout=5):
-        """
-        Trata qualquer popup que apareça durante login:
-        - alert JS
-        - modal HTML
-        - janela extra
-        """
-        # 🔔 ALERT JavaScript
-        try:
-            WebDriverWait(driver, timeout).until(EC.alert_is_present())
-            alert = driver.switch_to.alert
-            texto = alert.text
-            alert.accept()
-            self.log(f"⚠️ Alert fechado automaticamente: {texto}")
-            time.sleep(1)
-        except TimeoutException:
-            pass
-        except UnexpectedAlertPresentException:
-            try:
-                driver.switch_to.alert.accept()
-                self.log("⚠️ Alert inesperado fechado")
-            except Exception:
-                pass
-    
-        # 🪟 JANELA EXTRA
-        try:
-            handles = self.driver.window_handles
-            if len(handles) > 1:
-                principal = handles[0]
-                for h in handles[1:]:
-                    driver.switch_to.window(h)
-                    driver.close()
-                    self.log("🪟 Popup de janela fechado")
-                driver.switch_to.window(principal)
-        except Exception:
-            pass
-
-        # 🧱 MODAL HTML (se existir)
-        try:
-            modal = driver.find_elements(
-                By.XPATH,
-                "//button[contains(.,'Fechar') or contains(.,'OK') or contains(.,'Continuar')]"
-            )
-            for btn in modal:
-                if btn.is_displayed():
-                    btn.click()
-                    self.log("🧱 Modal HTML fechado")
-                    time.sleep(1)
-        except Exception:
-            pass   
-        
     def ui_toast(self, mensagem, tempo=2000):
         QTimer.singleShot(
             0,
             lambda m=mensagem, t=tempo: mostrar_toast(m, t)
         )
-    
-    def garantir_acesso_peticiones(self, driver):
+   
+
+    def possui_servico_389_ou_394(self, driver) -> bool:
+        """
+        Verifica se existe serviço 389 ou 394 na tabela de PDFs
+        """
         try:
+            driver.find_element(
+                By.XPATH,
+                "//a[normalize-space()='389' or normalize-space()='394']"
+            )
+            self.log("📄 Serviço 389 ou 394 detectado")
+            return True
+        except NoSuchElementException:
+            self.log("📄 Serviço 389/394 NÃO encontrado")
+           
+            return False
+
+    def garantir_acesso_peticiones(self, driver):
+        
+          
+
+        try:
+            
             self.log("🔍 Verificando necessidade de amplo acesso às petições...")
     
             link_amplo = WebDriverWait(driver, 1).until(
@@ -988,94 +1093,119 @@ class MainApp(QWidget):
         except TimeoutException:
             self.log("🔓 Nenhum popup de amplo acesso detectado")
             driver.switch_to.window(janela_principal)
-                
+    
+    
+        
     def abrir_detalhe_processo(self, driver):
-        worker_id = 1 if driver == self.driver1 else 2
-        numero = self.numero_atual[worker_id]
+        if driver == self.driver1:
+            worker_id = 1
+        elif driver == self.driver2:
+            worker_id = 2
+        elif driver == self.driver3:
+            worker_id = 3
+        else:
+            self.log("❌ Driver não reconhecido")
+            return
+
+
+        if not worker_id:
+            self.log("❌ Driver não reconhecido")
+            return
+
+        numero = self.numero_atual.get(worker_id)
 
         if not numero:
-            self.ui_warning( "Aviso", "Informe o número do processo.")
+            self.ui_warning("Aviso", "Informe o número do processo.")
             return
 
         try:
             self.log("🔐 Garantindo login...")
             self.garantir_login(driver)
-            self.tratar_popups_login(driver)
+
             self.log("🔎 Acessando página de pesquisa...")
             driver.get(URL_DESTINO)
 
-            # aguarda campo NumPedido visível
             campo = WebDriverWait(driver, 1).until(
                 EC.visibility_of_element_located((By.NAME, "NumPedido"))
             )
             campo.clear()
             campo.send_keys(numero)
-
-            # submit
             campo.submit()
 
-            # aguarda link de detalhe
             self.log("📄 Aguardando link de detalhe...")
             link = WebDriverWait(driver, 1).until(
                 EC.element_to_be_clickable(
                     (By.CSS_SELECTOR, "a[href*='MarcasServletController?Action=detail']")
                 )
             )
-
-            # clica (não usa get!)
             link.click()
-    
-            # aguarda página de detalhe
+
             WebDriverWait(driver, 1).until(
-    EC.presence_of_element_located((By.TAG_NAME, "body"))
-)
-            time.sleep(1)  # estabilidade
-            print("🌐 URL atual:", driver.current_url)
-           # self.extrair_dados_pagina()
-            # 🔓 garante acesso às petições (se necessário)
+                EC.presence_of_element_located((By.TAG_NAME, "body"))
+            )
+            time.sleep(1)
+
+            self.log(f"🌐 URL atual (Tela {worker_id}): {driver.current_url}")
+            # 🔎 Verifica se o serviço exige liberação de petições
+            if not self.possui_servico_389_ou_394(driver):
+                self.log("⏭️ Processo não exige liberação de petições")
+            
+                self._registrar_processo_concluido(numero)
+                self._finalizar_processo_atual(worker_id)
+            
+                return
+
             self.garantir_acesso_peticiones(driver)
-            self.liberar_acesso_peticiones(driver)    # trata o popup
+            self.liberar_acesso_peticiones(driver)
+
             # ✅ tenta baixar PDF
             self.tentar_clicar_botao_pdf(driver, worker_id, numero)
 
-        
         except UnexpectedAlertPresentException:
-            self.tratar_popups_login(driver)
             self.log("⚠️ Alert inesperado tratado, retomando fluxo")
+     
         except TimeoutException:
             if "Nenhum resultado foi encontrado" in driver.page_source:
                 self.log(f"❌ Processo {numero} inexistente no INPI")
-                self._registrar_processo_concluido(numero)
+                #self._registrar_processo_concluido(numero)
             else:
                 self.log(f"⏱ Timeout inesperado ao abrir processo {numero}")
-
+     
             QTimer.singleShot(0, lambda: self._finalizar_processo_atual(worker_id))
+     
+        except Exception as e:
+            QMessageBox.critical(
+                self,
+                "Erro",
+                f"Falha ao abrir detalhe do processo:\n{e}"
+            )
+            QTimer.singleShot(0, self.parar_processamento)
+
+    def tentar_clicar_botao_pdf(self, driver, worker_id, numero):
+        try:
+            elementos = driver.find_elements(
+                By.XPATH,
+                "//div[@id='389' or @id='394']/ancestor::tr//img[contains(@class,'salvaDocumento')]"
+            )
+
+            # ❌ IDs 389 e 394 NÃO existem
+            if not elementos:
+                self.log("Nenhum PDF encontrado para ID 389 ou 394")
+                #self._registrar_processo_concluido(numero)
+                QTimer.singleShot(0, lambda: self._finalizar_processo_atual(worker_id))
+                return
+
+            # ✅ Existe PDF → clica
+            elementos[0].click()
+            self.log("Clique no ícone PDF executado para ID 389 ou 394.")
+
+            time.sleep(0.6)
+            self.tratar_modal_captcha(driver, worker_id)
 
         except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Falha ao abrir detalhe do processo:{e}")
-        
-            QTimer.singleShot(0, self.parar_processamento)
-             
-    def tentar_clicar_botao_pdf(self, driver, worker_id, numero):
-          try:
-              img = driver.find_element(
-                  By.XPATH,
-                  "//div[@id='389' or @id='394']/ancestor::tr//img[contains(@class,'salvaDocumento')]"
-              )
-  
-              img.click()
-              self.log("Clique no ícone PDF executado para ID 389 ou 394.")
-  
-              time.sleep(0.6)
-              self.tratar_modal_captcha(driver, worker_id)
+            # erro REAL (selenium, timeout, DOM, etc)
+            self.log(f"Erro ao tentar clicar no PDF: {e}")
 
-
-  
-          except Exception :
-              self.log(f"Nenhum PDF encontrado para ID 389 ou 394")
-              self._registrar_processo_concluido(numero)
-              QTimer.singleShot(0, lambda: self._finalizar_processo_atual(worker_id))
-      
     
     def _repetir_processo_atual(self, worker_id, motivo):
         numero = self.numero_atual[worker_id]
@@ -1109,8 +1239,89 @@ class MainApp(QWidget):
         QTimer.singleShot(
             3000, lambda: self._processar_proximo(worker_id)
         )
+        
+    def iniciar_solver_auto(self):
+        if getattr(self, "_solver_ativo", False):
+            self.log("⚠️ Solver automático já está rodando")
+            return
+    
+        self._solver_ativo = True
+    
+        self._solver_thread = threading.Thread(
+            target=self._loop_solver_button,
+            daemon=True
+        )
+        self._solver_thread.start()
+    
+        self.log("🤖 Solver automático iniciado")
 
+    
+    def _loop_solver_button(self):
+        self._ultimo_solver_click = 0  # inicializa UMA vez
+    
+        while self._solver_ativo:
+            try:
+                # 👇 CONTROLE DE INTERVALO REAL
+                if time.time() - self._ultimo_solver_click > 1:
+                    if self.clicar_solver_button():
+                        self._ultimo_solver_click = time.time()
+    
+            except Exception as e:
+                self.log(f"⚠️ Solver erro: {e}")
+    
+            time.sleep(1)  # 👈 loop roda a cada 1s
+  
+  
+    def parar_solver_auto(self):
+        self._solver_ativo = False
+        self.log("🛑 Solver automático parado")
 
+    def clicar_solver_button(self):
+
+        time.sleep(2)
+
+        img_path = BASE_DIR / "solver_button.png"
+
+        if not img_path.exists():
+            self.log("❌ solver_button.png não encontrado")
+            return False
+
+        try:
+            pos = pyautogui.locateCenterOnScreen(
+                str(img_path),   # 👈 CONVERSÃO OBRIGATÓRIA
+                confidence=0.78
+            )
+
+            if pos:
+                pyautogui.moveTo(pos.x, pos.y, duration=0.3)
+                pyautogui.click()
+                self.log("🤖 Solver button clicado via PyAutoGUI")
+                return True
+            else:
+                self.log("⚠️ Solver button não encontrado na tela")
+                return False
+
+        except Exception as e:
+            self.log(f"❌ Erro PyAutoGUI: {e}")
+            return False
+
+    def _selenium_por_worker(self, worker_id):
+        if worker_id == 1:
+            return self.selenium1
+        elif worker_id == 2:
+            return self.selenium2
+        elif worker_id == 3:
+            return self.selenium3
+        else:
+            raise ValueError("Worker inválido")
+   
+    def obter_timeout(self) -> int:
+        try:
+            return int(self.combo_timeout.currentText())
+        except ValueError:
+            return 120  # fallback seguro
+
+    
     def tratar_modal_captcha(self, driver, worker_id):
 
         """
@@ -1158,6 +1369,9 @@ class MainApp(QWidget):
                         )
                         checkbox.click()
                         self.log("[captcha] checkbox clicado")
+                        
+                  
+                    
                     except Exception as e:
                         self.log(f"[captcha] falha ao clicar checkbox: ")
                     finally:
@@ -1166,32 +1380,16 @@ class MainApp(QWidget):
                     self.log(f"[captcha] erro switch_to.frame: ")
             else:
                 self.log("[captcha] iframe do recaptcha não encontrado")
-            div = self.identificar_captcha_imagem(driver)
-            if div:
-                try:
-                    driver.switch_to.frame(div)
-                    # checkbox id recaptcha-anchor
-                    try:
-                        
-                        checkbox = WebDriverWait(driver, WAIT_SHORT).until(
-                            EC.element_to_be_clickable((By.ID, "solver-button"))
-                        )
-                        checkbox.click()
-                        self.log("[buster] checkbox clicado")
-                    except Exception as e:
-                        self.log(f"[buster] falha ao clicar checkbox: ")
-                    finally:
-                        driver.switch_to.default_content()
-                except Exception as e:
-                    self.log(f"[buster] erro switch_to.frame:")
-            else:
-                self.log("[buster] iframe do recaptcha não encontrado")
+                driver.get("https://site-com-recaptcha.com")
 
+            
+        
             # Se você usa Buster: a extensão pode interagir com o desafio automaticamente.
             # Aqui aguardamos o token aparecer no DOM (g-recaptcha-response ou input#recaptcha-token)
             self.log("[captcha] aguardando token resolver (sem timeout)...")
+           
             token = None
-            timeout = 420  # segundos
+            timeout = self.obter_timeout()  # segundos mudar para aumetar o tempo de espera para resolução do captcha
             inicio = time.time()
 
             while time.time() - inicio < timeout:
@@ -1247,7 +1445,9 @@ class MainApp(QWidget):
                     btn.click()
                     self.log("[captcha] botão Download clicado")
                 # aguarda o PDF ser baixado
-                    caminho_pdf = self.selenium.wait_for_download(worker_id)
+                    selenium = self._selenium_por_worker(worker_id)
+                    caminho_pdf = selenium.wait_for_download(worker_id)
+
 
                     if caminho_pdf:
                         self._renomear_pdf_para_processo(worker_id, caminho_pdf)
@@ -1302,49 +1502,27 @@ class MainApp(QWidget):
             self.log(
                 f"📄 Worker {worker_id} — PDF renomeado para: {novo_caminho.name}"
             )
-    
-            self._registrar_processo_concluido(numero)
-    
-            QTimer.singleShot(
-                0, lambda: self._finalizar_processo_atual(worker_id)
-            )
+
+            # ✅ Verifica se o PDF realmente existe antes de registrar
+            if novo_caminho.exists():
+                self._registrar_processo_concluido(numero)
+                QTimer.singleShot(
+                    0, lambda: self._finalizar_processo_atual(worker_id)
+                )
+            else:
+                self.log(
+                    f"⚠️ Worker {worker_id} — PDF não encontrado após renomear, processo NÃO registrado."
+                )
+
     
         except Exception as e:
             self.log(
                 f"❌ Worker {worker_id} — Erro ao renomear PDF: {e}"
             )
-    
+  
 
-    def identificar_captcha_imagem(self, driver) -> bool:
-        """
-        Retorna True se o CAPTCHA de seleção de imagens estiver presente.
-        NÃO interage com o CAPTCHA.
-        """
-        try:
-            # procura iframe do challenge (bframe)
-            iframes = driver.find_elements(By.TAG_NAME, "div")
-    
-            for iframe in iframes:
-                src = iframe.get_attribute("src") or ""
-                if "api2/bframe" in src:
-                    # entra no iframe do desafio
-                    driver.switch_to.frame(iframe)
 
-                    try:
-                        # procura a div principal do desafio de imagens
-                        driver.find_element(By.ID, "solver-button")
-                        return True
-                    except NoSuchElementException:
-                        pass
-                    finally:
-                        # sempre volta para o DOM principal
-                        driver.switch_to.default_content()
-
-            return False
-
-        except Exception:
-            driver.switch_to.default_content()
-            return False
+  
 
     def selenium_get_recaptcha_iframe(self, driver):
         # procura iframe que contém 'anchor' (checkbox) ou 'api2/anchor'

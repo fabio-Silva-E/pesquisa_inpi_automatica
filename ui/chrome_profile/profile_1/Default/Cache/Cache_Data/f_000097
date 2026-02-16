@@ -44,7 +44,7 @@
     </div> 
      
     <form name="MarcaPesquisa" method="POST" action="../servlet/MarcasServletController">
-		<input type="hidden" name="CodPedido" id="CodPedido" value="5346870">
+		<input type="hidden" name="CodPedido" id="CodPedido" value="5532682">
     	<input type="hidden" name="NumPedido" value="">
     	<input type="hidden" name="Action" id="Action" value="">
     
@@ -126,8 +126,8 @@
 	                    Meus Pedidos&nbsp;
 	                    </font>
 						<input type="checkbox"  
-						name="MeusPedidos" value="930727940" 
-						onChange="ConfirmMyList(this.form,'930727940',0)">
+						name="MeusPedidos" value="932615260" 
+						onChange="ConfirmMyList(this.form,'932615260',0)">
 		            </td>
 	                
             </tr>
@@ -138,14 +138,10 @@
                 	<font class=normal>Nº do Processo:</font>
                 </td>
                 <td align=left valign="middle">
-                	<font class=marcador>&nbsp;<b>930727940</b></font>
-                	<input type="hidden" id="numeroProcesso" name="numeroProcesso" value ="930727940" />
+                	<font class=marcador>&nbsp;<b>932615260</b></font>
+                	<input type="hidden" id="numeroProcesso" name="numeroProcesso" value ="932615260" />
                 </td>
                     
-                		<td align="right" valign="middle" rowspan="5">
-                        	<img border="0" height="220" width="220" src='/pePI/servlet/LogoMarcasServletController?Action=image&codProcesso=5346870'>
-               			</td>
-                        
             </tr>
             <tr>	
 			
@@ -157,29 +153,7 @@
                 </td>
                 <td align=left>
                 
-                        <font class=normal >&nbsp;
-                            <a class=normal href="javascript:void(0)" onmouseout="hideMe('traducao')" onmouseover="showMe('traducao')" onClick="DisableHide()">EMPIRE OUTSOURCING SOLUÇÕES ADMINISTRATIVAS</a>
-                        </font>
-                        <div id="traducao"  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
-                            <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
-                                    <tr>
-                                        <td align="center" bgColor="#b5d6ad">
-                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                                <tr>
-                                                    <td><font class=normal>Tradução</font></td>
-                                                    <td width="30">
-                                                        <a href="javascript:EnableHide('traducao');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td align=left bgColor="#ffffff"><font class=normal> 
-                                        IMPÉRIO TERCEIRIZAÇÃO</font></td>
-                                    </tr>
-                            </table>
-                        </div>
+                        <font class=normal>&nbsp;BELCHIOR</font>
                         
                 </td>
         	</tr>
@@ -200,7 +174,7 @@
                 	<font class=normal>Apresentação:</font>
                 </td>
                 <td align=left>
-                	<font class=normal>&nbsp;Mista</font>
+                	<font class=normal>&nbsp;Nominativa</font>
                 </td>
                </tr>
                 
@@ -247,7 +221,7 @@
                         	<td>
                                <font class="normal">
 	                               <a class="normal" href="javascript:void(0)" onmouseout="hideMe('cln0')" onmouseover="showMe('cln0')" onClick="DisableHide()">
-										NCL(12) 35
+										NCL(12) 41
 	                               </a>
                                </font>
                                <div id='cln0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF"> 
@@ -266,7 +240,7 @@
                                        </tr>
                                        <tr>
                                            <td align="left" bgcolor="#ffffff">
-                                               <font class="normal">Propaganda; gestão de negócios; administração de negócios; funções de escritório.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </font>
+                                               <font class="normal">Educação, provimento de treinamento; entretenimento; atividades desportivas e culturais.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </font>
                                            </td>
                                        </tr>
                                    </table>
@@ -282,7 +256,41 @@
 
                         	<td>
 								
-	                            	<font class=normal>Gestão administrativa terceirizada para empresas.</font>
+                       			
+	                            <font class=normal >&nbsp;
+	                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('especificacao0')" onmouseover="showMe('especificacao0')" onClick="DisableHide()"> 
+	                                    Organização de competições automobilísticas;
+Organização e ...
+	                                </a>
+	                            </font>
+	                            <div id="especificacao0"  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 800px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+	                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+	                                        <tr>
+	                                            <td align="center" bgColor="#b5d6ad">
+	                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	                                                    <tr>
+	                                                        <td><font class=normal>Especificação</font></td>
+	                                                        <td width="30">
+	                                                            <a href="javascript:EnableHide('especificacao0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align=left bgColor="#ffffff">
+	                                                <font class=normal> 
+	                                                    Organização de competições automobilísticas;
+Organização e realização de eventos esportivos automobilísticos;
+Organização e realização de eventos esportivos para veículos motorizados;
+Clube automobilístico;
+Clube de veículos motorizados.
+	                                                </font>
+	                                            </td>
+	                                        </tr>
+	                                </table>
+	                            </div>
+	                            
 	                            
 	                            
 	                            
@@ -305,61 +313,6 @@
 			
 			
 			 
-			
-			<div class="accordions">
-			<div class="accordion-item">
-				<input type="checkbox" name="accordion" checked='checked' id="accordion-classificacao-viena" />
-				<label for= "accordion-classificacao-viena"><font class="titulo">Classificação Internacional de Viena</font>
-                        <font class=normal>
-                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
-                            </a>
-                        </font>
-					</label>
-					<div class="accordion-content">
-					
-					<table width="780px">
-					    <thead> 
-					    	<tr bgcolor="#b5d6ad" align="center"> 
-					    		<th width="15%"><font class=normal>Edição</font></th>
-					    		<th width="180"><font class=normal>Código</font></th>
-					    		<th width="600"><font class=normal>Descrição</font></th>
-					    	</tr>
-					    </thead>
-					    <tbody>
-					    
-                        <tr bgColor="#e9e9e9"  align="center">
-                        	<td><font class=normal>4                 </font></td>
-                        	<td><font class=normal>29.1.13   </font></td>
-                        	<td><font class=normal>Três cores predominantes</font></td>
-                        </tr>
-                        
-                        
-                        
-                        <tr bgColor="#e9e9e9"  align="center">
-                        	<td><font class=normal>4                 </font></td>
-                        	<td><font class=normal>27.5.1    </font></td>
-                        	<td><font class=normal>Letras apresentando um grafismo especial</font></td>
-                        </tr>
-                        
-                        
-                        
-                        <tr bgColor="#e9e9e9"  align="center">
-                        	<td><font class=normal>4                 </font></td>
-                        	<td><font class=normal>24.9.21   </font></td>
-                        	<td><font class=normal>Coroas com a representação de animais ou partes do corpo de animal</font></td>
-                        </tr>
-                        
-                        
-                        
-					    
-					    </tbody>
-		               
-					</table>		
-					</div>
-				</div>
-			</div>
-			<br/>
-			
 			
 					
         
@@ -387,7 +340,7 @@
                          <tr bgColor="#e9e9e9" align="center">
                              <td width="20"><font class=normal>Titular(1):</font></td>
                              <td width="400"><font
-                                     class=normal>ELISANGELA REGINA SANTOS DE OLIVEIRA 34231286825
+                                     class=normal>BELCHIOR JEEP CLUBE
                              </font></td>
                          </tr>
                          
@@ -423,7 +376,7 @@
                         
                         <tr bgColor="#e9e9e9" align="center">
                             <td width="20"><font class=normal>Procurador:</font></td>
-                            <td width="400"><font class=normal>ALINE MARIA DE OLIVEIRA</font></td>
+                            <td width="400"><font class=normal>REGIBRAS LTDA  EPP</font></td>
                         </tr>
                         
 
@@ -490,16 +443,16 @@
 					    <tbody>
 					    	<tr bgColor="#e9e9e9">
 					    		<th><font class=normal>
-									09/06/2023	 		
+									14/11/2023	 		
 					    		
 					    			</font>
 					    		</th>
 					    		<th><font class=normal> 
-						    		11/11/2025
+						    		23/09/2025
                      				</font>
                      			</th>
 					    		<th><font class=normal>
-					    			11/11/2035
+					    			23/09/2035
 					    			</font>
 					    		</th>
 					    		
@@ -541,13 +494,13 @@
 					    <tbody>
 					    	<tr bgcolor="#e9e9e9" align="center">
 					    		<td><font class=normal>Início</font></td>
-					    		<td><font class=normal>12/11/2034</font></td>
-					    		<td><font class=normal>12/11/2035</font></td>
+					    		<td><font class=normal>24/09/2034</font></td>
+					    		<td><font class=normal>24/09/2035</font></td>
 					    	</tr>					    	
 					    	<tr bgcolor="#e9e9e9" align="center">
 					    		<td><font class=normal>Fim</font></td>
-					    		<td><font class=normal>11/11/2035</font></td>
-					    		<td><font class=normal>11/05/2036</font></td>
+					    		<td><font class=normal>23/09/2035</font></td>
+					    		<td><font class=normal>23/03/2036</font></td>
 					    	</tr>
 					    </tbody>
 		               
@@ -595,10 +548,10 @@
                         </div>
 						 
 	                        [<a href="javascript:void(0)" style="font-size: 13px;"
-	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcesso&CodPedido=5346870','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Habilitados</a>]
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcesso&CodPedido=5532682','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Habilitados</a>]
 	                        &nbsp;
 	                        [<a href="javascript:void(0)" style="font-size: 13px;"
-	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcessoDesativado&CodPedido=5346870','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Desativados</a>]
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcessoDesativado&CodPedido=5532682','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Desativados</a>]
                         
 					</label>
 					<div class="accordion-content">
@@ -622,12 +575,45 @@
 		                        <td align="center"  width=10>
 		                            <font class=normal>
 		                                
-		                                    <img src='../jsp/imagens/registro_nao_ok.gif' width='17' height='13' border='0'  alt='Pagamento Não Conciliado'>
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto0')" onmouseover="showMe('pgto0')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                001        - Banco do Brasil S.A.<br>
+		                                                                
+		                                                                Data: 08/09/2025<br>
+		                                                                Valor: R$375.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
 		                                    
 		                            </font>
 		                        </td>
-		                        <td align="center" width=50><font class=normal>301250038375</font></td>
-		                        <td align="center" width=62><font class=normal>25/10/2025</font></td>
+		                        <td align="center" width=50><font class=normal>800250358642</font></td>
+		                        <td align="center" width=62><font class=normal>08/09/2025</font></td>
 		                        <td align="center" width=10>
 		                            <font class=normal>
 		                            
@@ -642,11 +628,11 @@
 				                </td>
 		                        <td align="center" width=30>
 		                            <font class=normal>
-		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('3023')" onmouseover="showMe('3023')" onClick="DisableHide()">
-		                                    3023
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('372')" onmouseover="showMe('372')" onClick="DisableHide()">
+		                                    372
 		                                </a>
 		                            </font>
-		                            <div id='3023'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                            <div id='372'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
 		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
 		                                        <tr>
 		                                            <td align="center" bgColor="#b5d6ad">
@@ -654,7 +640,7 @@
 		                                                    <tr>
 		                                                        <td><font class=normal>Descrição do Serviço</font></td>
 		                                                        <td width="30">
-		                                                            <a href="javascript:EnableHide('3023');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                            <a href="javascript:EnableHide('372');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
 		                                                        </td>
 		                                                    </tr>
 		                                                </table>
@@ -663,15 +649,15 @@
 		                                        <tr>
 		                                            <td align=left bgColor="#ffffff">
 		                                                <font class=normal>
-		                                                    <b>3023</b>
-		                                                    Concessão de registro de marca e expedição de certificado - Protocolo interno automático
+		                                                    <b>372</b>
+		                                                    Primeiro decênio de vigência de registro de marca e expedição de certificado de registro - retribuição paga no prazo ordinário - valor por classe
 		                                                </font>
 		                                            </td>
 		                                        </tr>
 		                                </table>
 		                            </div>
 		                        </td>
-		                        <td align="center" width=246><font class=normal>DIRMA/GABINETE</font></td>
+		                        <td align="center" width=246><font class=normal>BELCHIOR JEEP CLUBE</font></td>
 		                        <td align="center" width=10>
 		                            <font class=normal>
 		                                
@@ -711,10 +697,10 @@
 		                                                    <td align=left bgColor="#ffffff">
 		                                                        <font class=normal>
 		                                                            
-		                                                                033        - Banco do Estado de São Paulo S.A. - Banespa<br>
+		                                                                001        - Banco do Brasil S.A.<br>
 		                                                                
-		                                                                Data: 04/12/2024<br>
-		                                                                Valor: R$56.0
+		                                                                Data: 14/11/2023<br>
+		                                                                Valor: R$166.0
 		                                                                
 		                                                            <br>
 		                                                        </font>
@@ -725,108 +711,12 @@
 		                                    
 		                            </font>
 		                        </td>
-		                        <td align="center" width=50><font class=normal>850240632631</font></td>
-		                        <td align="center" width=62><font class=normal>04/12/2024</font></td>
+		                        <td align="center" width=50><font class=normal>850230558492</font></td>
+		                        <td align="center" width=62><font class=normal>14/11/2023</font></td>
 		                        <td align="center" width=10>
 		                            <font class=normal>
 		                            
-		                                <img id='850240632631' 
-		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
-		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
-		                                
-		                            </font>
-		                        </td>
-		                        <td align="center" width=10>
-		                		<font class=normal>
-		                		
-				                </font>
-				                </td>
-		                        <td align="center" width=30>
-		                            <font class=normal>
-		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('340')" onmouseover="showMe('340')" onClick="DisableHide()">
-		                                    340
-		                                </a>
-		                            </font>
-		                            <div id='340'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
-		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
-		                                        <tr>
-		                                            <td align="center" bgColor="#b5d6ad">
-		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-		                                                    <tr>
-		                                                        <td><font class=normal>Descrição do Serviço</font></td>
-		                                                        <td width="30">
-		                                                            <a href="javascript:EnableHide('340');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
-		                                                        </td>
-		                                                    </tr>
-		                                                </table>
-		                                            </td>
-		                                        </tr>
-		                                        <tr>
-		                                            <td align=left bgColor="#ffffff">
-		                                                <font class=normal>
-		                                                    <b>340</b>
-		                                                    Cumprimento de exigência
-		                                                </font>
-		                                            </td>
-		                                        </tr>
-		                                </table>
-		                            </div>
-		                        </td>
-		                        <td align="center" width=246><font class=normal>ELISANGELA REGINA SANTOS DE OLIVEIRA 34231286825</font></td>
-		                        <td align="center" width=10>
-		                            <font class=normal>
-		                                
-		                            </font>
-		                        </td>
-								<td align="center" width=10>
-									<font class="normal">&nbsp;                                
-										- 
-									</font>
-								</td>
-		                    </tr>
-		                    
-		                    <tr bgColor=#e9e9e9>
-		                        <td align="center"  width=10>
-		                            <font class=normal>
-		                                
-		                                    <font class=normal>
-		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto2')" onmouseover="showMe('pgto2')" onClick="DisableHide()">
-		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
-		                                        </a>
-		                                    </font>
-		                                    <div id='pgto2' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
-		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
-		                                                <tr>
-		                                                    <td align="center" bgColor="#b5d6ad">
-		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-		                                                            <tr>
-		                                                                <td><font class=normal>Informações do Banco:</font></td>
-		                                                                <td width="30">
-		                                                                    <a href="javascript:EnableHide('pgto2');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
-		                                                                </td>
-		                                                            </tr>
-		                                                        </table>
-		                                                    </td>
-		                                                </tr>
-		                                                <tr>
-		                                                    <td align=left bgColor="#ffffff">
-		                                                        <font class=normal>
-		                                                            
-		                                                            <br>
-		                                                        </font>
-		                                                    </td>
-		                                                </tr>
-		                                        </table>
-		                                    </div>
-		                                    
-		                            </font>
-		                        </td>
-		                        <td align="center" width=50><font class=normal>850230267572</font></td>
-		                        <td align="center" width=62><font class=normal>09/06/2023</font></td>
-		                        <td align="center" width=10>
-		                            <font class=normal>
-		                            
-		                                <img id='850230267572' 
+		                                <img id='850230558492' 
 		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
 		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
 		                                
@@ -868,7 +758,7 @@
 		                                </table>
 		                            </div>
 		                        </td>
-		                        <td align="center" width=246><font class=normal>ELISANGELA REGINA SANTOS DE OLIVEIRA 34231286825</font></td>
+		                        <td align="center" width=246><font class=normal>BELCHIOR JEEP CLUBE</font></td>
 		                        <td align="center" width=10>
 		                            <font class=normal>
 		                                
@@ -961,8 +851,8 @@
 					    <tbody>
 		                
 		                    <tr bgColor=#e9e9e9>
-		                        <td align="center" width=28><font class=normal>2862</font></td>
-		                        <td align="center" width=55><font class=normal><b>11/11/2025</b></font></td>
+		                        <td align="center" width=28><font class=normal>2855</font></td>
+		                        <td align="center" width=55><font class=normal><b>23/09/2025</b></font></td>
 		                        <td align="center" width=74>
 		                        
 		                            <font class=normal>
@@ -973,7 +863,7 @@
 		                        <td align=center  width=10>
 		                            <font class=normal>
 		                            	    	    <a href="#">                          
-					                            	<img id='9c93d9692f20cb524f393fa97ea305c4d8b1b5bfb3a115ca7a9d0706b90e718f' value="24326019" ehTitularOuProcurador="false" name='certificadoPublicacao' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
+					                            	<img id='6657fa3aafd7b2d074dd124186fc2fc7e491f31bb0e350cf93680f2f9493fff7' value="24116178" ehTitularOuProcurador="false" name='certificadoPublicacao' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
 						                			</a>
 						                		                                
 		                            </font>
@@ -1008,7 +898,7 @@
 		                        <td align=center  width=10>
 		                            <font class=normal>
 		                            	      <a href="#">                          
-				                            	    <img ipasDoc="S" id='930727940_2852_029' name='' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
+				                            	    <img ipasDoc="S" id='932615260_2852_029' name='' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
 					                			</a>
 					                    		                                
 		                            </font>
@@ -1021,65 +911,8 @@
 		                    </tr>
 		                    
 		                    <tr bgColor=#e9e9e9>
-		                        <td align="center" width=28><font class=normal>2838</font></td>
-		                        <td align="center" width=55><font class=normal><b>27/05/2025</b></font></td>
-		                        <td align="center" width=74>
-		                        
-		                            <font class=normal>
-		                                Republicação de pedido
-		                            </font>
-		                            
-		                        </td>
-		                        <td align=center  width=10>
-		                            <font class=normal>
-		                            	-		                                
-		                            </font>
-		                        </td>
-		                        <td align=center  width=10>
-		                            <font class=normal>
-		                            	-		                                
-		                            </font>
-		                        </td>
-		                        <td align=left  width=623>
-		                             <font class=normal>
-		                                <b>Detalhes do despacho: </b>Republicado o pedido em virtude da alteração da classe e da especificação apresentada inicialmente de maneira genérica, face aos esclarecimentos prestados na petição de cumprimento de exigência (850240632631).
-		                            </font>
-		                        </td>
-		                    </tr>
-		                    
-		                    <tr bgColor=white>
-		                        <td align="center" width=28><font class=normal>2813</font></td>
-		                        <td align="center" width=55><font class=normal><b>03/12/2024</b></font></td>
-		                        <td align="center" width=74>
-		                        
-		                            <font class=normal>
-		                                Exigência de mérito
-		                            </font>
-		                            
-		                        </td>
-		                        <td align=center  width=10>
-		                            <font class=normal>
-		                            	-		                                
-		                            </font>
-		                        </td>
-		                        <td align=center  width=10>
-		                            <font class=normal>
-		                            	      <a href="#">                          
-				                            	    <img ipasDoc="S" id='930727940_2813_136' name='' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
-					                			</a>
-					                    		                                
-		                            </font>
-		                        </td>
-		                        <td align=left  width=623>
-		                             <font class=normal>
-		                                <b>Detalhes do despacho: </b>Reapresente especificação restrita a itens incluídos unicamente na classe reivindicada no pedido de registro, observando os exemplos contidos na classificação internacional de produtos e serviços.
-		                            </font>
-		                        </td>
-		                    </tr>
-		                    
-		                    <tr bgColor=#e9e9e9>
-		                        <td align="center" width=28><font class=normal>2740</font></td>
-		                        <td align="center" width=55><font class=normal><b>11/07/2023</b></font></td>
+		                        <td align="center" width=28><font class=normal>2760</font></td>
+		                        <td align="center" width=55><font class=normal><b>28/11/2023</b></font></td>
 		                        <td align="center" width=74>
 		                        
 		                            <font class=normal>
@@ -1115,10 +948,10 @@
                         <font class=normal>
                             &nbsp;<br>Dados atualizados  até 
                             <b>
-                                23/12/2025
+                                06/01/2026
                             </b>
                             - Nº da Revista:
-                            <b>2868</b>
+                            <b>2870</b>
                         </font>
                     </td>
                 </tr>

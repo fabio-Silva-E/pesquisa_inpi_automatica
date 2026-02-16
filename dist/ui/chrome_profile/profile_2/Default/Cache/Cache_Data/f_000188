@@ -1,0 +1,1015 @@
+ 
+
+
+
+
+
+
+
+
+
+
+<html>
+    <head>
+        <title>INPI</title>
+        <meta content="text/html; charset=ISO-8859-1" http-equiv=Content-Type>
+        <link href="../jsp/css/inpi.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/captcha.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/accordions.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/MarcaDetalhe.css" rel=stylesheet type=text/css>
+        <script type="text/javascript" src="../jsp/funcoes/geral.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/captcha.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/meusPedidos.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/MarcaDetalhe.js"></script>
+
+   		<!-- RECAPTCHA -->
+		<script src="//www.google.com/recaptcha/api.js"></script>
+   		    </head>
+    <body bgColor="#ffffff" leftMargin=0 text="#000000" topMargin=0 >
+    
+    <div id="janelaModalCaptchaDownload" class="janelaModal">
+
+            <div class="tituloModal">Digite o texto da imagem abaixo</div>            
+           
+           <!-- RECAPTCHA -->
+			<div class="g-recaptcha" data-sitekey="6LfhwSAaAAAAANyx2xt8Ikk-YkQ3PGeAVhCfF3i2"></div>
+		
+            <fieldset></fieldset>
+            <input type="hidden" id="NumeroID">
+            <input type="hidden" id="certificado">
+            <input type="hidden" id="ipasDoc">
+            <input type="hidden" id="ehTitularOuProcurador">
+            
+    </div> 
+     
+    <form name="MarcaPesquisa" method="POST" action="../servlet/MarcasServletController">
+		<input type="hidden" name="CodPedido" id="CodPedido" value="6387997">
+    	<input type="hidden" name="NumPedido" value="">
+    	<input type="hidden" name="Action" id="Action" value="">
+    
+        <div id="overlay"></div>
+
+        <div id="mainContainer">
+
+<div id="principal">
+<br/>
+<div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
+	<ul id="menu-barra-temp" style="list-style:none;">
+	<li style="display:inline; float:left;padding-right:10px; margin-right:10px; borderright:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- Portal Padrão Barra de Identidade Visual do Governo Federal na Internet - APLICAÇÃO right:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- decoration:none; color:white;">Portal do Governo Brasileiro</a>
+		</li>
+		<li>
+			<a style="font-family:sans,sans-serif; text-decoration:none; color:white;" 
+			href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo
+			</a>
+		</li>
+	</ul>
+</div>
+<div id="logo">
+	<a id="portal-logo" href="http://www.inpi.gov.br" title="O portal do Brasil">
+		<span id="portal-title-1">Instituto Nacional da</span>
+		<span id="portal-title" class="corto">Propriedade Industrial</span>
+		<span id="portal-description">Ministério da Economia</span>
+	</a>
+</div>
+<script src="/pePI/jsp/funcoes/barra.js" type="text/javascript"></script>
+
+
+
+        <table width="780px">
+            <tr>
+                <td align="center" colspan="2"><font class="titulo">Consulta à Base de Dados do INPI</font></td>
+            </tr>
+            <tr>
+                <td align="right" colspan="2">
+                    <font class=normal>
+						<div align="right">
+                            [ <a href="../jsp/Base_pesquisa.jsp" class="titulo">Início</a> |
+                            <a href="../jsp/Ajuda.jsp" class="normal">Ajuda?</a> ]
+						</div>
+                    </font>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <font class=normal>
+                        » Consultar por: <a class=titulo href="../jsp/marcas/Pesquisa_num_processo.jsp">No.Processo</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_classe_basica.jsp">Marca</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_titular.jsp">Titular</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_figura.jsp">Cód. Figura</a> ]
+                    </font>
+                </td>
+	            <td align="right">
+	                <font class=normal>
+	                	
+						1/0
+						
+	                </font>
+	            </td>
+            </tr>
+            <tr>
+		  		<td colspan="2">
+	   	   			<hr class="hr">
+	    		</td>
+			</tr>
+            <tr>
+                <td colspan="2" align="center">
+                	<font class=normal>Marca</font>
+                </td>
+            </tr>
+            <tr>
+                
+	                <td align="right" colspan="2">
+	                    <font class="normal">
+	                    Meus Pedidos&nbsp;
+	                    </font>
+						<input type="checkbox"  
+						name="MeusPedidos" value="940853680" 
+						onChange="ConfirmMyList(this.form,'940853680',0)">
+		            </td>
+	                
+            </tr>
+        </table>
+        <table width="780px" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="left" width=120>
+                	<font class=normal>Nº do Processo:</font>
+                </td>
+                <td align=left valign="middle">
+                	<font class=marcador>&nbsp;<b>940853680</b></font>
+                	<input type="hidden" id="numeroProcesso" name="numeroProcesso" value ="940853680" />
+                </td>
+                    
+            </tr>
+            <tr>	
+			
+			
+			
+            <tr>
+                <td align="left">
+                	<font class=normal>Marca:</font>
+                </td>
+                <td align=left>
+                
+                        <font class=normal>&nbsp;TR STORE</font>
+                        
+                </td>
+        	</tr>
+        	<tr>
+                <td align="left">
+                	<font class=normal>Situação:</font>
+                </td>
+                <td align=left>
+                    <font class=normal>&nbsp;
+                    Aguardando manifestação sobre oposição
+                    </font>
+                </td>
+            </tr>
+            
+            
+             <tr>
+                <td align="left">
+                	<font class=normal>Apresentação:</font>
+                </td>
+                <td align=left>
+                	<font class=normal>&nbsp;Nominativa</font>
+                </td>
+               </tr>
+                
+               <tr>
+                    <td align="left">
+                    	<font class=normal>Natureza:</font>
+                    </td>
+                    <td align=left>
+                    	<font class=normal>&nbsp;Produtos e/ou Serviço</font>
+                    </td>
+                </tr>
+<tr>
+                   
+                </tr>                
+        </table>
+        
+        <br/>
+         
+          <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-classe-nice" />
+				<label for= "accordion-classe-nice"><font class="titulo">Classificação de Produtos / Serviços</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="110"><font class=normal>Classe de Nice</font></th>
+                                <th width="230"><font class=normal>Situação da Classe</font></th>
+                                <th width="440"><font class=normal>Especificação</font></th>
+					    	</tr>
+					    </thead>
+					    
+					     <tbody>
+					     
+					     
+                               
+                        <tr bgColor="#e9e9e9" align="center">
+                        	<td>
+                               <font class="normal">
+	                               <a class="normal" href="javascript:void(0)" onmouseout="hideMe('cln0')" onmouseover="showMe('cln0')" onClick="DisableHide()">
+										NCL(12) 07
+	                               </a>
+                               </font>
+                               <div id='cln0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF"> 
+                                   <table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#006363">
+                                       <tr>
+                                           <td align="left" bgcolor="#b5d6ad">
+                                               <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                   <tr>
+                                                       <td><font class="normal"><b>Classe Nice - Revisão: (12)</b></font></td>
+                                                       <td width="30">
+                                                           <a href="javascript:EnableHide('cln0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                       </td>
+                                                   </tr>
+                                               </table>
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td align="left" bgcolor="#ffffff">
+                                               <font class="normal">Máquinas e ferramentas mecânicas; motores (exceto para veículos terrestres); e engates de máquinas e componentes de transmissão (exceto para veículos terrestres); instrumentos agrícolas não manuais; chocadeiras.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         </font>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </div>
+                        	
+                        	</td>
+
+                            <td>
+                                <font class="normal">
+                                    Vide Situação do Processo
+                                </font></td>
+                            
+
+                        	<td>
+								
+                       			
+	                            <font class=normal >&nbsp;
+	                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('especificacao0')" onmouseover="showMe('especificacao0')" onClick="DisableHide()"> 
+	                                    Abafadores de som para motores e máquinas;Abridores de latas...
+	                                </a>
+	                            </font>
+	                            <div id="especificacao0"  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 800px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+	                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+	                                        <tr>
+	                                            <td align="center" bgColor="#b5d6ad">
+	                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	                                                    <tr>
+	                                                        <td><font class=normal>Especificação</font></td>
+	                                                        <td width="30">
+	                                                            <a href="javascript:EnableHide('especificacao0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align=left bgColor="#ffffff">
+	                                                <font class=normal> 
+	                                                    Abafadores de som para motores e máquinas;Abridores de latas elétricos;Acessórios para aspirador de pó para disseminação de perfumes e desinfetantes;Acessórios para caldeiras de máquinas;Acionadores de partida para motores e máquinas;Acoplamentos de eixos [máquinas];Acoplamentos, exceto para veículos terrestres;Aerocondensadores;Aerógrafos para aplicação de cor [máquinas];Afiador de esquis, elétricos;Afiador elétrico para instrumento de corte;Afiadora [máquina para afiar ferramenta];Agitador metálico para líquido revestido de vidro [dispositivos industriais];Agitadores;Agulha para máquina industrial;Agulhas para máquinas cardadoras de lã;Agulhas para máquinas de costura;Agulhas para máquinas para tricotar;Alavanca [parte de máquina];Alimentadores [partes de máquinas];Alimentadores para caldeiras de máquinas;Alimentadores para carburadores;Alternadores;Amassadeira elétrica;Amortecedor de impacto industrial, a gás;Amortecedor de impacto industrial, hidráulico;Amortecedor de impacto industrial, pneumático;Amortecedor isolador de ruído e de vibração [parte de máquina];Amortecedor para máquina;Ancinhos [máquinas];Ancinhos para máquinas;Anéis de êmbolos;Anéis de esferas para rolamentos;Anéis para lubrificação [peças de máquinas];Anel de lubrificação [parte de motor];Anel de pistão [parte de máquina];Anel de segmento [parte de máquina];Anel de segmento [parte de motor de veículo];Anel para prensa de filtrar [parte de máquina];Anel raspador de óleo [parte de motores];Aparador de grama, exceto instrumentos manuais de propulsão muscular;Aparatos de entintamento para máquinas de impressão;Aparelho concentrador de minério [máquina];Aparelho elétrico de uso agrícola para pulverização de produto químico [máquina];Aparelho fumívoro de uso industrial;Aparelho misturador de manteiga de uso industrial ou comercial;Aparelho para esterilização ou conservação do leite de uso industrial e comercial;Aparelho para hibridação;Aparelho para ordenha mecânica;Aparelho para pulverização de produto químico para uso agroindustrial;Aparelhos de corte a arco elétrico;Aparelhos de exposição de semicondutores usados em operações de fabricação;Aparelhos de fusão a arco elétrico;Aparelhos de soldagem, elétricos;Aparelhos e máquinas para encadernação para uso industrial;Aparelhos elétricos para vedar materiais plásticos [embalagem];Aparelhos eletromecânicos para preparação de alimentos;Aparelhos eletromecânicos para preparar bebidas;Aparelhos para a mineralização de água potável;Aparelhos para elevação;Aparelhos para fundir, a gás;Aparelhos para fundir, elétricos;Aparelhos para gaseificar água;Aparelhos para gaseificar bebidas;Aparelhos para içamento de redes [pesca];Aparelhos para lavagem [limpeza];Aparelhos para limpeza a vapor;Aparelhos para manuseio de carga e descarga;Aparelhos para processamento de minérios;Aparelhos para purificação de acetileno;Aparelhos para soldagem, a gás;Aparelhos para tirar cerveja sob pressão;Aparelhos para vulcanização;Aquecedores de água enquanto partes de máquinas;Arado de tração animal e puxado por trator [parte de máquina agrícola];Arados;Armações para máquinas;Aspirador de pó elétrico, portátil ou não;Aspirador industrial;Aspiradores de cabelo fixos sem contato;Aspiradores de óleo usado pneumáticos;Aspiradores de pó;Aspiradores de pó estacionários sem contato;Atomizadores [máquinas];Atuadores lineares pneumáticos ou hidráulicos, exceto para veículos terrestres;Bancadas para serrar [partes de máquinas];Bate-estaca [máquina];Bate-estacas;Batedeira agrícola [máquina];Batedeira elétrica [aparelho];Batedores elétricos;Batedores elétricos, para uso doméstico;Betoneiras [máquinas];Bielas para máquinas e motores;Bioimpressoras 3d;Biorreatores para uso na fabricação de biofármacos;Bloco para motor;Bobina para tear [parte de máquina];Bobinas de tear [carretéis];Bobinas para máquinas;Bocais de sucção para aspiradores de pó;Bomba acionada por pressão ou eletricamente para bombeamento de cimento;Bomba centrífuga;Bomba centrífuga de fluxo;Bomba com timer;Bomba de água de veículos [peça acessória de motores];Bomba de uso industrial;Bomba de vapor [peça de máquina];Bomba hidráulica;Bomba injetora para veículo;Bomba para aplicação de óleo e fluído;Bomba para gás natural para uso em poço de petróleo;Bomba para piscina;Bomba para poço de petróleo;Bomba pneumática de imersão;Bombas [máquinas];Bombas [partes de máquinas e motores];Bombas a vácuo [máquinas];Bombas autorreguladoras de combustível;Bombas centrífugas;Bombas de aeração para aquários;Bombas de ar [instalações de oficina];Bombas de ar comprimido;Bombas de combustível para postos de combustível;Bombas de gasolina para postos de combustível;Bombas distribuidoras de hidrogênio para postos de combustível;Bombas para cerveja;Bombas para instalações de aquecimento;Bombas para lubrificação;Bombas para natação contracorrente;Braços robóticos para preparar bebidas;Broca [peças de máquinas];Brocas [peças de máquinas];Buldôzeres;Bulldozer [equipamento de terraplenagem que consiste numa lâmina de aço adaptável a um trator, e destinado a escavar e deslocar, a pequenas distâncias, terras e outros materiais];Cabeças de cilindro para motores;Cabeçote [parte de motor];Cabeçote de máquina de costura doméstica ou industrial;Cabeçote para impressora industrial do tipo térmico;Cabo para aspirador de pó [parte do aparelho doméstico];Cabos de controle para máquinas e motores;Cábrea [espécie de guindaste, com duas ou três pernas convergentes no topo, onde há uma roldana para apoiar o cabo, e que serve para levantar materiais, nas construções];Cabrestantes;Caixa de escapamento para motor;Caixas de câmbio, exceto para veículos terrestres;Caixas de engaxetamento [peças de máquinas];Caixas de lubrificação [partes de máquinas];Caixas de munhões [peças de máquinas];Caixas para matrizes [impressão];Calandras [máquinas];Calandras rotativas portáteis para tecidos;Caldeira [parte de máquina];Caldeiras para máquinas a vapor;Câmara de pressão utilizada em lavadoras e máquinas de lavar;Camisa para máquina [envoltório ou revestimento externo, solto de, por exemplo, um tubo ou cilindro de motor de combustão interna];Camisa para motor;Canetas de impressão em 3d;Canos de descarga para motores e máquinas;Capôs [partes de máquinas];Capotas [partes de máquinas];Captador de fuligem [máquina];Carburadores;Carretéis de tear;Carretéis mecânicos para mangueiras flexíveis;Carretilha para máquina de costura;Carro para fundição [parte de máquina];Carros corrediça para máquinas de tricotar;Cárteres para máquinas e motores;Cartuchos para máquinas de filtrar;Cavadeira [máquina];Ceifeiras;Ceifeiras batedeiras;Ceifeiras enfardadeiras;Centelhador ou dispositivo de ignição [parte de máquina];Centrífuga industrial, parte, componente ou acessório;Centros de usinagem para metalurgia;Chanfradores;Charrua [arado];Chaves de fenda, elétricas;Chocadeira;Cilindros para impressão;Cilindros para laminação;Cilindros para máquinas;Cilindros para motores e máquinas;Clichês para impressão;Coletor de descarga para motores;Coletor de escape de veículos [peça acessória de motores];Coletores de incrustações para caldeiras de máquinas;Coletores de lama [máquinas];Colhedeira agrícola [colheitadeira ou colhedora];Comandos de pedal para máquinas de costura;Compactadores;Compactadores de lixo;Compressor para aparelho eletrodoméstico;Compressor para refrigeração de uso doméstico;Compressor para refrigeração de uso industrial;Compressor parte de máquina e veículo;Compressores [máquinas];Compressores para refrigeradores;Condensador [parte de máquina];Condensador de vapor [industrial];Condensadores de ar;Condensadores de vapor [peças de máquinas];Conexão para máquina industrial;Conjunto para bloqueio de pressurização [junta para máquinas];Controles hidráulicos para máquinas e motores;Controles pneumáticos para máquinas e motores;Conversor catalítico para automóveis [parte de escapamento];Conversor catalítico, exceto para automóvel;Conversores catalíticos;Conversores de combustível para motores de combustão interna;Conversores de torque, exceto para veículos terrestres;Conversores para siderúrgicas;Copo para freio [balancim];Coroa para máquina;Coroas de sondagem [partes de máquinas];Coroas diamantadas [partes de máquinas];Correia abrasiva [cinta lixa] para lixadeiras elétricas de bancada;Correias adesivas para roldanas;Correias de ventiladores para motores;Correias para dínamo;Correias para máquinas;Correias para motores e máquinas;Correias para transportadores;Correias transportadoras;Correias transportadoras [peças de máquinas];Correntes de comando, exceto para veículos terrestres;Correntes de transmissão, exceto para veículos terrestres;Correntes para elevadores [peças de máquinas];Corta-palhas;Cortadeira de papel [máquina];Cortadeira para fotografia [máquina];Cortador de grama movido a eletricidade ou a bateria de uso doméstico;Cortadoras [máquinas] para uso industrial;Cortadores [máquinas];Cortadores de grama [máquinas];Cortadores de legumes em espirais, elétricos;Coxim de máquinas;Coxim de motor, exceto para veículos terrestres;Culatra de máquina;Cultivadores [máquinas];Debulhadoras;Dente e borda para escavação [parte de máquina];Dente para arado;Descascadores de cereais;Descascadores de grãos;Descascadores de grãos e cereais;Descascadores de legumes, elétricos;Desengaçadores [máquinas];Desengorduradores [máquina];Desgaseificadores para água de alimentação;Desintegradores;Diafragma [peça de máquina];Diafragmas de bombas;Diamantes de vidraceiro [partes de máquinas];Dínamos;Dínamos para bicicletas;Dispensadores mecânicos [não elétricos] para preparados de limpeza e/ou desinfetantes para uso em lavanderia e nas indústrias de lavagem de artigos manufaturados [se máquina-ferramenta ou dispositivo industrial, exceto de propulsão muscular];Dispositivo automático para alimentação de animal;Dispositivos antipoluentes para motores e máquinas;Dispositivos de comando para elevadores de passageiros;Dispositivos de ignição para motores de combustão interna;Dispositivos de lavagem ultrassônica portáteis para lavanderia;Dispositivos economizadores de combustível para motores e máquinas;Dispositivos elétricos para abrir janelas;Dispositivos elétricos para abrir portas;Dispositivos elétricos para cortinas;Dispositivos elétricos para fechar janelas;Dispositivos elétricos para fechar portas;Dispositivos hidráulicos para abrir janelas;Dispositivos hidráulicos para abrir portas;Dispositivos hidráulicos para fechar janelas;Dispositivos hidráulicos para fechar portas;Dispositivos para almofadas de ar para deslocar cargas;Dispositivos para operar elevadores de passageiros;Dispositivos pneumáticos para abrir janelas;Dispositivos pneumáticos para abrir portas;Dispositivos pneumáticos para fechar janelas;Dispositivos pneumáticos para fechar portas;Distribuidor [parte de motor];Distribuidor de adubo ou estrume [máquinas agrícolas, exceto as operadas manualmente];Distribuidor de fertilizante [máquinas agrícolas, exceto as operadas manualmente];Dobadouras mecânicas;Eixos de comando para motores de veículos;Eixos de manivela;Eixos de máquinas;Eixos de transmissão, exceto para veículos terrestres;Ejetores;Eletrobomba autoaspirante para turbina e para centrífuga de poço;Eletrobomba utilizada em lavadoras e máquinas de lavar;Eletrodos para máquinas de soldagem;Elevador de caçamba;Elevador de corrente para agricultura;Elevador para lavagem de automóvel e para troca de peça;Elevadores [máquinas];Elevadores de grãos;Elevadores de passageiros;Elevadores mecânicos para empilhar veículos;Elevadores para agricultura;Elo [parte de máquina];Êmbolos amortecedores [peças de máquinas];Embreagens, exceto para veículos terrestres;Embutidoras [máquinas de embutir];Emendador de fusão de fibra óptica;Empacotadoras [máquina];Enceradeiras elétricas para assoalhos;Enfardadeiras;Enfardadeiras para feno;Engate [máquina industrial];Engrenagens para redução de velocidade, exceto para veículos terrestres;Engrenagens, exceto para veículos terrestres;Enxadas [charruas];Equipamento de alvejamento;Equipamento de isenção de nitrato [máquina];Equipamento para separação e classificação de produto;Escadas rolantes;Escapamento para veículos [peça acessória de motores];Escavadeiras;Escavadeiras [máquinas];Escovas [peças de máquinas];Escovas de carvão [eletricidade];Escovas de dínamo;Escovas elétricas [partes de máquinas];Escovas para aspiradores de pó;Esfera para moagem;Esfregões a vapor;Espremedores de frutas elétricos para uso doméstico;Estatores [partes de máquinas];Esteira de transporte;Esteira secadora [parte de máquina];Esteira sincronizada dentada ou lisa para máquinas industriais;Esteiras de borracha [lagarta], enquanto peças de mecanismos tratores em arados para neve;Esteiras de borracha [lagarta], enquanto peças de mecanismos tratores em máquinas agrícolas;Esteiras de borracha [lagarta], enquanto peças de mecanismos tratores em máquinas e aparelhos de carregamento e descarregamento;Esteiras de borracha [lagarta], enquanto peças de mecanismos tratores em máquinas para construção;Esteiras de borracha [lagarta], enquanto peças de mecanismos tratores em máquinas para mineração;Esteiras rolantes;Estiradores [máquinas];Etiquetadores [máquinas];Excêntrico [peça de máquina que transforma um movimento circular contínuo em movimento retilíneo alternativo];Extratores de pregos, elétricos;Extratores de suco, elétricos;Extratores para mineração;Facas elétricas;Facas enquanto peças de máquinas;Fateixas automáticas para uso náutico;Fatiadores de queijo, elétricos;Fatiadores de verduras e legumes, elétricos;Ferramentas [partes de máquinas];Ferramentas portáteis, exceto as de propulsão manual;Ferros de solda, a gás;Ferros de solda, elétricos;Filtros para limpeza de ar de resfriamento, para motores;Filtros, enquanto partes de máquinas ou motores;Filtros-prensas;Foles [partes de máquinas];Foles [ventiladores] [motores];Foles de forja;Fôrmas para calçados [peças de máquinas];Formões para máquinas;Furadeiras elétricas, manuais;Geradores de corrente;Geradores de eletricidade;Geradores de energia de emergência;Grades;Grampeador para uso industrial;Grampo para grampeador industrial;Grua;Guarnições para cardas [peças de máquinas de cardar];Guias para máquinas;Guinchos [máquinas];Guindastes;Guindastes móveis;Hastes para tear;Impressor [máquina];Impressoras 3d;Incubadoras para ovos;Injetores para motores;Instalações centrais de limpeza a vácuo;Instalações de condensação;Instalações de peneiramento;Instalações para aspiração de pó para limpeza;Instalações para lavagem de veículos;Instalações para remoção de pó para limpeza;Instalações pneumáticas para transporte por tubos;Instrumentos agrícolas, exceto os operados manualmente;Invólucros [partes de máquinas];Joeiradoras;Jogo de matriz;Jogo de matriz com bucha e rolamento de esfera;Joysticks como parte de máquinas, exceto para máquinas de jogos;Junções [peças de motor];Junções para vedação [peças de motor];Junta [peça de motor];Juntas cardan;Juntas universais [juntas de cardan];Lagares de vinho;Laminadores;Lâminas [partes de máquinas];Lâminas para corta-palha;Lâminas para serras [partes de máquinas];Lançadeiras [partes de máquinas];Lanças térmicas [máquinas];Lava-louças;Lavadora a gás;Lavadora para uso industrial;Lavadoras de alta pressão;Liquidificadores elétricos para uso doméstico;Lixadeira elétrica de bancada;Lonas de freios, exceto para veículos;Lubrificadores [peças de máquinas];Macaco hidráulico;Macacos [máquinas];Macacos para cremalheiras;Macacos pneumáticos;Maçarico;Maçarico para solda a gás;Maçaricos à gás;Maçaricos para corte a gás;Magnetos para ignição;Mancais antifricção para máquinas [chumaceiras];Mancais de rolamento para máquinas;Mancal;Mandris [peças de máquinas];Mangueira e correia [peça de máquina];Mangueiras para aspirador de pó;Manivelas [partes de máquinas];Máquina de beneficiamento e seleção de produto hortifrutigranjeiro;Máquina de ceifar;Máquina de costura e de overloque para uso industrial;Máquina de overloque de uso doméstico;Máquina de recarga de cartuchos de impressoras;Máquina e equipamento para geração de vapor;Máquina e equipamento para lavagem de veículo;Máquina injetora;Máquina para adubagem e plantio;Máquina para ajustar agulha para fonógrafo;Máquina para amanho de terra;Máquina para carregamento de navio;Máquina para colocar tampas de garrafas;Máquina para embalagem;Máquina para estampar;Máquina para fazer ou cobrir cova para semeadura ou plantio;Máquina para jato de areia;Máquina para lapidação de pedra;Máquina para revolver e preparar o solo;Máquina para transplante de árvore;Máquina para triturar ou machucar galho;Máquinas a vapor;Máquinas agrícolas;Máquinas amassadeiras;Máquinas automáticas de venda;Máquinas automáticas de venda de bilhetes;Máquinas ceifeiras;Máquinas centrífugas;Máquinas cerzideiras;Máquinas colheitadeiras;Máquinas componedoras [impressão];Máquinas cortadeiras;Máquinas cortadoras de carvão;Máquinas de ar comprimido;Máquinas de arar para uso agrícola;Máquinas de autosserviço;Máquinas de carregamento de fornalhas;Máquinas de cervejaria;Máquinas de cigarros para uso industrial;Máquinas de corte para ajuste de tamanho para fins industriais;Máquinas de cozinha elétricas;Máquinas de descarga elétrica [EDM];Máquinas de galvanização;Máquinas de galvanoplastia;Máquinas de gravação a laser portáteis;Máquinas de lavar louças;Máquinas de lavar operadas com moedas;Máquinas de lavar roupas com tambor de secagem;Máquinas de liberação de fluidos para uso industrial;Máquinas de peneirar;Máquinas de pulverização;Máquinas descascadoras;Máquinas dispensadoras de fita para uso industrial;Máquinas divisoras;Máquinas e aparelhos elétricos para lavagem de tapetes;Máquinas e aparelhos para limpeza, elétricos;Máquinas e aparelhos para polimento [elétricos];Máquinas elétricas para encerar;Máquinas elétricas para engraxar sapatos;Máquinas elétricas para fazer massas alimentícias;Máquinas elétricas para soldagem;Máquinas eletromecânicas para indústria química;Máquinas empacotadoras;Máquinas envasadoras;Máquinas fresadoras;Máquinas hidráulicas de carga;Máquinas industriais de impressão a jato de tinta;Máquinas manipuladoras industriais, automáticas;Máquinas misturadoras;Máquinas moedoras;Máquinas para a produção de açúcar;Máquinas para acabamento;Máquinas para acetinar;Máquinas para adelgaçar couro;Máquinas para afiar;Máquinas para afiar lâminas [correia];Máquinas para alcatroamento;Máquinas para aparar;Máquinas para aplainar;Máquinas para aplicação de goma;Máquinas para bater;Máquinas para caiação;Máquinas para cardar;Máquinas para colocação de trilhos;Máquinas para confecção de fraldas descartáveis;Máquinas para construção de estradas;Máquinas para construção de ferrovias;Máquinas para cortar pão;Máquinas para costura;Máquinas para curvar;Máquinas para debruar;Máquinas para desbastar;Máquinas para descarnar;Máquinas para descaroçar frutas;Máquinas para drenagem;Máquinas para empacotamento;Máquinas para encher garrafas;Máquinas para enchimento;Máquinas para encordoar raquetes;Máquinas para enxaguar;Máquinas para estampagem;Máquinas para estereotipar;Máquinas para exploração de minas;Máquinas para fabricação de papel;Máquinas para fabricação de semicondutores;Máquinas para fazer betume;Máquinas para fazer cordas;Máquinas para fazer frisos;Máquinas para fazer manteiga;Máquinas para fazer missô;Máquinas para fazer molho de soja;Máquinas para fazer salsichas;Máquinas para fiação;Máquinas para fiar [ing. spinning frame];Máquinas para filtrar;Máquinas para fotocomposição;Máquinas para fundição;Máquinas para fundição de tipos [caracteres tipográficos];Máquinas para furar;Máquinas para gerar gás por eletrólise;Máquinas para gravar;Máquinas para içamento;Máquinas para impressão;Máquinas para impressão para uso em chapas metálicas;Máquinas para impressão tipográfica;Máquinas para indústria têxtil;Máquinas para laticínios;Máquinas para lavar [roupas];Máquinas para lavar garrafas;Máquinas para malhetar;Máquinas para moagem de farinha;Máquinas para moldar;Máquinas para montagem de bicicletas;Máquinas para o processamento de plásticos;Máquinas para passar roupa;Máquinas para pintar;Máquinas para pontear;Máquinas para processar tabaco;Máquinas para pudlagem [descarbonização do ferro];Máquinas para rebitagem;Máquinas para refino de petróleo;Máquinas para remexer feno;Máquinas para rosquear;Máquinas para rosquear e talhar;Máquinas para sachar [mondar];Máquinas para selar [estampilhar];Máquinas para selar [lacrar] de uso industrial;Máquinas para selecionar de uso industrial;Máquinas para sucção de ar;Máquinas para sucção para uso industrial;Máquinas para tampar garrafas;Máquinas para terraplanagem;Máquinas para tingir;Máquinas para torcer roupas;Máquinas para trabalhar couro;Máquinas para trabalhar madeira;Máquinas para trabalhar metais;Máquinas para trabalhar pedras;Máquinas para trabalhar vidro;Máquinas para trançar;Máquinas para tricotar;Máquinas para vedação de garrafas;Máquinas para vedar;Máquinas perfuradoras;Máquinas raladoras de frutas, legumes e verduras;Máquinas rendeiras;Máquinas sopradoras;Máquinas tipográficas;Máquinas tosquiadoras para animais;Máquinas trituradoras;Máquinas varredoras de rua, autopropulsoras;Máquinas-ferramentas;Margeadores [impressão];Martelete [máquina pneumática; britadeira];Martelos [partes de máquinas];Martelos elétricos;Martelos mecânicos;Martelos pneumáticos;Martinetes [martelos de forja];Masseira elétrica;Mastros de carga;Matrizes de corte [máquinas industriais];Matrizes para impressão tipográfica;Mecanismos de controle para máquinas e motores;Mecanismos de rodas para máquinas;Mecanismos de transmissão, exceto para veículos terrestres;Mecanismos para propulsão, exceto para veículos terrestres;Mecanismos para teares;Mesas para máquinas;Misturadoras [batedoras] [máquinas];Moedor elétrico de carne;Moedor industrial;Moedores de café, exceto os operados manualmente;Moedores para cozinha, elétricos;Moinhos [máquinas];Moinhos centrífugos;Moinhos de pimenta, exceto operados manualmente;Moinhos para uso doméstico, exceto manuais;Mola para matriz ["die springs"];Molas [peças de máquinas];Moldes [partes de máquinas];Monta-cargas;Monta-cargas para vagões [elevadores];Mós;Motores a jato, exceto para veículos terrestres;Motores aeronáuticos;Motores de ar comprimido;Motores de arranque [partes de máquinas];Motores de arranque [partes de veículos terrestres];Motores de avião;Motores de combustão interna para barcos;Motores de popa;Motores e máquinas hidráulicas;Motores elétricos, exceto para veículos terrestres;Motores para barcos;Motores para veículos sobre colchão de ar;Motores propulsores, exceto para veículos terrestres;Motores, exceto para veículos terrestres;Motosserras;Munhões [peças de máquinas];Navalhas para máquinas de cortar grama;Ordenhadeiras;Pás mecânicas;Pastilhas de freio, exceto para veículos;Pedais de partida para motocicletas;Pedras para amolar [partes de máquinas];Peneiras [máquinas ou partes de máquinas];Peneiras para cinzas [máquinas];Picadores de carne, elétricos;Pigs para limpeza de dutos;Pinhões de motor de arranque;Pinhões de motor de partida;Pistões [peças de máquinas e motores];Pistões amortecedores [peças de máquinas];Pistões para cilindros;Pistões para motores;Pistolas [ferramentas que utilizam cartuchos explosivos];Pistolas de ar comprimido, para extrusão de mástique;Pistolas elétricas para cola;Pistolas para jateamento de areia;Pistolas para pintar;Plainas para alisar;Platinado para motor [parte de qualquer motor];Platinado para motoserra;Polia [parte de máquina];Pontes rolantes;Pontes telescópicas para embarque de passageiros, eletromecânicas;Porta-brocas [peças de máquinas];Porta-ferramentas [partes de máquinas];Porta-lâminas [partes de máquinas];Prensa de frutas;Prensas [máquinas para uso industrial];Prensas de uvas;Prensas para forragem;Prensas rotativas [tipografia];Prensas tipográficas;Pressurizador elétrico;Processadores de alimentos, elétricos;Pulverizadores [máquinas];Pulverizadores para esgoto;Punções para máquinas perfuradoras;Purgador termodinâmico para vapor [dispositivo automático que serve para separar e eliminar o líquido condensado numa tubulação de vapor, sem provocar a suspensão da operação da linha e sem deixar o vapor escapar];Purgadores automáticos [separadores de vapor];Radiadores [refrigeração] para motores e máquinas;Rampas de carregamento;Rebitadores [máquina para rebitar], exceto os de propulsão muscular;Rebolo [parte de máquina];Redutores de pressão [partes de máquinas];Reguladores [partes de máquinas];Reguladores de pressão [partes de máquinas];Reguladores de velocidade para máquinas e motores;Relhas de arado;Removedores de neve;Removedores de relva;Retificadoras [máquinas-ferramentas];Robôs domésticos para limpeza e lavanderia com inteligência artificial;Robôs industriais;Roda hidráulica [parte de máquina];Rodas de oleiro;Rodas livres, exceto para veículos terrestres;Rodas para fiar;Rodas para máquinas;Rolamentos [partes de máquinas];Rolamentos antifricção para máquinas [chumaceiras];Rolamentos autolubrificantes;Rolamentos de esferas;Rolamentos de roletes;Rolamentos para eixos de transmissão;Roldanas *;Roldanas [peças de máquinas];Rolos compressores;Rolos de impressão para máquinas;Sacadores de pregos, elétricos;Saco anódico para refino de ouro na fabricação de moeda [parte de máquina];Sacos para aspirador de pó;Sapatas de freios, exceto para veículos;Secadoras rotativas [centrífugas];Segmentos de êmbolos;Segmentos de freios, exceto para veículos;Semeadoras [máquinas];Separador magnético [máquinas ou parte de máquinas industriais];Separadores de águas;Separadores de grãos;Separadores de vapor/óleo;Separadores nata/leite;Serra de aço [parte de máquina];Serras [máquinas];Silencioso [silenciador] para escapamentos de veículos terrestres;Silenciosos para motores e máquinas;Sistema mecânico para alimentação de animais;Sonda [aparelho de perfuração que atinge grande e média profundidade para conhecimento do subsolo];Sondas para perfuração, flutuantes ou não;Sopradores de forja;Splicers de fusão de fibra óptica;Subsoladores motorizados;Superalimentadores [compressores];Suporte antifricção para máquina;Suportes para carretas [partes de máquinas];Suportes para máquinas;Tambores [peças de máquinas];Tambores para máquinas de bordar;Tanques de expansão [peças de máquinas];Teares [máquinas];Teares de malharia [máquinas];Tesouras elétricas;Tigelas batedeiras;Timão de arado [peça longa do arado ou do carro à qual se atrelam os animais que os puxam];Tímpanos [tipografia];Torneiras [partes de máquinas ou motores];Tornos mecânicos [máquinas-ferramentas];Tosquiadeiras elétricas;Tosquiadores [máquinas];Trados para minas;Trajes exoesqueléticos robóticos, exceto para fins medicinais;Transmissões para máquinas;Transportadores [máquinas];Transportadores pneumáticos;Tremonhas [descarga mecânica];Trituradores;Trituradores de lixo;Trituradores elétricos para cozinha;Trocadores automáticos de ferramentas para robôs industriais;Trocadores de calor [peças de máquinas];Tubo de compressor;Tubos de caldeiras [partes de máquinas];Tubos de caldeiras para máquinas;Turbina a vapor;Turbinas eólicas;Turbinas hidráulicas;Turbinas, exceto para veículos terrestres;Turbocarregadores para motores;Turbocompressores;Unidades flutuantes de produção, armazenamento e transferência [FPSO];Válvula eletromagnética de entrada de água em máquinas de lavar [parte de máquina];Válvula hidráulica de segurança [parte de máquina];Válvula para bomba hidráulica;Válvulas [peças de máquinas];Válvulas de pressão [partes de máquinas];Válvulas para charneiras [peças de máquinas];Vassouras a vapor;Vedações mecânicas enquanto peças de máquinas;Vela de alunagem [máquina de explosão];Vela de ignição para motores de automóvel;Velas para ignição de motores a combustão interna;Velas para reaquecimento de motores diesel;Ventiladores [foles] para compressão, aspiração e transporte de gases;Ventiladores [foles] para compressão, aspiração e transporte de grãos;Ventiladores para motores e máquinas;Ventoinhas [foles] para compressão, aspiração e transporte de gases;Ventoinhas [foles] para compressão, aspiração e transporte de grãos;Ventosas para ordenhadeiras;Vibradores [máquinas] para uso industrial;Virabrequim [em um motor de explosão, peça que possibilita o movimento alternado dos êmbolos; árvore de manivelas];Volantes para máquinas;Produtos de jardinagem
+	                                                </font>
+	                                            </td>
+	                                        </tr>
+	                                </table>
+	                            </div>
+	                            
+	                            
+	                            
+	                            
+	                            	<hr style="border: 1px solid #ffffff">
+	                            	<font class=normal></font>
+	                            
+	                            
+                        	</td>
+                        
+                        </tr>
+                        
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+			
+			 
+			
+					
+        
+         <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-titulares" />
+				<label for= "accordion-titulares"><font class="titulo">Titulares</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="20"><font class=normal></font></th>
+					    		<th width="400"><font class=normal>Nome</font></th>
+					    	</tr>
+					    </thead>
+					     <tbody>
+                         
+
+                         <tr bgColor="#e9e9e9" align="center">
+                             <td width="20"><font class=normal>Titular(1):</font></td>
+                             <td width="400"><font
+                                     class=normal>THIAGO THOMAZ ROCHA ME
+                             </font></td>
+                         </tr>
+                         
+
+					     </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+
+
+        <div class="accordions">
+            <div class="accordion-item">
+                <input type="checkbox" name="accordion" checked='checked' id="accordion-representantes" />
+                <label for= "accordion-representantes"><font class="titulo">Representante Legal</font>
+                    <font class=normal>
+                        <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                        </a>
+                    </font>
+                </label>
+                <div class="accordion-content">
+
+                    <table width="780px">
+                        <thead>
+                        <tr bgcolor="#b5d6ad">
+                            <th width="20"><font class=normal></font></th>
+                            <th width="400"><font class=normal>Nome</font></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        <tr bgColor="#e9e9e9" align="center">
+                            <td width="20"><font class=normal>Procurador:</font></td>
+                            <td width="400"><font class=normal>ALLAN HENRIQUE LOURENÇO</font></td>
+                        </tr>
+                        
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-datas" />
+				<label for= "accordion-datas"><font class="titulo">Datas</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="260"><font class=normal>Data de Depósito</font></th>
+					    		<th width="260"><font class=normal>Data de Concessão</font></th>
+					    		<th width="260"><font class=normal>Data de Vigência</font>
+						    		<font class=normal>
+	                     				<a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdatavigencia')" onmouseover="showMe('helpdatavigencia')" onClick="DisableHide()">
+												<img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+										</a>
+									</font>
+									<div id='helpdatavigencia'
+											style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+											<table border=1 borderColor="#006363" cellPadding=5
+												cellSpacing=0 width="100%">
+												<tr>
+													<td align="center" bgColor="#b5d6ad">
+														<table width="100%" border="0" cellspacing="0"
+															cellpadding="0">
+															<tr>
+																<td><font class=normal>Leia-me</font></td>
+																<td width="30"><a
+																	href="javascript:EnableHide('helpdatavigencia');"><img
+																		src="../jsp/imagens/bt_layer.gif" width="26"
+																		height="16" border="0" name="class"></a></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<tr>
+													<td align=left bgColor="#ffffff"><font class=normal>
+															A data de vigência dos processos de marca designados ao Brasil, pela via do Protocolo de Madri,
+															acompanha o prazo de vigência da inscrição internacional junto à OMPI,
+															independentemente da data de concessão do registro de marca no Brasil. </font></td>
+												</tr>
+											</table>
+										</div>
+					    		</th>
+					    		
+					    	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr bgColor="#e9e9e9">
+					    		<th><font class=normal>
+									01/09/2025	 		
+					    		
+					    			</font>
+					    		</th>
+					    		<th><font class=normal> 
+						    		
+                     				</font>
+                     			</th>
+					    		<th><font class=normal>
+					    			
+					    			</font>
+					    		</th>
+					    		
+					    		
+					    	</tr>
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+				 
+			
+			
+			 
+        
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-1" />
+				<label for= "accordion-1"><font class="titulo">Petições</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)" onmouseout="hideMe('helppeticoes')" onmouseover="showMe('helppeticoes')" onClick="DisableHide()">
+                                <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+                            </a>
+                        </font>
+                        <div id='helppeticoes'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+                            <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+                                    <tr>
+                                        <td align="center" bgColor="#b5d6ad">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td><font class=normal>Leia-me</font></td>
+                                                    <td width="30">
+                                                        <a href="javascript:EnableHide('helppeticoes');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align=left bgColor="#ffffff">
+                                            <font class=normal>
+                                                Só serão identificados nesta consulta os documentos (petições) 
+                                                apresentados por meio do sistema de Guia de Recolhimento da 
+                                                União - GRU - em vigor desde 2006. Documentos anteriores a 
+                                                esta data podem não estar relacionados.
+                                            </font>
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+						 
+	                        [<a href="javascript:void(0)" style="font-size: 13px;"
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcesso&CodPedido=6387997','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Habilitados</a>]
+	                        &nbsp;
+	                        [<a href="javascript:void(0)" style="font-size: 13px;"
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcessoDesativado&CodPedido=6387997','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Desativados</a>]
+                        
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>Pgo</font>
+					    		<th width="50"><font class=normal>Protocolo</font>
+					    		<th width="62"><font class=normal>Data</font>
+					    		<th width="10"><font class=normal>Img</font>
+					    		<th width="10">
+				                
+					    		<th width="30"><font class=normal>Serviço</font>
+					    		<th width="246"><font class=normal>Cliente</font>
+					    		<th width="10"><font class=normal>Delivery</font>
+			    				<th width="10"><font class=normal>Data</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto0')" onmouseover="showMe('pgto0')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                341        - Banco Itaú S.A.<br>
+		                                                                
+		                                                                Data: 12/11/2025<br>
+		                                                                Valor: R$520.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850250666904</font></td>
+		                        <td align="center" width=62><font class=normal>21/11/2025</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                <img id='850250666904' 
+		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
+		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('332')" onmouseover="showMe('332')" onClick="DisableHide()">
+		                                    332
+		                                </a>
+		                            </font>
+		                            <div id='332'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('332');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>332</b>
+		                                                    Oposição - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>TRAMONTINA S/A CUTELARIA</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto1')" onmouseover="showMe('pgto1')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto1' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto1');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                341        - Banco Itaú S.A.<br>
+		                                                                
+		                                                                Data: 17/11/2025<br>
+		                                                                Valor: R$260.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850250666479</font></td>
+		                        <td align="center" width=62><font class=normal>21/11/2025</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                <img id='850250666479' 
+		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
+		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('332')" onmouseover="showMe('332')" onClick="DisableHide()">
+		                                    332
+		                                </a>
+		                            </font>
+		                            <div id='332'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('332');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>332</b>
+		                                                    Oposição - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>THAIS RODRIGUES RAMOS DE ARAUJO EPP</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto2')" onmouseover="showMe('pgto2')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto2' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto2');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850250493821</font></td>
+		                        <td align="center" width=62><font class=normal>01/09/2025</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                <img id='850250493821' 
+		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
+		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('394')" onmouseover="showMe('394')" onClick="DisableHide()">
+		                                    394
+		                                </a>
+		                            </font>
+		                            <div id='394'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('394');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>394</b>
+		                                                    Pedido de registro de marca (com especificação de livre preenchimento) - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>THIAGO THOMAZ ROCHA ME</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+					</table>		
+					</div>					
+				</div>
+			</div>
+			
+			
+			<br/>
+			<div class="accordions">
+				<div class="accordion-item">
+					<input type="checkbox" name="accordion" checked="checked" id="accordion-2" />
+					<label for= "accordion-2"><font class="titulo">Publicações</font>
+		                <font class=normal>
+		                    <a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdespacho')" onmouseover="showMe('helpdespacho')" onClick="DisableHide()">
+		                        <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+		                    </a>
+		                </font>
+		                <div id='helpdespacho'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 600px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                    <table border=1 borderColor="#006363" borderColorLight="#b5d6ad" cellPadding=5 cellSpacing=0 width="100%">
+		                        <tbody>
+		                            <tr>
+		                                <td align="center" bgColor="#b5d6ad">
+		                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                        <tr>
+		                                            <td><font class=normal>Leia-me</font></td>
+		                                            <td width="30">
+		                                                <a href="javascript:EnableHide('helpdespacho');">
+		                                                <img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class">
+		                                                </a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td align=left bgColor="#ffffff">
+		                                    <font class=normal>
+		                                        PRAZOS:
+												O direito de praticar qualquer ato perante o INPI se extingue ao final do prazo 
+												estabelecido pela LPI para realização do mesmo, a não ser que o interessado comprove 
+												que o não realizou por justa causa. Reputa-se justa causa o evento imprevisto, alheio à 
+												vontade da parte, e que a impediu de praticar o ato.
+												Os prazos previstos na LPI em relação às patentes são contados em dias, meses 
+												e anos. Os prazos expressos em dias contam-se de modo contínuo; os expressos em 
+												meses devem ser contados de data a data, ou seja, expiram no dia de número igual ao do 
+												dia do início da contagem, ou no dia imediatamente subseqüente, caso falte esta
+												correspondência.
+												No cômputo dos prazos, exclui-se o dia do começo e inclui-se o do vencimento. Se 
+												este cair em dia sem expediente, o prazo será prorrogado até o primeiro dia útil após o 
+												vencimento.
+												Os prazos somente começam a correr a partir do primeiro dia útil após a
+												intimação, que será feita mediante publicação na RPI, ressalvados:
+												- os que expressamente independerem de notificação ou publicação por força do 
+												disposto na LPI; 
+												- as decisões administrativas, quando feita notificação por via postal ou por ciência 
+												dada ao interessado no processo; e
+												- os pareceres e despachos internos que não necessitem ser do conhecimento das 
+												partes (art. 226 da LPI). 
+												Não havendo expressa estipulação na LPI, o prazo para a prática de um ato será 
+												de 60 (sessenta) dias
+		                                    </font>
+		                                </td>
+		                            </tr>
+		                        </tbody>
+		                    </table>
+		            	</div>
+					</label>
+					<div class="accordion-content">
+
+					<table>
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>RPI</font>
+					    		<th width="50"><font class=normal>Data RPI</font>
+					    		<th width="62"><font class=normal>Despacho</font>
+					    		<th width="30"><font class=normal>Certificado</font>
+					    		<th width="30"><font class=normal>Inteiro Teor</font>
+					    		<th width="10"><font class=normal>Complemento do Despacho</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center" width=28><font class=normal>2869</font></td>
+		                        <td align="center" width=55><font class=normal><b>30/12/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Notificação de oposição
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                <b>Petições de oposição: </b>850250666479 de 21/11/2025 e 850250666904 de 21/11/2025
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center" width=28><font class=normal>2855</font></td>
+		                        <td align="center" width=55><font class=normal><b>23/09/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Publicação de pedido de registro para oposição (exame formal concluído)
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+				</table>		
+				</div>
+			</div>
+		</div>
+        
+        <table border=0 width="780px" border="0" cellpadding="3" cellspacing="2" class="fundoportal">
+                <tr>
+                    <td align="center" colSpan=6>
+                        <font class=normal>
+                            &nbsp;<br>Dados atualizados  até 
+                            <b>
+                                06/01/2026
+                            </b>
+                            - Nº da Revista:
+                            <b>2870</b>
+                        </font>
+                    </td>
+                </tr>
+        </table>
+            </form>
+    <!-- RECAPTCHA -->
+        <div id="conteudoCaptcha" style="display: none">
+            <form id="captchaForm">
+            
+                <div id="captchaConteiner">
+                    <br /> 
+                    <input type="submit" id="captchaButton" class="button branco" value="Download" />
+                    <div id="msgErroCaptcha" class="errorMsgCaptcha" style="display: none"></div>
+                </div>
+                
+                <div id="loader" style="display: none">
+                    <img src="../jsp/imagens/loading.gif" style="margin-top: 75px; width: 180px" />
+                </div>
+                
+                <input type="hidden" value="300" id="codDiretoria" />
+                <input type="hidden" id="cdDespach" />
+                
+            </form>
+        </div>
+    <!-- RECAPTCHA -->
+    
+	<br/>
+      
+	<div id="bottom_principal"></div>
+	<div id="footer">
+		<div id="texto_footer">
+			<p>Rua Mayrink Veiga, 9 - Centro - RJ - CEP: 20090-910</p>
+		</div>
+		<div id="logo_ouvidoria">
+			<a href="http://faleconosco.inpi.gov.br/" target="blank"><img src="/pePI/jsp/imagens/faleconosco.png" border="0" alt="Fale Conosco" onmouseout="this.src='/pePI/jsp/imagens/faleconosco.png';"
+				title="Fale Conosco" onmouseover="this.src='/pePI/jsp/imagens/faleconosco.png';" /> </a>
+		</div>
+	</div>
+    </body>
+</html>

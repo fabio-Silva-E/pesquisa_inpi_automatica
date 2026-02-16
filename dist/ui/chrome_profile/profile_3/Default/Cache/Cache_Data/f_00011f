@@ -1,0 +1,962 @@
+ 
+
+
+
+
+
+
+
+
+
+
+<html>
+    <head>
+        <title>INPI</title>
+        <meta content="text/html; charset=ISO-8859-1" http-equiv=Content-Type>
+        <link href="../jsp/css/inpi.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/captcha.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/accordions.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/MarcaDetalhe.css" rel=stylesheet type=text/css>
+        <script type="text/javascript" src="../jsp/funcoes/geral.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/captcha.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/meusPedidos.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/MarcaDetalhe.js"></script>
+
+   		<!-- RECAPTCHA -->
+		<script src="//www.google.com/recaptcha/api.js"></script>
+   		    </head>
+    <body bgColor="#ffffff" leftMargin=0 text="#000000" topMargin=0 >
+    
+    <div id="janelaModalCaptchaDownload" class="janelaModal">
+
+            <div class="tituloModal">Digite o texto da imagem abaixo</div>            
+           
+           <!-- RECAPTCHA -->
+			<div class="g-recaptcha" data-sitekey="6LfhwSAaAAAAANyx2xt8Ikk-YkQ3PGeAVhCfF3i2"></div>
+		
+            <fieldset></fieldset>
+            <input type="hidden" id="NumeroID">
+            <input type="hidden" id="certificado">
+            <input type="hidden" id="ipasDoc">
+            <input type="hidden" id="ehTitularOuProcurador">
+            
+    </div> 
+     
+    <form name="MarcaPesquisa" method="POST" action="../servlet/MarcasServletController">
+		<input type="hidden" name="CodPedido" id="CodPedido" value="6381602">
+    	<input type="hidden" name="NumPedido" value="">
+    	<input type="hidden" name="Action" id="Action" value="">
+    
+        <div id="overlay"></div>
+
+        <div id="mainContainer">
+
+<div id="principal">
+<br/>
+<div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
+	<ul id="menu-barra-temp" style="list-style:none;">
+	<li style="display:inline; float:left;padding-right:10px; margin-right:10px; borderright:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- Portal Padrão Barra de Identidade Visual do Governo Federal na Internet - APLICAÇÃO right:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- decoration:none; color:white;">Portal do Governo Brasileiro</a>
+		</li>
+		<li>
+			<a style="font-family:sans,sans-serif; text-decoration:none; color:white;" 
+			href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo
+			</a>
+		</li>
+	</ul>
+</div>
+<div id="logo">
+	<a id="portal-logo" href="http://www.inpi.gov.br" title="O portal do Brasil">
+		<span id="portal-title-1">Instituto Nacional da</span>
+		<span id="portal-title" class="corto">Propriedade Industrial</span>
+		<span id="portal-description">Ministério da Economia</span>
+	</a>
+</div>
+<script src="/pePI/jsp/funcoes/barra.js" type="text/javascript"></script>
+
+
+
+        <table width="780px">
+            <tr>
+                <td align="center" colspan="2"><font class="titulo">Consulta à Base de Dados do INPI</font></td>
+            </tr>
+            <tr>
+                <td align="right" colspan="2">
+                    <font class=normal>
+						<div align="right">
+                            [ <a href="../jsp/Base_pesquisa.jsp" class="titulo">Início</a> |
+                            <a href="../jsp/Ajuda.jsp" class="normal">Ajuda?</a> ]
+						</div>
+                    </font>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <font class=normal>
+                        » Consultar por: <a class=titulo href="../jsp/marcas/Pesquisa_num_processo.jsp">No.Processo</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_classe_basica.jsp">Marca</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_titular.jsp">Titular</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_figura.jsp">Cód. Figura</a> ]
+                    </font>
+                </td>
+	            <td align="right">
+	                <font class=normal>
+	                	
+						1/0
+						
+	                </font>
+	            </td>
+            </tr>
+            <tr>
+		  		<td colspan="2">
+	   	   			<hr class="hr">
+	    		</td>
+			</tr>
+            <tr>
+                <td colspan="2" align="center">
+                	<font class=normal>Marca</font>
+                </td>
+            </tr>
+            <tr>
+                
+	                <td align="right" colspan="2">
+	                    <font class="normal">
+	                    Meus Pedidos&nbsp;
+	                    </font>
+						<input type="checkbox"  
+						name="MeusPedidos" value="940842513" 
+						onChange="ConfirmMyList(this.form,'940842513',0)">
+		            </td>
+	                
+            </tr>
+        </table>
+        <table width="780px" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="left" width=120>
+                	<font class=normal>Nº do Processo:</font>
+                </td>
+                <td align=left valign="middle">
+                	<font class=marcador>&nbsp;<b>940842513</b></font>
+                	<input type="hidden" id="numeroProcesso" name="numeroProcesso" value ="940842513" />
+                </td>
+                    
+                		<td align="right" valign="middle" rowspan="5">
+                        	<img border="0" height="220" width="220" src='/pePI/servlet/LogoMarcasServletController?Action=image&codProcesso=6381602'>
+               			</td>
+                        
+            </tr>
+            <tr>	
+			
+			
+			
+            <tr>
+                <td align="left">
+                	<font class=normal>Marca:</font>
+                </td>
+                <td align=left>
+                
+                        <font class=normal>&nbsp;GREENOX</font>
+                        
+                </td>
+        	</tr>
+        	<tr>
+                <td align="left">
+                	<font class=normal>Situação:</font>
+                </td>
+                <td align=left>
+                    <font class=normal>&nbsp;
+                    Aguardando manifestação sobre oposição
+                    </font>
+                </td>
+            </tr>
+            
+            
+             <tr>
+                <td align="left">
+                	<font class=normal>Apresentação:</font>
+                </td>
+                <td align=left>
+                	<font class=normal>&nbsp;Mista</font>
+                </td>
+               </tr>
+                
+               <tr>
+                    <td align="left">
+                    	<font class=normal>Natureza:</font>
+                    </td>
+                    <td align=left>
+                    	<font class=normal>&nbsp;Produtos e/ou Serviço</font>
+                    </td>
+                </tr>
+<tr>
+                   
+                </tr>                
+        </table>
+        
+        <br/>
+         
+          <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-classe-nice" />
+				<label for= "accordion-classe-nice"><font class="titulo">Classificação de Produtos / Serviços</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="110"><font class=normal>Classe de Nice</font></th>
+                                <th width="230"><font class=normal>Situação da Classe</font></th>
+                                <th width="440"><font class=normal>Especificação</font></th>
+					    	</tr>
+					    </thead>
+					    
+					     <tbody>
+					     
+					     
+                               
+                        <tr bgColor="#e9e9e9" align="center">
+                        	<td>
+                               <font class="normal">
+	                               <a class="normal" href="javascript:void(0)" onmouseout="hideMe('cln0')" onmouseover="showMe('cln0')" onClick="DisableHide()">
+										NCL(12) 08
+	                               </a>
+                               </font>
+                               <div id='cln0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF"> 
+                                   <table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#006363">
+                                       <tr>
+                                           <td align="left" bgcolor="#b5d6ad">
+                                               <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                   <tr>
+                                                       <td><font class="normal"><b>Classe Nice - Revisão: (12)</b></font></td>
+                                                       <td width="30">
+                                                           <a href="javascript:EnableHide('cln0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                       </td>
+                                                   </tr>
+                                               </table>
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td align="left" bgcolor="#ffffff">
+                                               <font class="normal">Ferramentas e instrumentos manuais (propulsão muscular); cutelaria; armas brancas; aparelhos de barbear.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </font>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </div>
+                        	
+                        	</td>
+
+                            <td>
+                                <font class="normal">
+                                    Vide Situação do Processo
+                                </font></td>
+                            
+
+                        	<td>
+								
+                       			
+	                            <font class=normal >&nbsp;
+	                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('especificacao0')" onmouseover="showMe('especificacao0')" onClick="DisableHide()"> 
+	                                    Abridor de caixa não elétrico [ferramenta];Abridores de lata...
+	                                </a>
+	                            </font>
+	                            <div id="especificacao0"  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 800px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+	                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+	                                        <tr>
+	                                            <td align="center" bgColor="#b5d6ad">
+	                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	                                                    <tr>
+	                                                        <td><font class=normal>Especificação</font></td>
+	                                                        <td width="30">
+	                                                            <a href="javascript:EnableHide('especificacao0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align=left bgColor="#ffffff">
+	                                                <font class=normal> 
+	                                                    Abridor de caixa não elétrico [ferramenta];Abridores de latas, não elétricos;Abridores de ostras;Adagas;Afiador de corda manual;Afiador de esquis operado manualmente;Afiador manual para instrumento de corte [acionado por força muscular];Afiadores de velas;Agulhas para tatuagens;Alabarda [arma branca];Alavancas;Alfanje [arma branca];Alfanje [para cortar erva];Alicates [pinças]*;Alicates de unhas;Alicates decapadores [ferramentas manuais];Alicates para cutículas;Alicates*;Almofarizes para pilar [ferramentas manuais];Almotolia [lubrificação];Alvião [ferramenta];Alviões;Amoladores de facas;Ancinhos [ferramentas manuais];Ancinhos coletores de areia;Anéis de foices;Apanhador de fruta [colhedor manual];Aparador de cerca viva elétrico;Aparador de cerca viva movido a combustível fóssil;Aparador de grama manual [propulsão muscular];Aparelho manual [de propulsão muscular] sugador de solda não elétrico;Aparelho para curvar cílio;Aparelho para furar orelhas;Aparelhos elétricos para trançar o cabelo;Aparelhos manuais para ondular cabelos;Aparelhos para barbear, elétricos ou não;Aparelhos para curvar cílios;Aparelhos para decantar líquidos [ferramentas manuais];Aparelhos para depilação, elétricos ou não;Aparelhos para destruir parasitas de plantas operados manualmente;Aparelhos para fazer tatuagens;Aperta-cabo e aperta-fio [ferramenta];Aplicador de cílio artificial;Arado manual [de propulsão muscular];Arco de serra;Arcos de pua [ferramentas manuais];Aríetes [ferramentas manuais];Arma de estoque;Armas brancas;Armas portáteis, exceto armas de fogo [arma branca];Arpão*;Arranca-ponta [ferramenta];Arranca-pregos [ferramentas manuais];Arrancador de fruto [ferramenta];Assentadores para navalhas de barbear [correias para afiar navalhas];Atiçadores [ferros para atiçar fogo];Atomizadores para inseticidas [ferramentas manuais];Bainhas para espadas;Baionetas;Barras de mandrilagem [ferramentas manuais];Bastão com faca ou espeto embutido usado para marcar o gado a ferro em brasa;Bastão para marcar animal feito de substância não tóxica;Bedame ou badame [formão];Bengala-espada [arma branca];Berbequins manuais a propulsão muscular;Bico para almotolia [lubrificação];Bisegres;Bombas d'água manuais [propulsão muscular];Bombas de ar manuais;Bombas manuais *;Brocas [partes de ferramentas manuais];Buris [ferramentas manuais];Buris de oculista;Cabo manual para cortar [ferramenta];Cabos para facas;Cabos para ferramentas operadas manualmente [empunhaduras];Cabos para foices;Cabos para passadores;Caixa [estojo] para ferramenta [cheia];Caixa de meia esquadria [ferramentas manuais];Camartelos;Canivetes;Capa protetora feita de tecido antitérmico para ferro de passar;Cardas [ferramentas manuais];Cassetetes;Cassetetes de polícia;Chapinhas alisadoras de cabelo;Chassis para serras manuais;Chave de encaixe;Chave metálica para veículo;Chave para broca;Chave para dar corda;Chave para porca ou parafuso;Chaves de boca;Chaves de fenda do tipo "catraca" [ferramentas manuais];Chaves de fenda, não elétricas;Chaves inglesas [ferramentas manuais];Cintos porta-ferramentas;Cinzeis para escultores;Cinzéis*;Cisalhas [tesoura]*;Coletes para ferramentas;Coletores de dinheiro;Colheres *;Colheres de pedreiro [trolha];Colheres, garfos e facas de mesa para bebês;Colheres, garfos e facas de mesa, todos de plástico;Colheres, garfos, escumadeiras, conchas [utensílios de cozinha], parte de faqueiro;Concha ou colher para fundição;Conchas [ferramentas manuais];Correia abrasiva [cinta lixa] para lixadeiras elétricas manuais, com propulsão muscular;Correias de couro usadas para afiar;Corta-tubos [ferramentas manuais];Corta-vidro [ferramenta];Cortador de fotografias [ferramentas manuais];Cortador de propulsão muscular para uso doméstico;Cortador e fatiador de alimentos [mandolin];Cortadores [ferramentas manuais];Cortadores de cápsulas de garrafas de vinho, operados manualmente;Cortadores de frutas em fatias;Cortadores de grama [instrumentos manuais];Cortadores de legumes em espirais, operados manualmente;Cortadores de pizza, não elétricos;Cortadores de unhas, elétricos ou não;Cunho [placa de ferro para marcar moeda, medalha] [ferramenta manual];Cutelaria *;Cutelos de açougueiro;Cutelos de carne enquanto facas;Cutelos enquanto facas;Dardo para abate de animal;Debulhadores de milho manuais;Degoladores para ferreiros [ferramentas manuais];Dentes de ferro para ancinho [parte de ferramenta];Descaroçador de frutas;Descaroçadores de frutas, operados manualmente;Descarregador de feno [ferramenta manual];Descascador [ferramenta manual];Descascadores de legumes, operados manualmente;Desencapador de fio [ferramenta];Diamantes de vidraceiros [partes de ferramentas manuais];Dispensadores mecânicos [não elétricos] para preparados de limpeza e/ou desinfetantes para uso em lavanderia e nas indústrias de lavagem de artigos manufaturados [se ferramenta manual de propulsão muscular];Dispositivos depilatórios a laser, exceto para fins medicinais;Enxadas [ferramentas manuais];Enxadões [picaretas];Enxertadeiras [facas];Enxós [ferramentas];Enxós de tanoeiro;Escardilhos [ferramentas manuais];Escareador [ferramenta];Escavadoras [ferramentas manuais];Escopro [ferramenta];Esmeril [pedra para amolar];Espadas;Espátula para pintor, decorador e vidraceiro;Espátulas [ferramentas manuais];Espátulas [jardinagem];Espátulas para pintura;Espátulas para uso por artistas;Espevitadeira [tesoura para aparar o morrão de candeeiro, vela];Espevitadeiras [tesoura para esmorraçar];Espremedores de tubos manuais, exceto para uso doméstico;Esquadros [ferramentas];Estampadores [gravadores] em relevo [ferramentas manuais];Estampilhas [ferramentas manuais];Esticadores para fios metálicos [ferramentas manuais];Esticadores para fitas metálicas [ferramentas manuais];Estiletes;Estiletes tipo bisturi;Estojos de barbear;Estojos de manicure [kits];Estojos para aparelhos de barbear;Estojos para pedicure;Extensão para macho [ferramenta manual];Extensões de berbequins para brocas;Extratores de cardo [ferramentas manuais];Extratores de pregos tipo pé de cabra [ferramentas manuais];Extratores de pregos, operados manualmente;Faca [utensílio de cozinha ou cutelaria];Faca para abate e para esfolar animal;Facão;Facas *;Facas de caça;Facas de cerâmica;Facas de correeiro;Facas de poda;Facas de tanoeiro;Facas moedoras de carne;Facas multiferramentas;Facas multifuncionais;Facas para cortar verduras e legumes;Facas para enxertar plantas;Facas para escamar;Facas picadoras de carne;Facas trinchantes;Faqueiro;Fatiador não elétrico de legumes;Fatiadores de frutas manuais;Fatiadores de ovos, não elétricos;Fatiadores de queijo, não elétricos;Fatiadores de verduras e legumes, operados manualmente;Fendeleira;Ferramentas de corte [ferramentas manuais];Ferramentas de jardinagem, operadas manualmente;Ferramentas manuais;Ferramentas manuais para abrir valas;Ferramentas manuais para colher frutos;Ferramentas manuais para estampilhar;Ferramentas manuais para pisoamento;Ferramentas manuais para raspagem;Ferro de amolar;Ferros [ferramentas manuais não elétricas];Ferros de passar;Ferros de plaina;Ferros para calafetar;Ferros para frisar;Ferros para gofrar;Ferros para marcar a fogo;Ferros para moldagem;Ferros para plissar;Ferros para polir e dar lustre;Florete [arma branca];Foices;Foicinhas;Foles para lareira [ferramentas manuais];Formão;Formas de sapateiro;Forquilha [ferramenta];Forquilhas para agricultura [ferramentas manuais];Fresas [ferramentas manuais];Fúler (ing. Fuller) [ferramentas manuais];Furadeira manual;Furador para tíquete [manual];Furadores;Gadanhas;Garfo para estrume [forcados];Garfos [talheres];Garfos para jardinagem [ferramentas manuais];Garfos trinchantes;Garras de urso para carnes [garras trinchantes];Gastalhos para carpinteiros ou tanoeiros;Goivas [ferramentas manuais];Grampos para carpinteiros ou tanoeiros;Guia fio [ferramenta manual];Guilhotina manual;Implementos agrícolas manuais;Instrumento manual para apicultura;Instrumentos e ferramentas para esfolar animais;Instrumentos estéreis para piercing corporal;Instrumentos manuais para esmerilhar;Instrumentos para afiar [amolar];Instrumentos para afiar lâminas;Instrumentos para amolar navalhas;Instrumentos para cortar tubos [ferramentas];Instrumentos para marcar gado;Instrumentos para perfurar bilhetes;Instrumentos para picar verduras e legumes;Kit manicure [estojos de manicure] com artigos de cutelaria;Kits manicure, elétricos;Lâminas [armas];Lâminas [ferramentas manuais];Lâminas para aparelho de barbear;Lâminas para plaina guilherme;Lâminas para serras [partes de ferramentas manuais];Lâminas para tesouras;Lança;Lima para calo;Limas [ferramentas];Limas grossas [grosa];Limas para agulhas;Lixadeira elétrica manual, com propulsão muscular;Lixadeira manual, não elétrica [propulsão muscular];Lixas de esmeril em papelão para unhas;Lixas de esmeril para toalete;Lixas de unhas, elétricas;Lixas para unhas;Macaco hidráulico manual;Macacos manuais;Macete;Machadinha de tanoeiro;Machadinhas;Machados;Machetes [facão ou faca de mato];Macho [ferramenta];Machos para fazer roscas [ferramentas manuais];Maços [ferramentas manuais];Maços [martelos de madeira];Malho [martelo de ferro];Mandris [escareador] [ferramentas manuais];Mandris de expansão [ferramentas manuais];Mangas [soquete] de mandril [escareador];Mãos de almofariz [ferramentas manuais];Máquinas de uso pessoal para corte do cabelo, elétricas e não elétricas;Máquinas para cortar barba;Máquinas para corte do pelo dos animais [instrumentos manuais];Marreta;Martelos [ferramentas manuais];Martelos de emergência;Martelos de forja [malho];Martelos de pedra;Martelos de pedreiro;Martelos pena [ferramentas manuais para afixar rebites];Mexedores de tinta [palito];Mó [ferramenta manual para amolação];Moletas [ferramentas manuais];Olhal [ferragem];Pás para cavar [ferramentas manuais];Pás para remover [ferramentas manuais];Pedras para afiar foices;Pedras para afiar lâminas;Pedras para amolar;Pedras para amolar [ferramentas manuais];Pentes para abrir roscas [ferramentas manuais];Perfuradores [ferramentas manuais];Perfuradores [furador];Pés de cabra;Picadores de gelo;Picaretas [ferramentas manuais];Pilões [ferramentas manuais];Pinças para cutículas;Pinças para depilar;Pinças para numerar;Pinças*;Pistolas [ferramentas manuais];Pistolas para calafetar, não elétricas;Pistolas para extrusão de mástiques, acionadas manualmente;Plainas;Plainas guilherme;Podadeira;Podadores de árvores;Podões [tesouras de podar];Podões para aparar bordas;Polidores de unhas, elétricos ou não;Porta-brocas [ferramentas manuais];Porta-cossinetes [ferramentas manuais];Porta-serras;Porta-tarraxas [ferramentas manuais];Prataria [facas, garfos e colheres];Processadores de alimentos manuais;Pulverizadores para inseticidas [ferramentas manuais];Punções [ferramentas manuais];Punções de bico [ferramentas manuais];Punções de centro [ferramentas manuais];Punções para pregos;Puxavantes [ferramentas manuais];Puxavantes para ferreiros;Quebra-pedra [ferramenta manual];Raspadeiras [ferramentas manuais];Raspador [ferramenta];Raspadores para esquis;Rebitadores [máquina para rebitar] [ferramentas manuais];Rebolos [pedras para amolar] [ferramentas manuais];Roçadeira [foice de cabo alto, própria para roçar mato ? ferramenta de propulsão muscular];Roda [ferramenta de propulsão muscular];Rodas de esmeril [rebolo];Sabres;Saca-pinos;Sacadores de pregos, operados manualmente;Sargento [ferramenta];Seringas para pulverizar inseticidas;Serras [ferramentas manuais];Serras de arco;Serras tico-tico;Socos-ingleses;Soqueiras;Sovela [ferramenta para furar couro];Sovelas;Suporte para pedras de amolar;Talhadeiras [cinzéis] [ferramentas manuais];Talhadeiras de carpinteiro [cinzel];Talheres [facas, garfos e colheres];Talheres descartáveis;Tarraxas;Teares manuais portáteis, de propulsão manual;Tenazes*;Tesouras *;Tesouras de eslagartar;Tesouras para podar [jardinagem];Tira abrasiva adaptada para ferramentas manuais [parte de ferramenta];Tornos de bancada;Tornos de bancada [instrumentos manuais];Tosquiadeiras para gado;Tosquiadores [instrumentos manuais];Trados [ferramentas manuais];Trinchetes [faca de sapateiro];Vaporizadores para inseticidas [ferramentas manuais];Vazadores [saca-bocados] [ferramentas manuais];Vazadouros [partes de ferramentas manuais];Verrumas [brocas] [ferramentas manuais];Verrumões [trado] [ferramentas manuais];Verrumões de carpinteiro [trado comprido];Zarabatana [arma de arremesso]
+	                                                </font>
+	                                            </td>
+	                                        </tr>
+	                                </table>
+	                            </div>
+	                            
+	                            
+	                            
+	                            
+	                            	<hr style="border: 1px solid #ffffff">
+	                            	<font class=normal></font>
+	                            
+	                            
+                        	</td>
+                        
+                        </tr>
+                        
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+			
+			 
+			
+			<div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-classificacao-viena" />
+				<label for= "accordion-classificacao-viena"><font class="titulo">Classificação Internacional de Viena</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad" align="center"> 
+					    		<th width="15%"><font class=normal>Edição</font></th>
+					    		<th width="180"><font class=normal>Código</font></th>
+					    		<th width="600"><font class=normal>Descrição</font></th>
+					    	</tr>
+					    </thead>
+					    <tbody>
+					    
+                        <tr bgColor="#e9e9e9"  align="center">
+                        	<td><font class=normal>4                 </font></td>
+                        	<td><font class=normal>28.19     </font></td>
+                        	<td><font class=normal>INSCRIÇÕES EM OUTROS CARACTERES</font></td>
+                        </tr>
+                        
+                        
+                        
+					    
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+					
+        
+         <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-titulares" />
+				<label for= "accordion-titulares"><font class="titulo">Titulares</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="20"><font class=normal></font></th>
+					    		<th width="400"><font class=normal>Nome</font></th>
+					    	</tr>
+					    </thead>
+					     <tbody>
+                         
+
+                         <tr bgColor="#e9e9e9" align="center">
+                             <td width="20"><font class=normal>Titular(1):</font></td>
+                             <td width="400"><font
+                                     class=normal>MAURO RICARDO FILHO
+                             </font></td>
+                         </tr>
+                         
+
+					     </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+
+
+        <div class="accordions">
+            <div class="accordion-item">
+                <input type="checkbox" name="accordion" checked='checked' id="accordion-representantes" />
+                <label for= "accordion-representantes"><font class="titulo">Representante Legal</font>
+                    <font class=normal>
+                        <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                        </a>
+                    </font>
+                </label>
+                <div class="accordion-content">
+
+                    <table width="780px">
+                        <thead>
+                        <tr bgcolor="#b5d6ad">
+                            <th width="20"><font class=normal></font></th>
+                            <th width="400"><font class=normal>Nome</font></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+                        <tr bgColor="#e9e9e9" align="center">
+                            <td width="20"><font class=normal>Procurador:</font></td>
+                            <td width="400"><font class=normal>GUSTAVO LEÃO DE CARVALHO CÂNDIDO</font></td>
+                        </tr>
+                        
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-datas" />
+				<label for= "accordion-datas"><font class="titulo">Datas</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="260"><font class=normal>Data de Depósito</font></th>
+					    		<th width="260"><font class=normal>Data de Concessão</font></th>
+					    		<th width="260"><font class=normal>Data de Vigência</font>
+						    		<font class=normal>
+	                     				<a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdatavigencia')" onmouseover="showMe('helpdatavigencia')" onClick="DisableHide()">
+												<img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+										</a>
+									</font>
+									<div id='helpdatavigencia'
+											style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+											<table border=1 borderColor="#006363" cellPadding=5
+												cellSpacing=0 width="100%">
+												<tr>
+													<td align="center" bgColor="#b5d6ad">
+														<table width="100%" border="0" cellspacing="0"
+															cellpadding="0">
+															<tr>
+																<td><font class=normal>Leia-me</font></td>
+																<td width="30"><a
+																	href="javascript:EnableHide('helpdatavigencia');"><img
+																		src="../jsp/imagens/bt_layer.gif" width="26"
+																		height="16" border="0" name="class"></a></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<tr>
+													<td align=left bgColor="#ffffff"><font class=normal>
+															A data de vigência dos processos de marca designados ao Brasil, pela via do Protocolo de Madri,
+															acompanha o prazo de vigência da inscrição internacional junto à OMPI,
+															independentemente da data de concessão do registro de marca no Brasil. </font></td>
+												</tr>
+											</table>
+										</div>
+					    		</th>
+					    		
+					    	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr bgColor="#e9e9e9">
+					    		<th><font class=normal>
+									29/08/2025	 		
+					    		
+					    			</font>
+					    		</th>
+					    		<th><font class=normal> 
+						    		
+                     				</font>
+                     			</th>
+					    		<th><font class=normal>
+					    			
+					    			</font>
+					    		</th>
+					    		
+					    		
+					    	</tr>
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+				 
+			
+			
+			 
+        
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-1" />
+				<label for= "accordion-1"><font class="titulo">Petições</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)" onmouseout="hideMe('helppeticoes')" onmouseover="showMe('helppeticoes')" onClick="DisableHide()">
+                                <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+                            </a>
+                        </font>
+                        <div id='helppeticoes'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+                            <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+                                    <tr>
+                                        <td align="center" bgColor="#b5d6ad">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td><font class=normal>Leia-me</font></td>
+                                                    <td width="30">
+                                                        <a href="javascript:EnableHide('helppeticoes');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align=left bgColor="#ffffff">
+                                            <font class=normal>
+                                                Só serão identificados nesta consulta os documentos (petições) 
+                                                apresentados por meio do sistema de Guia de Recolhimento da 
+                                                União - GRU - em vigor desde 2006. Documentos anteriores a 
+                                                esta data podem não estar relacionados.
+                                            </font>
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+						 
+	                        [<a href="javascript:void(0)" style="font-size: 13px;"
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcesso&CodPedido=6381602','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Habilitados</a>]
+	                        &nbsp;
+	                        [<a href="javascript:void(0)" style="font-size: 13px;"
+	                        onclick="createPopupWin('../servlet/MarcasServletController?Action=modalListagemAmploAcessoDesativado&CodPedido=6381602','modal2',900,300)" class="titulo" >Listagem de Terceiros Interessados Desativados</a>]
+                        
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>Pgo</font>
+					    		<th width="50"><font class=normal>Protocolo</font>
+					    		<th width="62"><font class=normal>Data</font>
+					    		<th width="10"><font class=normal>Img</font>
+					    		<th width="10">
+				                
+					    		<th width="30"><font class=normal>Serviço</font>
+					    		<th width="246"><font class=normal>Cliente</font>
+					    		<th width="10"><font class=normal>Delivery</font>
+			    				<th width="10"><font class=normal>Data</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto0')" onmouseover="showMe('pgto0')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                001        - Banco do Brasil S.A.<br>
+		                                                                
+		                                                                Data: 12/11/2025<br>
+		                                                                Valor: R$520.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850250651504</font></td>
+		                        <td align="center" width=62><font class=normal>12/11/2025</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                <img id='850250651504' 
+		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
+		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('332')" onmouseover="showMe('332')" onClick="DisableHide()">
+		                                    332
+		                                </a>
+		                            </font>
+		                            <div id='332'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('332');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>332</b>
+		                                                    Oposição - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>CASA DO MDF E FERRAGENS COMERCIAL LTDA</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto1')" onmouseover="showMe('pgto1')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto1' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto1');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                104        - Caixa Econômica Federal<br>
+		                                                                
+		                                                                Data: 06/08/2025<br>
+		                                                                Valor: R$166.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850250492113</font></td>
+		                        <td align="center" width=62><font class=normal>29/08/2025</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                <img id='850250492113' 
+		                                src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' 
+		                                alt='Imagem do Documento em PDF' class='salvaDocumento cursor' align="top">
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('394')" onmouseover="showMe('394')" onClick="DisableHide()">
+		                                    394
+		                                </a>
+		                            </font>
+		                            <div id='394'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('394');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>394</b>
+		                                                    Pedido de registro de marca (com especificação de livre preenchimento) - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>MAURO RICARDO FILHO</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+					</table>		
+					</div>					
+				</div>
+			</div>
+			
+			
+			<br/>
+			<div class="accordions">
+				<div class="accordion-item">
+					<input type="checkbox" name="accordion" checked="checked" id="accordion-2" />
+					<label for= "accordion-2"><font class="titulo">Publicações</font>
+		                <font class=normal>
+		                    <a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdespacho')" onmouseover="showMe('helpdespacho')" onClick="DisableHide()">
+		                        <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+		                    </a>
+		                </font>
+		                <div id='helpdespacho'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 600px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                    <table border=1 borderColor="#006363" borderColorLight="#b5d6ad" cellPadding=5 cellSpacing=0 width="100%">
+		                        <tbody>
+		                            <tr>
+		                                <td align="center" bgColor="#b5d6ad">
+		                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                        <tr>
+		                                            <td><font class=normal>Leia-me</font></td>
+		                                            <td width="30">
+		                                                <a href="javascript:EnableHide('helpdespacho');">
+		                                                <img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class">
+		                                                </a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td align=left bgColor="#ffffff">
+		                                    <font class=normal>
+		                                        PRAZOS:
+												O direito de praticar qualquer ato perante o INPI se extingue ao final do prazo 
+												estabelecido pela LPI para realização do mesmo, a não ser que o interessado comprove 
+												que o não realizou por justa causa. Reputa-se justa causa o evento imprevisto, alheio à 
+												vontade da parte, e que a impediu de praticar o ato.
+												Os prazos previstos na LPI em relação às patentes são contados em dias, meses 
+												e anos. Os prazos expressos em dias contam-se de modo contínuo; os expressos em 
+												meses devem ser contados de data a data, ou seja, expiram no dia de número igual ao do 
+												dia do início da contagem, ou no dia imediatamente subseqüente, caso falte esta
+												correspondência.
+												No cômputo dos prazos, exclui-se o dia do começo e inclui-se o do vencimento. Se 
+												este cair em dia sem expediente, o prazo será prorrogado até o primeiro dia útil após o 
+												vencimento.
+												Os prazos somente começam a correr a partir do primeiro dia útil após a
+												intimação, que será feita mediante publicação na RPI, ressalvados:
+												- os que expressamente independerem de notificação ou publicação por força do 
+												disposto na LPI; 
+												- as decisões administrativas, quando feita notificação por via postal ou por ciência 
+												dada ao interessado no processo; e
+												- os pareceres e despachos internos que não necessitem ser do conhecimento das 
+												partes (art. 226 da LPI). 
+												Não havendo expressa estipulação na LPI, o prazo para a prática de um ato será 
+												de 60 (sessenta) dias
+		                                    </font>
+		                                </td>
+		                            </tr>
+		                        </tbody>
+		                    </table>
+		            	</div>
+					</label>
+					<div class="accordion-content">
+
+					<table>
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>RPI</font>
+					    		<th width="50"><font class=normal>Data RPI</font>
+					    		<th width="62"><font class=normal>Despacho</font>
+					    		<th width="30"><font class=normal>Certificado</font>
+					    		<th width="30"><font class=normal>Inteiro Teor</font>
+					    		<th width="10"><font class=normal>Complemento do Despacho</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center" width=28><font class=normal>2869</font></td>
+		                        <td align="center" width=55><font class=normal><b>30/12/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Notificação de oposição
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                <b>Petições de oposição: </b>850250651504 de 12/11/2025
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center" width=28><font class=normal>2855</font></td>
+		                        <td align="center" width=55><font class=normal><b>23/09/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Publicação de pedido de registro para oposição (exame formal concluído)
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+				</table>		
+				</div>
+			</div>
+		</div>
+        
+        <table border=0 width="780px" border="0" cellpadding="3" cellspacing="2" class="fundoportal">
+                <tr>
+                    <td align="center" colSpan=6>
+                        <font class=normal>
+                            &nbsp;<br>Dados atualizados  até 
+                            <b>
+                                06/01/2026
+                            </b>
+                            - Nº da Revista:
+                            <b>2870</b>
+                        </font>
+                    </td>
+                </tr>
+        </table>
+            </form>
+    <!-- RECAPTCHA -->
+        <div id="conteudoCaptcha" style="display: none">
+            <form id="captchaForm">
+            
+                <div id="captchaConteiner">
+                    <br /> 
+                    <input type="submit" id="captchaButton" class="button branco" value="Download" />
+                    <div id="msgErroCaptcha" class="errorMsgCaptcha" style="display: none"></div>
+                </div>
+                
+                <div id="loader" style="display: none">
+                    <img src="../jsp/imagens/loading.gif" style="margin-top: 75px; width: 180px" />
+                </div>
+                
+                <input type="hidden" value="300" id="codDiretoria" />
+                <input type="hidden" id="cdDespach" />
+                
+            </form>
+        </div>
+    <!-- RECAPTCHA -->
+    
+	<br/>
+      
+	<div id="bottom_principal"></div>
+	<div id="footer">
+		<div id="texto_footer">
+			<p>Rua Mayrink Veiga, 9 - Centro - RJ - CEP: 20090-910</p>
+		</div>
+		<div id="logo_ouvidoria">
+			<a href="http://faleconosco.inpi.gov.br/" target="blank"><img src="/pePI/jsp/imagens/faleconosco.png" border="0" alt="Fale Conosco" onmouseout="this.src='/pePI/jsp/imagens/faleconosco.png';"
+				title="Fale Conosco" onmouseover="this.src='/pePI/jsp/imagens/faleconosco.png';" /> </a>
+		</div>
+	</div>
+    </body>
+</html>

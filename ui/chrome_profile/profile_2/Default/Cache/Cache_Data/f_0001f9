@@ -1,0 +1,964 @@
+ 
+
+
+
+
+
+
+
+
+
+
+<html>
+    <head>
+        <title>INPI</title>
+        <meta content="text/html; charset=ISO-8859-1" http-equiv=Content-Type>
+        <link href="../jsp/css/inpi.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/captcha.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/accordions.css" rel=stylesheet type=text/css>
+        <link href="../jsp/css/MarcaDetalhe.css" rel=stylesheet type=text/css>
+        <script type="text/javascript" src="../jsp/funcoes/geral.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/jquery-1.6.2.min.js"></script>
+        <script type="text/javascript" src="../jsp/funcoes/captcha.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/meusPedidos.js"></script>
+   		<script type="text/javascript" src="../jsp/funcoes/MarcaDetalhe.js"></script>
+
+   		<!-- RECAPTCHA -->
+		<script src="//www.google.com/recaptcha/api.js"></script>
+   		    </head>
+    <body bgColor="#ffffff" leftMargin=0 text="#000000" topMargin=0 >
+    
+    <div id="janelaModalCaptchaDownload" class="janelaModal">
+
+            <div class="tituloModal">Digite o texto da imagem abaixo</div>            
+           
+           <!-- RECAPTCHA -->
+			<div class="g-recaptcha" data-sitekey="6LfhwSAaAAAAANyx2xt8Ikk-YkQ3PGeAVhCfF3i2"></div>
+		
+            <fieldset></fieldset>
+            <input type="hidden" id="NumeroID">
+            <input type="hidden" id="certificado">
+            <input type="hidden" id="ipasDoc">
+            <input type="hidden" id="ehTitularOuProcurador">
+            
+    </div> 
+     
+    <form name="MarcaPesquisa" method="POST" action="../servlet/MarcasServletController">
+		<input type="hidden" name="CodPedido" id="CodPedido" value="5581796">
+    	<input type="hidden" name="NumPedido" value="">
+    	<input type="hidden" name="Action" id="Action" value="">
+    
+        <div id="overlay"></div>
+
+        <div id="mainContainer">
+
+<div id="principal">
+<br/>
+<div id="barra-brasil" style="background:#7F7F7F; height: 20px; padding:0 0 0 10px;display:block;">
+	<ul id="menu-barra-temp" style="list-style:none;">
+	<li style="display:inline; float:left;padding-right:10px; margin-right:10px; borderright:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- Portal Padrão Barra de Identidade Visual do Governo Federal na Internet - APLICAÇÃO right:1px solid #EDEDED">
+		<a href="http://brasil.gov.br" style="font-family:sans,sans-serif; text- decoration:none; color:white;">Portal do Governo Brasileiro</a>
+		</li>
+		<li>
+			<a style="font-family:sans,sans-serif; text-decoration:none; color:white;" 
+			href="http://epwg.governoeletronico.gov.br/barra/atualize.html">Atualize sua Barra de Governo
+			</a>
+		</li>
+	</ul>
+</div>
+<div id="logo">
+	<a id="portal-logo" href="http://www.inpi.gov.br" title="O portal do Brasil">
+		<span id="portal-title-1">Instituto Nacional da</span>
+		<span id="portal-title" class="corto">Propriedade Industrial</span>
+		<span id="portal-description">Ministério da Economia</span>
+	</a>
+</div>
+<script src="/pePI/jsp/funcoes/barra.js" type="text/javascript"></script>
+
+
+
+        <table width="780px">
+            <tr>
+                <td align="center" colspan="2"><font class="titulo">Consulta à Base de Dados do INPI</font></td>
+            </tr>
+            <tr>
+                <td align="right" colspan="2">
+                    <font class=normal>
+						<div align="right">
+                            [ <a href="../jsp/Base_pesquisa.jsp" class="titulo">Início</a> |
+                            <a href="../jsp/Ajuda.jsp" class="normal">Ajuda?</a> ]
+						</div>
+                    </font>
+                </td>
+            </tr>
+            <tr>
+                <td align="left">
+                    <font class=normal>
+                        » Consultar por: <a class=titulo href="../jsp/marcas/Pesquisa_num_processo.jsp">No.Processo</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_classe_basica.jsp">Marca</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_titular.jsp">Titular</a> | 
+                            <a class=titulo href="../jsp/marcas/Pesquisa_figura.jsp">Cód. Figura</a> ]
+                    </font>
+                </td>
+	            <td align="right">
+	                <font class=normal>
+	                	
+						1/0
+						
+	                </font>
+	            </td>
+            </tr>
+            <tr>
+		  		<td colspan="2">
+	   	   			<hr class="hr">
+	    		</td>
+			</tr>
+            <tr>
+                <td colspan="2" align="center">
+                	<font class=normal>Marca</font>
+                </td>
+            </tr>
+            <tr>
+                
+	                <td align="right" colspan="2">
+	                    <font class="normal">
+	                    Meus Pedidos&nbsp;
+	                    </font>
+						<input type="checkbox"  
+						name="MeusPedidos" value="933109016" 
+						onChange="ConfirmMyList(this.form,'933109016',0)">
+		            </td>
+	                
+            </tr>
+        </table>
+        <table width="780px" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td align="left" width=120>
+                	<font class=normal>Nº do Processo:</font>
+                </td>
+                <td align=left valign="middle">
+                	<font class=marcador>&nbsp;<b>933109016</b></font>
+                	<input type="hidden" id="numeroProcesso" name="numeroProcesso" value ="933109016" />
+                </td>
+                    
+                		<td align="right" valign="middle" rowspan="5">
+                        	<img border="0" height="220" width="220" src='/pePI/servlet/LogoMarcasServletController?Action=image&codProcesso=5581796'>
+               			</td>
+                        
+            </tr>
+            <tr>	
+			
+			
+			
+            <tr>
+                <td align="left">
+                	<font class=normal>Marca:</font>
+                </td>
+                <td align=left>
+                
+                        <font class=normal>&nbsp;COLONI & WENDT</font>
+                        
+                </td>
+        	</tr>
+        	<tr>
+                <td align="left">
+                	<font class=normal>Situação:</font>
+                </td>
+                <td align=left>
+                    <font class=normal>&nbsp;
+                    Em exame de mérito (encerrado prazo para cumprimento da exigência)
+                    </font>
+                </td>
+            </tr>
+            
+            
+             <tr>
+                <td align="left">
+                	<font class=normal>Apresentação:</font>
+                </td>
+                <td align=left>
+                	<font class=normal>&nbsp;Mista</font>
+                </td>
+               </tr>
+                
+               <tr>
+                    <td align="left">
+                    	<font class=normal>Natureza:</font>
+                    </td>
+                    <td align=left>
+                    	<font class=normal>&nbsp;Produtos e/ou Serviço</font>
+                    </td>
+                </tr>
+<tr>
+                   
+                </tr>                
+        </table>
+        
+        <br/>
+         
+          <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-classe-nice" />
+				<label for= "accordion-classe-nice"><font class="titulo">Classificação de Produtos / Serviços</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="110"><font class=normal>Classe de Nice</font></th>
+                                <th width="230"><font class=normal>Situação da Classe</font></th>
+                                <th width="440"><font class=normal>Especificação</font></th>
+					    	</tr>
+					    </thead>
+					    
+					     <tbody>
+					     
+					     
+                               
+                        <tr bgColor="#e9e9e9" align="center">
+                        	<td>
+                               <font class="normal">
+	                               <a class="normal" href="javascript:void(0)" onmouseout="hideMe('cln0')" onmouseover="showMe('cln0')" onClick="DisableHide()">
+										NCL(12) 35
+	                               </a>
+                               </font>
+                               <div id='cln0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF"> 
+                                   <table width="100%" border="1" cellspacing="0" cellpadding="5" bordercolor="#006363">
+                                       <tr>
+                                           <td align="left" bgcolor="#b5d6ad">
+                                               <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                   <tr>
+                                                       <td><font class="normal"><b>Classe Nice - Revisão: (12)</b></font></td>
+                                                       <td width="30">
+                                                           <a href="javascript:EnableHide('cln0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                       </td>
+                                                   </tr>
+                                               </table>
+                                           </td>
+                                       </tr>
+                                       <tr>
+                                           <td align="left" bgcolor="#ffffff">
+                                               <font class="normal">Propaganda; gestão de negócios; administração de negócios; funções de escritório.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           </font>
+                                           </td>
+                                       </tr>
+                                   </table>
+                               </div>
+                        	
+                        	</td>
+
+                            <td>
+                                <font class="normal">
+                                    Vide Situação do Processo
+                                </font></td>
+                            
+
+                        	<td>
+								
+                       			
+	                            <font class=normal >&nbsp;
+	                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('especificacao0')" onmouseover="showMe('especificacao0')" onClick="DisableHide()"> 
+	                                    Administração comercial;Administração comercial de shopping ...
+	                                </a>
+	                            </font>
+	                            <div id="especificacao0"  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 800px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+	                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+	                                        <tr>
+	                                            <td align="center" bgColor="#b5d6ad">
+	                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+	                                                    <tr>
+	                                                        <td><font class=normal>Especificação</font></td>
+	                                                        <td width="30">
+	                                                            <a href="javascript:EnableHide('especificacao0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+	                                                        </td>
+	                                                    </tr>
+	                                                </table>
+	                                            </td>
+	                                        </tr>
+	                                        <tr>
+	                                            <td align=left bgColor="#ffffff">
+	                                                <font class=normal> 
+	                                                    Administração comercial;Administração comercial de shopping center;Administração comercial do licenciamento de produtos e serviços de terceiros;Administração de arquivo;Administração de biblioteca;Administração de cartão de benefícios comerciais [promoção de negócios];Administração de cartão de desconto;Administração de empresa;Administração de holding [tipo de empresa];Administração de negócios de esportistas;Administração de negócios de programas de reembolso para terceiros;Administração de programa de incentivo;Administração de programas de fidelidade de consumidores;Administração de programas de milhas de viagens;Administração de programas de viajantes frequentes;Agenciamento de artistas;Agenciamento de mão-de-obra;Agenciamento de mercadoria [intermediação];Agenciamento de modelo para publicidade [administração de carreira];Agenciamento de profissional para atendimento domiciliar;Agenciamento, gestão e intermediação de obra artística;Agências de modelos para publicidade ou promoção de vendas;Aluguel de caixas registradoras;Aluguel de cartazes/outdoors publicitários;Aluguel de equipamento de escritório em espaços de co-working;Aluguel de escritório virtual [aluguel de equipamentos e material de escritório e fornecimento de serviços de escritório];Aluguel de espaço publicitário;Aluguel de estande de vendas;Aluguel de máquinas automáticas de venda;Aluguel de máquinas de autosserviço;Aluguel de máquinas e equipamentos de escritório *;Aluguel de máquinas fotocopiadoras;Aluguel de material publicitário;Aluguel de tempo de publicidade em meios de comunicação;Análise de conteúdo de jornais e revistas e preparo de relatório comparando o conteúdo dos diversos veículos de comunicação;Análise de custo;Anúncio;Apoio administrativo e secretariado;Apresentação de produtos em meios de comunicação para fins de comércio varejista;Arquivista;Assessoria e consultoria em distribuição comercial para terceiros [planejamento de marketing];Assessoria e consultoria em gestão organizacional para terceiros para fins de "compliance";Assessoria e consultoria em governança corporativa para terceiros [gestão organizacional];Assessoria e consultoria em marketing relativas a desenvolvimento de produto ou serviço de terceiros;Assessoria e consultoria em marketing relativas a logística de distribuição comercial de terceiros;Assessoria e consultoria em marketing relativas a precificação de produto ou serviço de terceiros;Assessoria e consultoria em marketing relativas a promoção de produto ou serviço de terceiros;Assessoria em gestão comercial ou industrial;Assessoria em gestão industrial ou comercial;Assessoria promocional, consultoria e informação sobre propaganda;Assessoria, consultoria e informação ao consumidor sobre produtos e respectivos preços, através de websites, em conexão com comércio realizado pela internet;Assessoria, consultoria e informação demográfica [serviços de marketing];Assessoria, consultoria e informação econômica, para os setores industrial e comercial das empresas, visando o planejamento, organização, monitoramento e desenvolvimento de projetos [também provido on-line] [assessoria em gestão comercial];Assessoria, consultoria e informação em agências de modelos para publicidade ou promoção de vendas;Assessoria, consultoria e informação em auditoria [gestão organizacional];Assessoria, consultoria e informação em compilação de informações em bancos de dados de computador;Assessoria, consultoria e informação em contabilidade;Assessoria, consultoria e informação em franquia, exceto licenciamento da propriedade intelectual [gestão comercial];Assessoria, consultoria e informação em gestão de negócios e comercialização de produtos sob contrato de franquia;Assessoria, consultoria e informação em gestão de negócios para companhias industriais ou comerciais;Assessoria, consultoria e informação em investigações, avaliações e pesquisas em negócios;Assessoria, consultoria e informação em marketing;Assessoria, consultoria e informação em negócios relacionados à estratégia, marketing, produção, pessoal e assuntos relativos ao comércio varejista;Assessoria, consultoria e informação em negócios relativos à relocalização para empresas;Assessoria, consultoria e informação em promoção de vendas;Assessoria, consultoria e informação em publicidade e propaganda através de qualquer meio;Assessoria, consultoria e informação em serviços de recursos humanos para empresas;Assessoria, consultoria e informação empresarial;Assessoria, consultoria e informação na implantação e viabilização de sistema de franquia;Assessoria, consultoria e informação relacionadas ao planejamento, análise, gestão e organização de negócios para empresas;Assessoria, consultoria e informação sobre busca de dados em arquivos de computador para terceiros;Assessoria, consultoria e informação sobre eleições políticas;Assessoria, consultoria e informação sobre gestão de negócios no campo da propriedade intelectual;Assessoria, consultoria e informação sobre gestão governamental;Assessoria, consultoria e informação sobre imposto de renda;Assessoria, consultoria e informação sobre leilões;Assessoria, consultoria e informação sobre oportunidades de negócio;Assessoria, consultoria e informação sobre organização de feiras para fins comerciais ou publicitários;Assessoria, consultoria e informação sobre pesquisas de opinião;Assessoria, consultoria e informação sobre publicidade através de mala direta;Assessoria, consultoria e informação sobre reprodução de documentos;Assessoria, consultoria e informação sobre testes psicológicos para seleção de pessoal;Assessoria, consultoria e informação sobre tributos, impostos e taxas;Assessoria, consultoria e informações estatísticas [marketing];Assessoria, consultoria e informações sobre administração de pessoal;Assessoria, consultoria e informações sobre franchising [gestão comercial];Assessoria, consultoria e informações sobre marketing;Assistência administrativa para responder a licitações;Assistência administrativa para responder a solicitações de propostas [rfp] de prestação de serviços;Atendimento ao cliente [s.a.c.; serviço de orientação ao consumidor];Atualização de material publicitário;Atualização e manutenção de dados em bancos de dados de computadores;Atualização e manutenção de informações em registros;Auditoria contábil e financeira;Auditoria em negócios;Auxílio em gestão de negócios;Avaliações de negócios;Busca de dados em arquivos de computador para terceiros;Captação de patrocínio;Comerciais de rádio;Comerciais de televisão;Comércio [através de qualquer meio] de adesivos para papelaria ou para uso doméstico;Comércio [através de qualquer meio] de água mineral engarrafada; comercialização de água bruta;Comércio [através de qualquer meio] de alfinetes e agulhas [artigos de armarinho];Comércio [através de qualquer meio] de alimentos para animais;Comércio [através de qualquer meio] de alimentos para bebês;Comércio [através de qualquer meio] de amianto;Comércio [através de qualquer meio] de animais vivos;Comércio [através de qualquer meio] de aparelhos [lâminas] de barbear;Comércio [através de qualquer meio] de aparelhos de aquecimento;Comércio [através de qualquer meio] de aparelhos de cozimento;Comércio [através de qualquer meio] de aparelhos de distribuição de água;Comércio [através de qualquer meio] de aparelhos de iluminação;Comércio [através de qualquer meio] de aparelhos de instalações sanitárias;Comércio [através de qualquer meio] de aparelhos de locomoção por terra, por ar ou por água;Comércio [através de qualquer meio] de aparelhos de produção de vapor;Comércio [através de qualquer meio] de aparelhos de refrigeração;Comércio [através de qualquer meio] de aparelhos de secagem;Comércio [através de qualquer meio] de aparelhos de ventilação;Comércio [através de qualquer meio] de aparelhos e instrumentos científicos;Comércio [através de qualquer meio] de aparelhos e instrumentos cinematográficos;Comércio [através de qualquer meio] de aparelhos e instrumentos cirúrgicos;Comércio [através de qualquer meio] de aparelhos e instrumentos cronométricos;Comércio [através de qualquer meio] de aparelhos e instrumentos de controle [inspeção];Comércio [através de qualquer meio] de aparelhos e instrumentos de ensino;Comércio [através de qualquer meio] de aparelhos e instrumentos de medição;Comércio [através de qualquer meio] de aparelhos e instrumentos de pesagem;Comércio [através de qualquer meio] de aparelhos e instrumentos de salvamento;Comércio [através de qualquer meio] de aparelhos e instrumentos de sinalização;Comércio [através de qualquer meio] de aparelhos e instrumentos dentários;Comércio [através de qualquer meio] de aparelhos e instrumentos fotográficos;Comércio [através de qualquer meio] de aparelhos e instrumentos geodésicos;Comércio [através de qualquer meio] de aparelhos e instrumentos médicos;Comércio [através de qualquer meio] de aparelhos e instrumentos náuticos;Comércio [através de qualquer meio] de aparelhos e instrumentos ópticos;Comércio [através de qualquer meio] de aparelhos e instrumentos para conduzir, interromper, transformar, acumular, regular ou controlar eletricidade;Comércio [através de qualquer meio] de aparelhos e instrumentos veterinários;Comércio [através de qualquer meio] de aparelhos extintores de incêndio;Comércio [através de qualquer meio] de aparelhos para o registro, a transmissão e a reprodução de som ou imagens;Comércio [através de qualquer meio] de aparelhos para suporte de registro magnético;Comércio [através de qualquer meio] de armas brancas;Comércio [através de qualquer meio] de armas de fogo;Comércio [através de qualquer meio] de artigos de cama, mesa e banho;Comércio [através de qualquer meio] de artigos de chapelaria;Comércio [através de qualquer meio] de artigos de cutelaria;Comércio [através de qualquer meio] de artigos de ferragem;Comércio [através de qualquer meio] de artigos de iluminação;Comércio [através de qualquer meio] de artigos de joalheria;Comércio [através de qualquer meio] de artigos de louça de faiança;Comércio [através de qualquer meio] de artigos de papelaria;Comércio [através de qualquer meio] de artigos de relojoaria;Comércio [através de qualquer meio] de artigos de vidro;Comércio [através de qualquer meio] de artigos do vestuário;Comércio [através de qualquer meio] de artigos ortopédicos;Comércio [através de qualquer meio] de artigos para animais;Comércio [através de qualquer meio] de artigos para encadernação;Comércio [através de qualquer meio] de artigos para fumantes;Comércio [através de qualquer meio] de artigos para ginástica;Comércio [através de qualquer meio] de artigos para prática de esportes;Comércio [através de qualquer meio] de asfalto, piche e betume;Comércio [através de qualquer meio] de baixelas em metal;Comércio [através de qualquer meio] de baixelas em porcelana;Comércio [através de qualquer meio] de bebidas alcoólicas;Comércio [através de qualquer meio] de bebidas não alcoólicas;Comércio [através de qualquer meio] de bengalas;Comércio [através de qualquer meio] de bijuteria;Comércio [através de qualquer meio] de bobinas de papel;Comércio [através de qualquer meio] de bolsas femininas;Comércio [através de qualquer meio] de borracha em bruto;Comércio [através de qualquer meio] de borracha semiprocessada;Comércio [através de qualquer meio] de botões [artigos de armarinho];Comércio [através de qualquer meio] de cabos e fios de metal comuns não elétricos;Comércio [através de qualquer meio] de caixas registradoras;Comércio [através de qualquer meio] de calçados;Comércio [através de qualquer meio] de capachos e esteiras;Comércio [através de qualquer meio] de caracteres de imprensa;Comércio [através de qualquer meio] de carpetes e tapetes;Comércio [através de qualquer meio] de cartas de baralho;Comércio [através de qualquer meio] de cera dentária;Comércio [através de qualquer meio] de chicotes, arreios e artigos de selaria;Comércio [através de qualquer meio] de chocadeiras;Comércio [através de qualquer meio] de clichês [imprensa];Comércio [através de qualquer meio] de cofres;Comércio [através de qualquer meio] de colchetes e ilhoses [artigos de armarinho];Comércio [através de qualquer meio] de combustíveis [incluindo a gasolina para motores];Comércio [através de qualquer meio] de composições extintoras de fogo;Comércio [através de qualquer meio] de construções metálicas transportáveis;Comércio [através de qualquer meio] de construções transportáveis não metálicas;Comércio [através de qualquer meio] de cordas e fios;Comércio [através de qualquer meio] de cortiça semiprocessada;Comércio [através de qualquer meio] de cosméticos;Comércio [através de qualquer meio] de couro em bruto ou semiprocessado;Comércio [através de qualquer meio] de decorações para árvores de natal;Comércio [através de qualquer meio] de dentifrícios;Comércio [através de qualquer meio] de desinfetantes;Comércio [através de qualquer meio] de discos acústicos;Comércio [através de qualquer meio] de emplastros;Comércio [através de qualquer meio] de engates de máquinas e componentes de transmissão [exceto para veículos terrestres];Comércio [através de qualquer meio] de equipamento de processamento de dados e computadores;Comércio [através de qualquer meio] de escovas;Comércio [através de qualquer meio] de espelhos;Comércio [através de qualquer meio] de explosivos;Comércio [através de qualquer meio] de ferramentas manuais;Comércio [através de qualquer meio] de fios e fibras para uso têxtil;Comércio [através de qualquer meio] de fitas e laços;Comércio [através de qualquer meio] de flores artificiais;Comércio [através de qualquer meio] de fogos de artifício;Comércio [através de qualquer meio] de fósforos;Comércio [através de qualquer meio] de fotografias;Comércio [através de qualquer meio] de gelo;Comércio [através de qualquer meio] de goma;Comércio [através de qualquer meio] de graxas;Comércio [através de qualquer meio] de guarda-chuvas;Comércio [através de qualquer meio] de guarda-sóis;Comércio [através de qualquer meio] de guta-percha;Comércio [através de qualquer meio] de imitações de couro;Comércio [através de qualquer meio] de instrumentos agrícolas não manuais;Comércio [através de qualquer meio] de instrumentos manuais [propulsão muscular];Comércio [através de qualquer meio] de instrumentos musicais;Comércio [através de qualquer meio] de jogos e brinquedos;Comércio [através de qualquer meio] de junco semiprocessado;Comércio [através de qualquer meio] de linóleo [piso em manta];Comércio [através de qualquer meio] de livros;Comércio [através de qualquer meio] de loções para os cabelos;Comércio [através de qualquer meio] de lubrificantes;Comércio [através de qualquer meio] de madeira semiprocessada;Comércio [através de qualquer meio] de malas e bolsas de viagem;Comércio [através de qualquer meio] de máquinas de calcular;Comércio [através de qualquer meio] de máquinas de escrever;Comércio [através de qualquer meio] de máquinas distribuidoras automáticas;Comércio [através de qualquer meio] de máquinas-ferramentas;Comércio [através de qualquer meio] de materiais de construção metálicos;Comércio [através de qualquer meio] de materiais de construção não metálicos;Comércio [através de qualquer meio] de materiais impressos;Comércio [através de qualquer meio] de materiais metálicos para vias férreas;Comércio [através de qualquer meio] de materiais para artistas;Comércio [através de qualquer meio] de material de escritório;Comércio [através de qualquer meio] de material de instrução e de ensino;Comércio [através de qualquer meio] de material de limpeza;Comércio [através de qualquer meio] de material de sutura;Comércio [através de qualquer meio] de material para a fabricação de escovas;Comércio [através de qualquer meio] de material para curativos;Comércio [através de qualquer meio] de material para obturações dentárias;Comércio [através de qualquer meio] de matérias de enchimento;Comércio [através de qualquer meio] de matérias para calafetar, vedar e isolar;Comércio [através de qualquer meio] de matérias plásticas não processadas;Comércio [através de qualquer meio] de matérias plásticas para embalagem;Comércio [através de qualquer meio] de matérias têxteis fibrosas em bruto;Comércio [através de qualquer meio] de matérias tintoriais;Comércio [através de qualquer meio] de mecanismos para aparelhos operados com moedas;Comércio [através de qualquer meio] de membros, olhos ou dentes artificiais;Comércio [através de qualquer meio] de metais comuns e suas ligas;Comércio [através de qualquer meio] de metais em folhas e em pó para pintores, decoradores, impressores e artistas;Comércio [através de qualquer meio] de metais preciosos e suas ligas;Comércio [através de qualquer meio] de mica;Comércio [através de qualquer meio] de minérios;Comércio [através de qualquer meio] de mochilas;Comércio [através de qualquer meio] de molduras;Comércio [através de qualquer meio] de monumentos não metálicos;Comércio [através de qualquer meio] de mordentes [fixador para tintas];Comércio [através de qualquer meio] de motores [exceto os motores para veículos terrestres];Comércio [através de qualquer meio] de móveis;Comércio [através de qualquer meio] de munições e projéteis;Comércio [através de qualquer meio] de óleos essenciais;Comércio [através de qualquer meio] de óleos industriais;Comércio [através de qualquer meio] de óleos vegetais alimentícios;Comércio [através de qualquer meio] de palha de aço;Comércio [através de qualquer meio] de panelas;Comércio [através de qualquer meio] de papel e papelão;Comércio [através de qualquer meio] de partes e componentes de aparelhos de locomoção por terra, por ar ou por água;Comércio [através de qualquer meio] de partes e componentes de veículos;Comércio [através de qualquer meio] de pedras preciosas;Comércio [através de qualquer meio] de peles de animais;Comércio [através de qualquer meio] de pentes e esponjas;Comércio [através de qualquer meio] de pincéis;Comércio [através de qualquer meio] de plantas e flores naturais;Comércio [através de qualquer meio] de preparações de higiene pessoal não medicamentosas;Comércio [através de qualquer meio] de preparações farmacêuticas;Comércio [através de qualquer meio] de preparações higiênicas para uso medicinal;Comércio [através de qualquer meio] de preparações para branquear [lavanderia];Comércio [através de qualquer meio] de preparações para limpar, polir, desengordurar e decapar;Comércio [através de qualquer meio] de preparações para temperar e soldar metais;Comércio [através de qualquer meio] de preparações veterinárias;Comércio [através de qualquer meio] de preservativos contra oxidação e contra a deterioração da madeira;Comércio [através de qualquer meio] de produtos abrasivos para limpeza;Comércio [através de qualquer meio] de produtos alimentícios [aves e ovos];Comércio [através de qualquer meio] de produtos alimentícios [biscoitos];Comércio [através de qualquer meio] de produtos alimentícios [bolos];Comércio [através de qualquer meio] de produtos alimentícios [carnes vermelhas];Comércio [através de qualquer meio] de produtos alimentícios [cereais];Comércio [através de qualquer meio] de produtos alimentícios [chocolates];Comércio [através de qualquer meio] de produtos alimentícios [doces];Comércio [através de qualquer meio] de produtos alimentícios [frutas, verduras e legumes];Comércio [através de qualquer meio] de produtos alimentícios [grãos];Comércio [através de qualquer meio] de produtos alimentícios [laticínios];Comércio [através de qualquer meio] de produtos alimentícios [massas];Comércio [através de qualquer meio] de produtos alimentícios [pães];Comércio [através de qualquer meio] de produtos alimentícios [peixes];Comércio [através de qualquer meio] de produtos alimentícios [refeições congeladas];Comércio [através de qualquer meio] de produtos alimentícios [salgadinhos];Comércio [através de qualquer meio] de produtos alimentícios [sanduíches];Comércio [através de qualquer meio] de produtos alimentícios [sorvetes];Comércio [através de qualquer meio] de produtos alimentícios [sucos];Comércio [através de qualquer meio] de produtos confeccionados de metais preciosos ou folheados;Comércio [através de qualquer meio] de produtos de metal comum;Comércio [através de qualquer meio] de produtos de perfumaria;Comércio [através de qualquer meio] de produtos de serralharia;Comércio [através de qualquer meio] de produtos em matérias plásticas semiprocessados;Comércio [através de qualquer meio] de produtos para a destruição dos animais nocivos, fungicidas e herbicidas;Comércio [através de qualquer meio] de produtos para absorver, molhar e ligar a pó;Comércio [através de qualquer meio] de publicações periódicas impressas;Comércio [através de qualquer meio] de redes;Comércio [através de qualquer meio] de rendas e bordados;Comércio [através de qualquer meio] de resinas artificiais não processadas;Comércio [através de qualquer meio] de resinas naturais em estado bruto;Comércio [através de qualquer meio] de revestimentos de assoalhos;Comércio [através de qualquer meio] de roupas;Comércio [através de qualquer meio] de sabões;Comércio [através de qualquer meio] de sacos e sacolas;Comércio [através de qualquer meio] de sementes;Comércio [através de qualquer meio] de substâncias adesivas destinadas à indústria;Comércio [através de qualquer meio] de substâncias dietéticas para uso medicinal;Comércio [através de qualquer meio] de substâncias para uso em lavanderia;Comércio [através de qualquer meio] de substâncias químicas destinadas à agricultura, à horticultura e à silvicultura;Comércio [através de qualquer meio] de substâncias químicas destinadas a conservar alimentos;Comércio [através de qualquer meio] de substâncias químicas destinadas à fotografia;Comércio [através de qualquer meio] de substâncias químicas destinadas à indústria;Comércio [através de qualquer meio] de substâncias químicas destinadas às ciências;Comércio [através de qualquer meio] de substâncias tanantes;Comércio [através de qualquer meio] de tabaco;Comércio [através de qualquer meio] de tapeçarias murais;Comércio [através de qualquer meio] de tecidos;Comércio [através de qualquer meio] de telas alcatroadas [lonas];Comércio [através de qualquer meio] de tendas;Comércio [através de qualquer meio] de tintas, vernizes, lacas;Comércio [através de qualquer meio] de toldos;Comércio [através de qualquer meio] de tubos flexíveis não metálicos;Comércio [através de qualquer meio] de tubos metálicos;Comércio [através de qualquer meio] de tubos rígidos não metálicos para a construção;Comércio [através de qualquer meio] de utensílios e recipientes para a casa ou a cozinha;Comércio [através de qualquer meio] de veículos;Comércio [através de qualquer meio] de velas;Comércio [através de qualquer meio] de velas e pavios para iluminação;Comércio [através de qualquer meio] de vidro bruto ou semiacabado;Comércio [através de qualquer meio] de vime semiprocessado;Comércio [através de qualquer meio] de xaropes e preparações para bebidas;Comércio de produtos de panificação;Comércio on-line, no varejo, de filmes e músicas pré-gravados e para download;Comércio on-line, no varejo, de música digital baixável;Comércio on-line, no varejo, de toques de telefone baixáveis;Comércio, no atacado, de preparações sanitárias, farmacêuticas e veterinárias e de suprimentos médicos;Comércio, no varejo, de obras de artes fornecidas por galerias de arte;Comércio, no varejo, de preparações sanitárias, farmacêuticas e veterinárias e de suprimentos médicos;Comparação de preços;Compilação de índices de informações para fins comerciais ou publicitários;Compilação de informação em bancos de dados de computador;Compilações de estatísticas;Concessionária de veículos [comércio de veículos];Consultoria em gestão de negócios;Consultoria em gestão de pessoal;Consultoria em gestão e organização de negócios;Consultoria em organização de negócios;Consultoria profissional em negócios;Consultoria referente a estratégias de comunicação em publicidade;Consultoria referente a estratégias de comunicação em relações públicas;Contabilidade;Controle e registro de bovinos [gestão comercial];Corretagem de veículos;Datilografia;Decoração de vitrines;Demonstração de produtos;Desenvolvimento de conceitos de campanha publicitária;Desenvolvimento de conceitos de marketing;Desfile de moda com fim publicitário;Despachante aduaneiro [desembaraço e liberação de documento alfandegário];Despachante para agilizar documento;Determinação de perfis [profiling] de consumidores para fins comerciais ou de marketing;Digitação;Distribuição de amostras;Distribuição de brindes;Distribuição de material publicitário;Distribuição de utensílio para diálise [comércio];Drogaria [comércio];Edição de texto publicitário;Elaboração de currículos para terceiros;Elaboração de declaração de imposto de renda;Elaboração de extratos de contas;Emissão de documentos e certidões oficiais;Especialistas em eficiência de negócios;Estudos de marketing;Estudos e pareceres pertinentes à macro e microeconomia, serviços estes prestados com fins de assessoria na gestão de negócios e operação de uma empresa comercial;Expedientes administrativos [auxílio administrativo];Farmácia [comércio de produtos farmacêuticos];Faturamento;Fornecimento de avaliações feitas por usuários para fins comerciais ou publicitários;Fornecimento de classificações feitas por usuários para fins comerciais ou publicitários;Fornecimento de críticas feitas por usuários para fins comerciais ou publicitários;Fornecimento de mão-de-obra [terceirização];Fotocópia [reprodução de documentos];Franchising [sistema pelo qual empresa detentora de uma marca registrada, processo patenteado de produção ou direitos similares concede a outras empresas licença de utilização dessas marcas ou processos, sob certas condições ? administração de negócios];Gerenciamento de banco de dados;Gestão administrativa de hotéis;Gestão administrativa terceirizada para empresas;Gestão computadorizada de arquivos;Gestão computadorizada de prontuários e arquivos médicos;Gestão de franquia;Gestão de negócios para provedores de serviços freelance;Gestão interina de negócios;Gestão pública/privada;Guarda-livro [contabilidade];Habilitação de celular [serviço de cadastro];Implantação de programa de controle de qualidade [controle empresarial];Indexação na web para fins comerciais ou publicitários;Intermediação na compra e venda de energia e capacidade elétrica;Inventário e gerência de estoque;Investigações [estudo] sobre negócios;Leilões;Levantamento mercadológico;Levantamentos de informações de negócios;Licenciamento, compra e venda, leasing de marcas e patentes [intermediação de negócios comerciais];Marketing;Marketing direcionado;Marketing no âmbito de publicação de softwares;Marketing por influenciadores;Negociação de contratos de negócios para terceiros;Negociação e conclusão de transações comerciais para terceiros;Organização de eventos de moda para fins promocionais;Organização de eventos para fins publicitários e/ou comerciais;Organização de exposições para fins comerciais ou publicitários;Organização de feiras comerciais;Organização e administração de empresa;Organização e realização de eventos comerciais;Otimização de ferramenta de busca para fins de promoção de vendas;Otimização de tráfego de website;Ouvidoria;Padaria [comércio de bebidas não alcoólicas; sem vistas ao consumo no local];Padaria [comércio de biscoitos; sem vistas ao consumo no local];Padaria [comércio de bolos; sem vistas ao consumo no local];Padaria [comércio de café moído; sem vistas ao consumo no local];Padaria [comércio de carnes frias pré-cozidas, curadas ou defumadas; sem vistas ao consumo no local];Padaria [comércio de doces; sem vistas ao consumo no local];Padaria [comércio de laticínios; sem vistas ao consumo no local];Padaria [comércio de pães, sem vistas ao consumo no local];Padaria [comércio de preparações para fazer bebidas à base de chás; sem vistas ao consumo no local];Padaria [comércio de salgados; sem vistas ao consumo no local];Padaria [comércio de tortas; sem vistas ao consumo no local];Perícia contábil;Perícia técnica na área contábil;Perícia técnica na área de administração;Pesquisa de marketing;Pesquisa de mercado;Pesquisa em negócios;Pesquisas de opinião;Preparação de declarações de impostos;Preparação de estudos de rentabilidade de negócios;Preparação de folha de pagamento;Previsões econômicas;Processamento administrativo de pedidos de compra;Processamento de texto;Produção de filmes publicitários;Produção de programas de telecompras;Programa de qualidade total [gestão empresarial];Programas de cartão de pontuação [tipo programa de milhagem/fidelidade];Promoção de bens e serviços através de patrocínio de eventos esportivos;Promoção de produtos por meio de influenciadores;Promoção de venda para terceiros [publicidade];Promoção de vendas para terceiros;Promotor de eventos [se comerciais];Propaganda;Prospecção de venda para terceiros;Provimento de informação comercial e de aconselhamento a consumidores para escolha de produtos e serviços;Provimento de informações da lista telefônica;Provimento de informações de negócios;Provimento de informações de negócios através de um website;Provimento de informações sobre contatos comerciais e de negócios;Provimento de mercado on-line para compradores e vendedores de produtos e serviços [marketplace];Publicação de textos publicitários;Publicidade;Publicidade de rádio;Publicidade de televisão;Publicidade externa;Publicidade on-line em rede de computadores;Publicidade pay-per-click;Publicidade por catálogos de vendas;Publicidade por mala direta;Publicidade por qualquer meio;Recrutamento de pessoal;Redação de roteiros para fins publicitários;Redação de textos publicitários;Registro de dados e comunicação escritos;Relações públicas;Representação comercial;Representação comercial de aparelho elétrico, eletrônico e térmico;Serviço de corretor de publicidade;Serviço de declaração de impostos;Serviço de intermediação de negócios com a finalidade de unir investidores particulares em potencial a empreendedores que precisem de recursos;Serviços administrativos para encaminhamentos médicos;Serviços administrativos para realocação de empresas;Serviços de afixação de mensagens publicitárias;Serviços de agências de emprego;Serviços de agências de importação-exportação;Serviços de agências de informação comercial;Serviços de agências de propaganda;Serviços de agências de publicidade;Serviços de assessoria de imprensa;Serviços de assessoria em gestão de negócios;Serviços de caixa postal de voz [secretária eletrônica];Serviços de central telefônica;Serviços de cerimonial [planejamento de eventos] com fins comerciais ou publicitários;Serviços de clipping;Serviços de colocação e recolocação no mercado de trabalho, prestados a título de assistência social;Serviços de compilação e disponibilização de listas de casamento;Serviços de compras para terceiros [compra de produtos e serviços para outras empresas];Serviços de comunicação corporativa;Serviços de consultoria em negócios para transformações digitais;Serviços de fatura [emissão de notas fiscais];Serviços de fotocópias;Serviços de geração de leads [marketing];Serviços de gestão de negócios para projetos de construção;Serviços de inteligência competitiva;Serviços de inteligência de mercado;Serviços de intermediação comercial;Serviços de intermediação de negócios relacionados à associação de vários profissionais com clientes;Serviços de layout para fins publicitários;Serviços de lembrete de compromissos [funções de escritório];Serviços de lobby comercial;Serviços de marcação de compromissos [funções de escritório];Serviços de pedidos on-line na área de retirada e entrega por restaurantes;Serviços de processamento de dados [funções de escritório];Serviços de programa de incentivo a funcionários;Serviços de programas de fidelidade [clube, cartão, talão];Serviços de promoção de campanhas publicitárias com vistas à prevenção de doenças, a título de assistência social;Serviços de recepção de visitantes [funções de escritório];Serviços de registro de listas de presentes;Serviços de secretária eletrônica [caixa postal de voz];Serviços de secretariado;Serviços de telemarketing;Serviços prestados por entidades de representação de classe, a saber, intermediação comercial para os seus associados.;Serviços prestados por entidades de representação de classe, a saber, promoção de negócios dos associados;Serviços prestados por entidades de representação de classe, a saber, serviços de administração de convênios de benefícios;Serviços prestados por entidades de representação de classe, a saber, sistematização de informações em bancos de dados para a inclusão e disponibilização de currículos e ofertas de empregos;Serviços prestados por entidades sindicais, a saber, administração de convênios de benefícios;Serviços publicitários para criar a identidade da marca para terceiros;Sistematização de informações em bancos de dados de computador;Site para efetuar o licenciamento eletrônico de veículos;Supermercado [comércio de alimentos];Supermercado [comércio de artigos de higiene pessoal, cosmética e perfumaria];Supermercado [comércio de lâmpadas e pilhas];Supermercado [comércio de óleos, graxas e preparações para polir];Supermercado [comércio de preparações para higiene doméstica, inclusive desinfetantes, desodorizantes de ambiente, preparações para perfumar ambiente e repelentes para ambientes];Supermercado [comércio de preparações para lavanderia];Supermercado [comércio de rações para animais];Supermercado [comércio de recipientes para acondicionar alimentos];Supermercado [comércio de talheres, pratos e recipientes, todos descartáveis];Supermercado [comércio de toalhas de papel, guardanapos de papel, papel laminado e filmes plásticos];Supermercado [comércio de utensílios de mesa];Supermercado [comércio de utensílios manuais de limpeza, não elétricos];Supermercado [comércio de utensílios para toalete];Supermercado [comércio de velas e fósforos];Taquigrafia;Telemarketing;Telepesquisa [pesquisa de opinião];Terceirização [assistência empresarial];Terceirização [assistência empresarial];Terceirização [fornecimento de mão-de-obra];Testes psicológicos, para seleção de pessoal;Testes, exames e provas psicotécnicos para seleção de pessoal [recrutamento de pessoal];Transcrição de comunicações [funções de escritório];Venda de assinaturas de serviços de cobrança eletrônica de pedágios para terceiros;Venda de assinaturas de serviços de telecomunicações para terceiros;Venda e licenciamento de franchising [tratando-se de administração de negócios em franchising];Vendas de assinaturas de jornal para terceiros
+	                                                </font>
+	                                            </td>
+	                                        </tr>
+	                                </table>
+	                            </div>
+	                            
+	                            
+	                            
+	                            
+	                            	<hr style="border: 1px solid #ffffff">
+	                            	<font class=normal></font>
+	                            
+	                            
+                        	</td>
+                        
+                        </tr>
+                        
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+			
+			 
+			
+			<div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-classificacao-viena" />
+				<label for= "accordion-classificacao-viena"><font class="titulo">Classificação Internacional de Viena</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad" align="center"> 
+					    		<th width="15%"><font class=normal>Edição</font></th>
+					    		<th width="180"><font class=normal>Código</font></th>
+					    		<th width="600"><font class=normal>Descrição</font></th>
+					    	</tr>
+					    </thead>
+					    <tbody>
+					    
+                        <tr bgColor="#e9e9e9"  align="center">
+                        	<td><font class=normal>4                 </font></td>
+                        	<td><font class=normal>27.5.1    </font></td>
+                        	<td><font class=normal>Letras apresentando um grafismo especial</font></td>
+                        </tr>
+                        
+                        
+                        
+                        <tr bgColor="#e9e9e9"  align="center">
+                        	<td><font class=normal>4                 </font></td>
+                        	<td><font class=normal>29.1.11   </font></td>
+                        	<td><font class=normal>Uma cor predominante</font></td>
+                        </tr>
+                        
+                        
+                        
+                        <tr bgColor="#e9e9e9"  align="center">
+                        	<td><font class=normal>4                 </font></td>
+                        	<td><font class=normal>5.5.19    </font></td>
+                        	<td><font class=normal>Outras flores, florações</font></td>
+                        </tr>
+                        
+                        
+                        
+					    
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+					
+        
+         <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-titulares" />
+				<label for= "accordion-titulares"><font class="titulo">Titulares</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="20"><font class=normal></font></th>
+					    		<th width="400"><font class=normal>Nome</font></th>
+					    	</tr>
+					    </thead>
+					     <tbody>
+                         
+
+                         <tr bgColor="#e9e9e9" align="center">
+                             <td width="20"><font class=normal>Titular(1):</font></td>
+                             <td width="400"><font
+                                     class=normal>BARCELONA PARTICIPAÇÕES E ATIVOS LTDA
+                             </font></td>
+                         </tr>
+                         
+
+					     </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+
+
+        <div class="accordions">
+            <div class="accordion-item">
+                <input type="checkbox" name="accordion" checked='checked' id="accordion-representantes" />
+                <label for= "accordion-representantes"><font class="titulo">Representante Legal</font>
+                    <font class=normal>
+                        <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                        </a>
+                    </font>
+                </label>
+                <div class="accordion-content">
+
+                    <table width="780px">
+                        <thead>
+                        <tr bgcolor="#b5d6ad">
+                            <th width="20"><font class=normal></font></th>
+                            <th width="400"><font class=normal>Nome</font></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br/>
+
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-datas" />
+				<label for= "accordion-datas"><font class="titulo">Datas</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)"  onClick="DisableHide()">
+                            </a>
+                        </font>
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="260"><font class=normal>Data de Depósito</font></th>
+					    		<th width="260"><font class=normal>Data de Concessão</font></th>
+					    		<th width="260"><font class=normal>Data de Vigência</font>
+						    		<font class=normal>
+	                     				<a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdatavigencia')" onmouseover="showMe('helpdatavigencia')" onClick="DisableHide()">
+												<img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+										</a>
+									</font>
+									<div id='helpdatavigencia'
+											style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+											<table border=1 borderColor="#006363" cellPadding=5
+												cellSpacing=0 width="100%">
+												<tr>
+													<td align="center" bgColor="#b5d6ad">
+														<table width="100%" border="0" cellspacing="0"
+															cellpadding="0">
+															<tr>
+																<td><font class=normal>Leia-me</font></td>
+																<td width="30"><a
+																	href="javascript:EnableHide('helpdatavigencia');"><img
+																		src="../jsp/imagens/bt_layer.gif" width="26"
+																		height="16" border="0" name="class"></a></td>
+															</tr>
+														</table>
+													</td>
+												</tr>
+												<tr>
+													<td align=left bgColor="#ffffff"><font class=normal>
+															A data de vigência dos processos de marca designados ao Brasil, pela via do Protocolo de Madri,
+															acompanha o prazo de vigência da inscrição internacional junto à OMPI,
+															independentemente da data de concessão do registro de marca no Brasil. </font></td>
+												</tr>
+											</table>
+										</div>
+					    		</th>
+					    		
+					    	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr bgColor="#e9e9e9">
+					    		<th><font class=normal>
+									04/01/2024	 		
+					    		
+					    			</font>
+					    		</th>
+					    		<th><font class=normal> 
+						    		
+                     				</font>
+                     			</th>
+					    		<th><font class=normal>
+					    			
+					    			</font>
+					    		</th>
+					    		
+					    		
+					    	</tr>
+					    </tbody>
+		               
+					</table>		
+					</div>
+				</div>
+			</div>
+			<br/>
+			
+			
+				 
+			
+			
+			 
+        
+        <div class="accordions">
+			<div class="accordion-item">
+				<input type="checkbox" name="accordion" checked='checked' id="accordion-1" />
+				<label for= "accordion-1"><font class="titulo">Petições</font>
+                        <font class=normal>
+                            <a class=normal href="javascript:void(0)" onmouseout="hideMe('helppeticoes')" onmouseover="showMe('helppeticoes')" onClick="DisableHide()">
+                                <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+                            </a>
+                        </font>
+                        <div id='helppeticoes'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+                            <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+                                    <tr>
+                                        <td align="center" bgColor="#b5d6ad">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td><font class=normal>Leia-me</font></td>
+                                                    <td width="30">
+                                                        <a href="javascript:EnableHide('helppeticoes');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align=left bgColor="#ffffff">
+                                            <font class=normal>
+                                                Só serão identificados nesta consulta os documentos (petições) 
+                                                apresentados por meio do sistema de Guia de Recolhimento da 
+                                                União - GRU - em vigor desde 2006. Documentos anteriores a 
+                                                esta data podem não estar relacionados.
+                                            </font>
+                                        </td>
+                                    </tr>
+                            </table>
+                        </div>
+						 
+					</label>
+					<div class="accordion-content">
+					
+					<table width="780px">
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>Pgo</font>
+					    		<th width="50"><font class=normal>Protocolo</font>
+					    		<th width="62"><font class=normal>Data</font>
+					    		<th width="10"><font class=normal>Img</font>
+					    		<th width="10">
+				                
+					    		<th width="30"><font class=normal>Serviço</font>
+					    		<th width="246"><font class=normal>Cliente</font>
+					    		<th width="10"><font class=normal>Delivery</font>
+			    				<th width="10"><font class=normal>Data</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center"  width=10>
+		                            <font class=normal>
+		                                
+		                                    <font class=normal>
+		                                        <a class=normal href="javascript:void(0)" onmouseout="hideMe('pgto0')" onmouseover="showMe('pgto0')" onClick="DisableHide()">
+		                                            <img src='../jsp/imagens/registro_em_exame.gif' width='17' height='13' border='0'  alt='Pagamento Conciliado'>
+		                                        </a>
+		                                    </font>
+		                                    <div id='pgto0' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                        <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                                <tr>
+		                                                    <td align="center" bgColor="#b5d6ad">
+		                                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                            <tr>
+		                                                                <td><font class=normal>Informações do Banco:</font></td>
+		                                                                <td width="30">
+		                                                                    <a href="javascript:EnableHide('pgto0');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                                </td>
+		                                                            </tr>
+		                                                        </table>
+		                                                    </td>
+		                                                </tr>
+		                                                <tr>
+		                                                    <td align=left bgColor="#ffffff">
+		                                                        <font class=normal>
+		                                                            
+		                                                                756        - Banco Cooperativo do Brasil S.A. - BANCOOB<br>
+		                                                                
+		                                                                Data: 03/11/2023<br>
+		                                                                Valor: R$415.0
+		                                                                
+		                                                            <br>
+		                                                        </font>
+		                                                    </td>
+		                                                </tr>
+		                                        </table>
+		                                    </div>
+		                                    
+		                            </font>
+		                        </td>
+		                        <td align="center" width=50><font class=normal>850240002476</font></td>
+		                        <td align="center" width=62><font class=normal>04/01/2024</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                            
+		                                -
+		                                
+		                            </font>
+		                        </td>
+		                        <td align="center" width=10>
+		                		<font class=normal>
+		                		
+				                </font>
+				                </td>
+		                        <td align="center" width=30>
+		                            <font class=normal>
+		                                <a class=normal href="javascript:void(0)" onmouseout="hideMe('394')" onmouseover="showMe('394')" onClick="DisableHide()">
+		                                    394
+		                                </a>
+		                            </font>
+		                            <div id='394'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 300px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                                <table border=1 borderColor="#006363" cellPadding=5 cellSpacing=0 width="100%">
+		                                        <tr>
+		                                            <td align="center" bgColor="#b5d6ad">
+		                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                                    <tr>
+		                                                        <td><font class=normal>Descrição do Serviço</font></td>
+		                                                        <td width="30">
+		                                                            <a href="javascript:EnableHide('394');"><img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class"></a>
+		                                                        </td>
+		                                                    </tr>
+		                                                </table>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td align=left bgColor="#ffffff">
+		                                                <font class=normal>
+		                                                    <b>394</b>
+		                                                    Pedido de registro de marca (com especificação de livre preenchimento) - valor por classe
+		                                                </font>
+		                                            </td>
+		                                        </tr>
+		                                </table>
+		                            </div>
+		                        </td>
+		                        <td align="center" width=246><font class=normal>BARCELONA PARTICIPAÇÕES E ATIVOS LTDA</font></td>
+		                        <td align="center" width=10>
+		                            <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+								<td align="center" width=10>
+									<font class="normal">&nbsp;                                
+										- 
+									</font>
+								</td>
+		                    </tr>
+		                    
+					</table>		
+					</div>					
+				</div>
+			</div>
+			
+			<div style="margin-top: 4px;">
+				<font class="link-sol-amplo-acesso">
+				<a href="javascript:void(0)" style="cursor:pointer;" onclick="createPopupWin('../servlet/MarcasServletController?Action=modalSolicitacaoAmploAcesso&CodPedido=5581796', 'modal1', 900, 590);" class="titulo" >Clique aqui para ter acesso as petições do processo</a>
+			   </font>
+			   <font class=normal>
+		                    <a class=normal href="javascript:void(0)" onmouseout="hideMe('helpamploacesso')" onmouseover="showMe('helpamploacesso')" onClick="DisableHide()">
+		                        <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+		                    </a>
+		                </font>
+		                <div id='helpamploacesso' style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 460px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                    <table border=1 borderColor="#006363" borderColorLight="#b5d6ad" cellPadding=5 cellSpacing=0 width="460px">
+		                        <tbody>
+		                            <tr>
+		                                <td align="center" bgColor="#b5d6ad">
+		                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                        <tr>
+		                                            <td><font class=normal>Leia-me</font></td>
+		                                            <td width="30">
+		                                                <a href="javascript:EnableHide('helpamploacesso');">
+		                                                <img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class">
+		                                                </a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td align=justify bgColor="#ffffff" class="tooltip-sol-amplo-acesso">
+		                                    <font class=normal> O INPI zela pelos dados pessoais nos termos da Lei Geral de Proteção
+															de Dados Pessoais (LGPD). Desse modo, foram adotadas medidas de
+															privacidade em prol dos solicitantes dos serviços prestados
+															pelo INPI, sem prejudicar a transparência e publicidade dos
+															atos praticados pelo Instituto. </font>
+										</td>
+		                            </tr>
+		                        </tbody>
+		                    </table>
+		            	</div>
+			</div>
+			
+			
+			<br/>
+			<div class="accordions">
+				<div class="accordion-item">
+					<input type="checkbox" name="accordion" checked="checked" id="accordion-2" />
+					<label for= "accordion-2"><font class="titulo">Publicações</font>
+		                <font class=normal>
+		                    <a class=normal href="javascript:void(0)" onmouseout="hideMe('helpdespacho')" onmouseover="showMe('helpdespacho')" onClick="DisableHide()">
+		                        <img src="../jsp/imagens/help.gif" width="13" height="15" border="0" name="class">
+		                    </a>
+		                </font>
+		                <div id='helpdespacho'  style="BACKGROUND-COLOR: #ffffff; BORDER-BOTTOM: #000000 1px; BORDER-LEFT: #000000 1px; BORDER-RIGHT: #000000 1px; BORDER-TOP: #000000 1px; HEIGHT: 20px; POSITION: absolute; VISIBILITY: hidden; WIDTH: 600px; Z-INDEX: 10; layer-background-color: #FFFFFF">
+		                    <table border=1 borderColor="#006363" borderColorLight="#b5d6ad" cellPadding=5 cellSpacing=0 width="100%">
+		                        <tbody>
+		                            <tr>
+		                                <td align="center" bgColor="#b5d6ad">
+		                                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+		                                        <tr>
+		                                            <td><font class=normal>Leia-me</font></td>
+		                                            <td width="30">
+		                                                <a href="javascript:EnableHide('helpdespacho');">
+		                                                <img src="../jsp/imagens/bt_layer.gif" width="26" height="16" border="0" name="class">
+		                                                </a>
+		                                            </td>
+		                                        </tr>
+		                                    </table>
+		                                </td>
+		                            </tr>
+		                            <tr>
+		                                <td align=left bgColor="#ffffff">
+		                                    <font class=normal>
+		                                        PRAZOS:
+												O direito de praticar qualquer ato perante o INPI se extingue ao final do prazo 
+												estabelecido pela LPI para realização do mesmo, a não ser que o interessado comprove 
+												que o não realizou por justa causa. Reputa-se justa causa o evento imprevisto, alheio à 
+												vontade da parte, e que a impediu de praticar o ato.
+												Os prazos previstos na LPI em relação às patentes são contados em dias, meses 
+												e anos. Os prazos expressos em dias contam-se de modo contínuo; os expressos em 
+												meses devem ser contados de data a data, ou seja, expiram no dia de número igual ao do 
+												dia do início da contagem, ou no dia imediatamente subseqüente, caso falte esta
+												correspondência.
+												No cômputo dos prazos, exclui-se o dia do começo e inclui-se o do vencimento. Se 
+												este cair em dia sem expediente, o prazo será prorrogado até o primeiro dia útil após o 
+												vencimento.
+												Os prazos somente começam a correr a partir do primeiro dia útil após a
+												intimação, que será feita mediante publicação na RPI, ressalvados:
+												- os que expressamente independerem de notificação ou publicação por força do 
+												disposto na LPI; 
+												- as decisões administrativas, quando feita notificação por via postal ou por ciência 
+												dada ao interessado no processo; e
+												- os pareceres e despachos internos que não necessitem ser do conhecimento das 
+												partes (art. 226 da LPI). 
+												Não havendo expressa estipulação na LPI, o prazo para a prática de um ato será 
+												de 60 (sessenta) dias
+		                                    </font>
+		                                </td>
+		                            </tr>
+		                        </tbody>
+		                    </table>
+		            	</div>
+					</label>
+					<div class="accordion-content">
+
+					<table>
+					    <thead> 
+					    	<tr bgcolor="#b5d6ad"> 
+					    		<th width="10"><font class=normal>RPI</font>
+					    		<th width="50"><font class=normal>Data RPI</font>
+					    		<th width="62"><font class=normal>Despacho</font>
+					    		<th width="30"><font class=normal>Certificado</font>
+					    		<th width="30"><font class=normal>Inteiro Teor</font>
+					    		<th width="10"><font class=normal>Complemento do Despacho</font>
+					    <tbody>
+		                
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center" width=28><font class=normal>2858</font></td>
+		                        <td align="center" width=55><font class=normal><b>14/10/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Exigência de mérito
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	      <a href="#">                          
+				                            	    <img ipasDoc="S" id='933109016_2858_136' name='' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
+					                			</a>
+					                    		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                <b>Detalhes do despacho: </b>Tendo em vista que a lei federal que permitia a extração, industrialização, comercialização e distribuição do amianto crisotila no Brasil (Lei 9.055/1995, art. 2º) foi declarada inconstitucional pelo Supremo Tribunal Federal (STF), a utilização do amianto crisotila passou a ser proibida em todo o país. Assim, de acordo com o procedimento previsto no item 5.4.6. Especificação contendo termos equivalentes a produtos ou serviços considerados ilícitos do Manual de Marcas, esclareça a requerente a licitude dos serviços ?Comércio [através de qualquer meio] de amianto? elencados na especificação ou substitua os mesmos por outros compatíveis com a classe reivindicada e que não se enquadrem nas proibições legais.
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center" width=28><font class=normal>2853</font></td>
+		                        <td align="center" width=55><font class=normal><b>09/09/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Anulação de despacho (em processo)
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                <b>Detalhes do despacho: </b>Anulado o deferimento publicado na RPI de 02/09/2025, tendo em vista erro formal.
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+		                    <tr bgColor=#e9e9e9>
+		                        <td align="center" width=28><font class=normal>2852</font></td>
+		                        <td align="center" width=55><font class=normal><b>02/09/2025</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Deferimento do pedido
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	      <a href="#">                          
+				                            	    <img ipasDoc="S" id='933109016_2852_029' name='' src='../jsp/imagens/pdf.gif' width='16' height='16' border='0' alt='Imagem do Documento em PDF' align='top' style="padding-top: 5px;" class="salvaDocumento">
+					                			</a>
+					                    		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+		                    <tr bgColor=white>
+		                        <td align="center" width=28><font class=normal>2768</font></td>
+		                        <td align="center" width=55><font class=normal><b>23/01/2024</b></font></td>
+		                        <td align="center" width=74>
+		                        
+		                            <font class=normal>
+		                                Publicação de pedido de registro para oposição (exame formal concluído)
+		                            </font>
+		                            
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=center  width=10>
+		                            <font class=normal>
+		                            	-		                                
+		                            </font>
+		                        </td>
+		                        <td align=left  width=623>
+		                             <font class=normal>
+		                                
+		                            </font>
+		                        </td>
+		                    </tr>
+		                    
+				</table>		
+				</div>
+			</div>
+		</div>
+        
+        <table border=0 width="780px" border="0" cellpadding="3" cellspacing="2" class="fundoportal">
+                <tr>
+                    <td align="center" colSpan=6>
+                        <font class=normal>
+                            &nbsp;<br>Dados atualizados  até 
+                            <b>
+                                06/01/2026
+                            </b>
+                            - Nº da Revista:
+                            <b>2870</b>
+                        </font>
+                    </td>
+                </tr>
+        </table>
+            </form>
+    <!-- RECAPTCHA -->
+        <div id="conteudoCaptcha" style="display: none">
+            <form id="captchaForm">
+            
+                <div id="captchaConteiner">
+                    <br /> 
+                    <input type="submit" id="captchaButton" class="button branco" value="Download" />
+                    <div id="msgErroCaptcha" class="errorMsgCaptcha" style="display: none"></div>
+                </div>
+                
+                <div id="loader" style="display: none">
+                    <img src="../jsp/imagens/loading.gif" style="margin-top: 75px; width: 180px" />
+                </div>
+                
+                <input type="hidden" value="300" id="codDiretoria" />
+                <input type="hidden" id="cdDespach" />
+                
+            </form>
+        </div>
+    <!-- RECAPTCHA -->
+    
+	<br/>
+      
+	<div id="bottom_principal"></div>
+	<div id="footer">
+		<div id="texto_footer">
+			<p>Rua Mayrink Veiga, 9 - Centro - RJ - CEP: 20090-910</p>
+		</div>
+		<div id="logo_ouvidoria">
+			<a href="http://faleconosco.inpi.gov.br/" target="blank"><img src="/pePI/jsp/imagens/faleconosco.png" border="0" alt="Fale Conosco" onmouseout="this.src='/pePI/jsp/imagens/faleconosco.png';"
+				title="Fale Conosco" onmouseover="this.src='/pePI/jsp/imagens/faleconosco.png';" /> </a>
+		</div>
+	</div>
+    </body>
+</html>
